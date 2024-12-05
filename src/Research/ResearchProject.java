@@ -1,11 +1,10 @@
 package Research;
+
+
+import Users.Researcher;
+
 import java.util.*;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
 
 public class ResearchProject {
 	private String title;

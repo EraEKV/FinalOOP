@@ -3,6 +3,10 @@ package Research;
 import java.util.Date;
 import java.util.Vector;
 
+
+import Enums.CitationFormat;
+import Users.Researcher;
+
 public class ResearchPaper {
     private String name;
     private int pages;

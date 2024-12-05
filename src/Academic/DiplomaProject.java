@@ -1,6 +1,10 @@
 package Academic ;
 
 
+import Research.ResearchPaper;
+
+import java.util.Vector;
+
 /**
  * <!-- begin-user-doc -->
  * <!--  end-user-doc  -->

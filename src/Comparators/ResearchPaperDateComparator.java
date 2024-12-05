@@ -1,6 +1,8 @@
 package Comparators ;
 
 
+import Research.ResearchPaper;
+
 /**
  * <!-- begin-user-doc -->
  * <!--  end-user-doc  -->
@@ -18,5 +20,9 @@ public class ResearchPaperDateComparator implements Comparator<ResearchPaper>
 		super();
 	}
 
+	@Override
+	public int compare(ResearchPaper c1, ResearchPaper c2) {
+		return 0;
+	}
 }
 

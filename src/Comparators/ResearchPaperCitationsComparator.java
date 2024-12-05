@@ -7,6 +7,8 @@ package Comparators ;
  * @generated
  */
 
+import Research.ResearchPaper
+
 public class ResearchPaperCitationsComparator implements Comparator<ResearchPaper>
 {
 	/**
@@ -18,5 +20,9 @@ public class ResearchPaperCitationsComparator implements Comparator<ResearchPape
 		super();
 	}
 
+	@Override
+	public int compare(ResearchPaper c1, ResearchPaper c2) {
+		return 0;
+	}
 }
 
