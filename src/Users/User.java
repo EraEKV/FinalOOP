@@ -18,7 +18,7 @@ public abstract class User implements Subscriber {
 	
 	private Vector<Notification> notifications;
 	
-	public User(){
+	public User() {
 
 	}
 
@@ -32,7 +32,7 @@ public abstract class User implements Subscriber {
 		this.email = email;
 	}
 	
-	public boolean login(Credentials parameter) {
+	public boolean login(Credentials c) {
 		// TODO implement me
 		return false;	
 	}
@@ -53,6 +53,22 @@ public abstract class User implements Subscriber {
 //		return null;
 //	}
 
+
+	public String getFirstname() {
+		return firstname;
+	}
+
+	public String getLastname() {
+		return lastname;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
 	@Override
 	public boolean equals(Object o) {
