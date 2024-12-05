@@ -105,12 +105,12 @@ public class ResearchProject {
 	// hashCode method (Optional but recommended when overriding equals)
 	@Override
 	public int hashCode() {
-		int result = title != null ? title.hashCode() : 0;
-		result = 31 * result + (dateOfWritting != null ? dateOfWritting.hashCode() : 0);
-		result = 31 * result + (publishDate != null ? publishDate.hashCode() : 0);
-		result = 31 * result + (authors != null ? authors.hashCode() : 0);
-		result = 31 * result + (papers != null ? papers.hashCode() : 0);
-		result = 31 * result + (superVisor != null ? superVisor.hashCode() : 0);
-		return result;
+		int res = title != null ? title.hashCode() : 0;
+		res = 31 * res + (dateOfWritting != null ? dateOfWritting.hashCode() : 0);
+		res = 31 * res + (publishDate != null ? publishDate.hashCode() : 0);
+		res = 31 * res + (authors != null ? authors.hashCode() : 0);
+		res = 31 * res + (papers != null ? papers.hashCode() : 0);
+		res = 31 * res + (superVisor != null ? superVisor.hashCode() : 0);
+		return res;
 	}
 }
