@@ -1,11 +1,5 @@
-package Pakita enjoyers OOP Class UML ;
+package Enums;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-public enum LessonType
-{
-	;
+public enum LessonType {
+    LECTURE, PRACTICE
 }

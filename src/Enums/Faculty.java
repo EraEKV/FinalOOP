@@ -1,11 +1,5 @@
-package Pakita enjoyers OOP Class UML ;
+package Enums;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-public enum Faculty
-{
-	;
+public enum Faculty {
+    SITE, SAM, SEOG
 }
