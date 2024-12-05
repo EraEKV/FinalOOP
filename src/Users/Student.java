@@ -1,306 +1,160 @@
-package Users ;
+package Users;
 
+import Academic.Course;
+import Academic.Journal;
+import Enums.Faculty;
+import Enums.Semester;
+import Enums.Speciality;
+import Enums.StudentType;
+import Enums.DocumentType;
+import System.Complaint;
+import System.Organization;
+import System.Notification;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Vector;
 
-public class Student extends User implements CanBeResearcher, CanViewTeachers
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private StudentType type;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+// CanViewTeachers interface
+
+public class Student extends User implements CanBeResearcher, ManageOrganization {
+
 	private String id;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+	private StudentType type;
 	private Faculty faculty;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private int startYear;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public  attribute2;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Speciality speciality;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Employee advisor;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<Complaint> warnings;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Researcher isResearcher;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<Journal> journal;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Researcher researchSupervisor;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
 	private HashMap<Course, Integer> countRetakes;
+
+	private Vector<Notification> notifications;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private Vector<Complaint> notifications;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Student(){
+	public Student() {
 		super();
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+	public Student(String id) {
+		this.id = id;
+	}
+
+	public Student(String id, String firstname, String lastname, Faculty faculty, Speciality speciality) {
+		super(firstname, lastname);
+		this.startYear = LocalDate.now().getYear();
+		this.id = id;
+		this.faculty = faculty;
+		this.speciality = speciality;
+	}
 	
-	public Vector<Marks> viewMarks() {
+	public void viewMarks() {
 		// TODO implement me
-		return null;	
+		return;
 	}
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
-	public Transcipt viewTranscript() {
+	public void viewTranscript() {
 		// TODO implement me
-		return null;	
+		return;
 	}
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
-	public void operation3() {
-		// TODO implement me	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void rateTeacher(Teacher parameter) {
+	public void rateTeacher(Teacher t) {
 		// TODO implement me
-		return null;	
+		return;
 	}
+
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
-	public void dropout(Request parameter) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public String viewTeacherInfo(Teacher parameter) {
+	public String viewTeacherInfo(Teacher t) {
 		// TODO implement me
 		return "";	
 	}
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
-	public void viewAbsenses() {
-		// TODO implement me
-		return null;	
+//	public void viewAbsenses() {
+//		// TODO implement me
+//		return;
+//	}
+	
+	
+//	public void requestDocument(DocumentType parameter) {
+//		// TODO implement me
+//		return;
+//	}
+	
+	
+//	public void coursesRegistration(Course parameter, Teacher parameter2, Semester parameter3, pair<Integer, Integer> parameter4) {
+//		// TODO implement me
+//		return;
+//	}
+
+
+	@Override
+	public void beReseacrher() {
+
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void requestDocument(DocumentType parameter) {
-		// TODO implement me
-		return null;	
+
+	@Override
+	public void update() {
+
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void deleteOrganization(Organization parameter) {
-		// TODO implement me
-		return null;	
+
+	@Override
+	public void deleteOrganization(Organization org) {
+
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void joinOrganization(Organization parameter) {
-		// TODO implement me
-		return null;	
+
+	@Override
+	public void joinOrganization(Organization org) {
+
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void createOrganization(String parameter) {
-		// TODO implement me
-		return null;	
+
+	@Override
+	public void createOrganization(String name) {
+
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void leaveOrganization(Organization parameter) {
-		// TODO implement me
-		return null;	
+
+	@Override
+	public void leaveOrganization(Organization org) {
+
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void coursesRegistration(Course parameter, Teacher parameter2, Semester parameter3, pair<Integer, Integer> parameter4) {
-		// TODO implement me
-		return null;	
+
+
+
+
+
+	@Override
+	public boolean equals(Object o) {
+		if(!super.equals(o)) return false;
+		Student s = (Student) o;
+		return id.equals(s.id)
+				&& faculty.equals(s.faculty)
+				&& speciality.equals(s.speciality)
+				&& startYear == s.startYear;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void operation() {
-		// TODO implement me
-		return null;	
+
+	@Override
+	public int hashCode() {
+		int res = super.hashCode();
+		res = 31 * res + (id != null ? id.hashCode() : 0);
+		res = 31 * res + (faculty != null ? faculty.hashCode() : 0);
+		res = 31 * res + (speciality != null ? speciality.hashCode() : 0);
+		res = 31 * res + (startYear);
+
+		return res;
 	}
-	
+
+	@Override
+	public String toString() {
+		return super.toString()
+				+ ", id=" + id
+				+ ", faculty=" + faculty
+				+ ", speciality=" + speciality
+				+ ", startYear=" + startYear;
+	}
 }
 

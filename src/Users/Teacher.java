@@ -1,157 +1,109 @@
 package Users ;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+import Enums.Faculty;
+import Enums.TeacherType;
 
-public class Teacher extends Employee implements CanTeach, CanViewStudents, CanBeResearcher, CanViewTeachers
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+import java.util.Vector;
+
+// CanViewStudents interface
+public class Teacher extends Employee implements CanTeach, CanBeResearcher {
+
 	private String id;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private String subjectName;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private Vector<Schedule> schedule;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private TeacherType teacherType;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Researcher isResearcher;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Faculty faculty;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<Integer> ratings;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Teacher(){
-		super();
+
+//	Constructors
+	public Teacher() {	}
+
+	public Teacher(String id) {
+		this.id = id;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void putMarks(Course parameter, Student parameter2, Date parameter3, double parameter4) {
-		// TODO implement me
-		return null;	
+	public Teacher(String id, String firstname, String lastname, TeacherType teacherType, Faculty faculty) {
+		super(firstname, lastname);
+		this.id = id;
+		this.teacherType = teacherType;
+		this.faculty = faculty;
 	}
+
+//	public void putMarks(Course course, Student student, Date date, double grade) {
+//		// TODO implement me
+//		return null;
+//	}
+//
+//	public void putMarks(Course course, Student student, MarkType parameter3, double grade) {
+//		// TODO implement me
+//		return null;
+//	}
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+//	public void sendComplaint(Complaint parameter) {
+//		// TODO implement me
+//		return null;
+//	}
 	
-	public void putMarks(Course parameter, Student parameter2, MarkType parameter3, double parameter4) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public Vector<Schedule> viewSchedule() {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void sendComplaint(Complaint parameter) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void markAttendance(JournalCourse parameter, Vector<Student> parameter2, Attendance parameter3) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+//	public void markAttendance(JournalCourse parameter, Vector<Student> parameter2, Attendance parameter3) {
+//		// TODO implement me
+//		return null;
+//	}
 	
 	public double getRating() {
 		// TODO implement me
-		return null;	
+		return 0.0;
 	}
-	
+
+	@Override
+	public void beReseacrher() {
+		if(!teacherType.equals(TeacherType.PROFESSOR)) {
+			isResearcher = new Researcher();
+		}
+	}
+
+	@Override
+	public void teach() {
+		System.out.println("Teacher " + id + " is teaching");
+	}
+
+//	@Override
+//	public Vector<Student> viewStudentsInfo(Course parameter) {
+//		return null;
+//	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if(!super.equals(o)) return false;
+		Teacher t = (Teacher) o;
+		return id.equals(t.id)
+				&& teacherType.equals(t.teacherType)
+				&& faculty.equals(t.faculty)
+				&& isResearcher.equals(t.isResearcher);
+	}
+
+	@Override
+	public int hashCode() {
+		int res = super.hashCode();
+
+		res = res * 31 + (id != null ? id.hashCode() : 0);
+		res = res * 31 + (teacherType != null ? teacherType.hashCode() : 0);
+		res = res * 31 + (isResearcher != null ? isResearcher.hashCode() : 0);
+		res = res * 31 + (faculty != null ? faculty.hashCode() : 0);
+		res = res * 31 + (ratings != null ? ratings.hashCode() : 0);
+
+		return res;
+	}
+
+	@Override
+	public String toString() {
+		return "Teacher{" +
+				"id='" + id + '\'' +
+				", teacher=" + teacherType +
+				", faculty=" + faculty +
+				", isResearcher=" + isResearcher +
+				'}';
+	}
 }
 
