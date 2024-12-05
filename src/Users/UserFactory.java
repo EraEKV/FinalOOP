@@ -1,166 +1,116 @@
 package Users ;
 
+import CustomExceptions.UserTypeException;
+import Enums.*;
+import Database.Database;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+import java.time.Year;
 
-public class UserFactory
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public UserFactory(){
-		super();
+public class UserFactory {
+
+
+	public UserFactory() {
+
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public Researcher createUser(Teacher parameter4) {
-		// TODO implement me
-		return null;	
+
+
+	//	new Manager
+//	public User createUser(String firstname, String lastname, UserType userType, ManagerType managerType) {
+//		String id = generateId(userType, managerType);
+//		return new Manager(id, firstname, lastname, managerType);
+//	}
+
+	//	new Student (Bachelor)
+	public User createUser(String firstname, String lastname, UserType userType, Faculty faculty, Speciality speciality) {
+		String id = generateId(userType, StudentType.BACHELOR);
+		return new Student(id, firstname, lastname, faculty, speciality);
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public Researcher createUser(Student parameter4) {
-		// TODO implement me
-		return null;	
+
+	//	new GradStudent
+//	public User createUser(String firstname, String lastname, UserType userType, Faculty faculty, Speciality speciality, StudentType studType) {
+//		String id = generateId(userType, studType);
+//		if(studType.equals(StudentType.MASTER)) {
+//			return new MasterStudent(id, firstname, lastname, faculty, speciality);
+//		} else {
+//			return new PhDStudent(id, firstname, lastname, faculty, speciality);
+//		}
+//	}
+
+	// new Teacher
+	public User createUser(String firstname, String lastname, UserType userType, TeacherType teacherType, Faculty faculty) {
+		String id = generateId(userType, teacherType);
+		return new Teacher(id, firstname, lastname, teacherType, faculty);
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser(String parameter, String parameter2, UserType parameter3, ManagerType parameter4) {
-		// TODO implement me
-		return null;	
+
+
+//	public Researcher createUser(Teacher t) {
+//		// TODO implement me
+//		return null;
+//	}
+//
+//	public Researcher createUser(Student s) {
+//		// TODO implement me
+//		return null;
+//	}
+
+
+	// generating ID for new User
+	private <T extends Enum<T>> String generateId(UserType userType, T specificType) {
+		String idSuffix;
+		String id;
+
+		Database db = Database.getInstance();
+
+		switch (userType) {
+			case STU:
+				if (specificType instanceof StudentType) {
+					switch ((StudentType) specificType) {
+						case PHD:
+							idSuffix = "P";
+							break;
+						case MASTER:
+							idSuffix = "M";
+							break;
+						case BACHELOR:
+							idSuffix = "B";
+							break;
+						default:
+							throw new UserTypeException("Unknown student type: " + specificType);
+					}
+					idSuffix += db.getStudentsCount(specificType);
+				} else {
+					throw new UserTypeException("Invalid specific type for student: " + specificType);
+				}
+				break;
+
+			case TCH:
+				if (specificType instanceof TeacherType) {
+					idSuffix = "T" + db.getUsersCount(userType);
+				} else {
+					throw new UserTypeException("Invalid specific type for teacher: " + specificType);
+				}
+				break;
+
+			case MNG:
+				if (specificType instanceof ManagerType) {
+					idSuffix = "M" + db.getUsersCount(userType);
+				} else {
+					throw new UserTypeException("Invalid specific type for manager: " + specificType);
+				}
+				break;
+
+			default:
+				throw new UserTypeException("Unknown user type: " + userType);
+		}
+
+
+		String yearPart = String.valueOf(Year.now().getValue()).substring(2);
+
+		id = yearPart + idSuffix;
+
+		return id;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser(String parameter, String parameter2, UserType parameter3, Faculty parameter4, Speciality parameter5) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser(String parameter, String parameter2, UserType parameter3, Faculty parameter4, Speciality parameter5, StudentType parameter6) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser( parameter,  parameter2) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser() {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser() {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser() {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser() {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser( parameter,  parameter2) {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public User createUser(String parameter, String parameter2, UserType parameter3, TeacherType parameter4, Faculty parameter5) {
-		// TODO implement me
-		return null;	
-	}
-	
+
 }
 
