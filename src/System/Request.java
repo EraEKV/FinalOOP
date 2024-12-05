@@ -1,22 +1,9 @@
-package Pakita enjoyers OOP Class UML ;
+package System;
 
+import Enums.Status;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class Request
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Request(){
-		super();
-	}
-
+public class Request extends Notification {
+    private String topic;
+    private Boolean isSigned;
+    private Status status;
 }
-

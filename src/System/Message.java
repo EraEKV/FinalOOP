@@ -1,22 +1,5 @@
-package Pakita enjoyers OOP Class UML ;
+package System;
 
-
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class Message
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Message(){
-		super();
-	}
-
+public class Message extends Notification {
+    private String receiver;
 }
-

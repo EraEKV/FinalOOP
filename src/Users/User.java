@@ -1,163 +1,86 @@
 package Users ;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+import Enums.News;
+import Research.Subscriber;
+import System.Credentials;
+import System.Notification;
 
-public abstract class User implements NewsSubscribers, Subscriber
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public  attribute;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private String id;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+import java.util.Vector;
+
+// NewsSubscriber interface
+public abstract class User implements Subscriber {
+
 	private String firstname;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private String lastname;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private String email;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private String password;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private Vector<Message> messages;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+
 	
 	private Vector<Notification> notifications;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public  subscribe;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
 	public User(){
-		super();
+
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+	public User(String firstname, String lastname) {
+		this.firstname = firstname;
+		this.lastname = lastname;
+	}
+
+	public User(String firstname, String lastname, String email) {
+		this(firstname, lastname);
+		this.email = email;
+	}
 	
 	public boolean login(Credentials parameter) {
 		// TODO implement me
 		return false;	
 	}
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public Vector<News> viewNews() {
 		// TODO implement me
 		return null;	
 	}
+
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+//	public void addComments(News news, String text) {
+//		// TODO implement me
+//		return;
+//	}
 	
-	public Vector<Message> viewMessages() {
-		// TODO implement me
-		return null;	
+//	public void newNotifications( parameter) {
+//		// TODO implement me
+//		return null;
+//	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
+		User u = (User) o;
+
+		return firstname.equals(u.firstname)
+				&& lastname.equals(u.lastname)
+				&& email.equals(u.email);
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void addComments(News parameter, String parameter2) {
-		// TODO implement me
-		return null;	
+
+	@Override
+	public int hashCode() {
+		int res = 31;
+		res = 31 * res + (firstname != null ? firstname.hashCode() : 0);
+		res = 31 * res + (lastname != null ? lastname.hashCode() : 0);
+		res = 31 * res + (email != null ? email.hashCode() : 0);
+
+		return res;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void newNotifications( parameter) {
-		// TODO implement me
-		return null;	
+
+	@Override
+	public String toString() {
+			return getClass().getName()
+					+ "  firstname=" + firstname
+					+ ", lastname=" + lastname
+					+ ", email=" + email;
 	}
-	
 }
 

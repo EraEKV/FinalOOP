@@ -1,14 +1,10 @@
-package Pakita enjoyers OOP Class UML ;
+package Users;
+
+public class Researcher {
+
+    public Researcher() {
+
+    }
 
 
-
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-public  interface Researcher 
-{
-	
 }
-

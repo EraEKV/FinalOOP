@@ -1,22 +1,20 @@
-package Pakita enjoyers OOP Class UML ;
+package System;
 
+public class Credentials {
+    private String email;
+    private String password;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+    public String generateHash(String password) {
 
-public class Credentials
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Credentials(){
-		super();
-	}
+        return "";
+    }
 
+    public String generateHash() {
+        return "";
+    }
+
+    public String generateEmail(String firstname, String lastname) {
+
+        return "";
+    }
 }
-
