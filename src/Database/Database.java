@@ -1,265 +1,140 @@
 package Database ;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+import Academic.Journal;
+import Academic.SemesterPeriod;
+import Academic.Transcript;
+import CustomExceptions.UserTypeException;
+import Enums.*;
+import Enums.News;
+import Research.ResearchJournal;
+import Research.ResearchPaper;
+import Research.ResearchProject;
+import Users.Rector;
+import Users.Student;
+import Users.Teacher;
+import Users.User;
+import System.Organization;
+import Academic.Course;
+import Users.Researcher;
+import System.Organization;
+import System.Credentials;
 
-public class Database implements Serializable
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public Database DATABASE;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.Vector;
+
+public class Database implements Serializable {
+	private static Database DATABASE;
 	
 	private boolean isRegistrationOpened;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private HashMap<Credentials, User> users;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	private Vector<Course> courses;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Rector rector;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	private Vector<Teacher> teachers;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<ResearchJournal> researchJournals;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	private Vector<ResearchProject> researchProjects;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<ResearchPaper> researchPapers;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	private Vector<Researcher> researchers;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<Student> students;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	private Vector<String> logs;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private PriorityQueue<News> news;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public HashMap<Faculty, DeansOffice> offices;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private Vector<Journals> journals;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private pair<Integer, Integer> year;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+
+	private Vector<Journal> journals;
+
+	private Years years;
 	
 	private Semester semester;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public boolean regaIsOpen;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+	public boolean regIsOpen;
 	
 	private SemesterPeriod semesterPeriod;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<User> newsSubscribers;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public  attribute2;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	private Vector<Organization> organizations;
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<Transcript> transcripts;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Database(){
-		super();
-	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+	private int usersCount;
+
+	private int bachelorStudentsCount;
+	private int masterStudentsCount;
+	private int phdStudentsCount;
+	private int teachersCount;
+	private int managersCount;
+
+
+	private Database() {
+
+	}
 	
 	public Database Read() {
 		// TODO implement me
-		return null;	
+		return DATABASE;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
 	
 	public void Write() {
 		// TODO implement me
-		return null;	
+		return;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void Alter() {
-		// TODO implement me
-		return null;	
+
+	public static Database getInstance() {
+		if (DATABASE == null) {
+			DATABASE = new Database();
+		}
+		return DATABASE;
 	}
-	
+
+	public int getUsersCount(UserType userType) {
+		int count = 0;
+		switch (userType) {
+			case MNG:
+				count = ++managersCount;
+				break;
+			case TCH:
+				count = ++teachersCount;
+				break;
+			default:
+				throw new UserTypeException("Unknown user type: " + userType); // Обрабатываем неизвестный тип
+		}
+		return count;
+	}
+
+	public <T extends Enum<T>> int getStudentsCount(T studentType) {
+		int count = 0;
+
+		if (studentType instanceof StudentType) {
+			switch ((StudentType) studentType) {
+				case PHD:
+					count = ++phdStudentsCount;
+					break;
+				case MASTER:
+					count = ++masterStudentsCount;
+					break;
+				case BACHELOR:
+					count = ++bachelorStudentsCount;
+					break;
+				default:
+					throw new UserTypeException("Unknown student type: " + studentType);
+			}
+		}
+		return count;
+	}
+
+	public void newUserAdded(User user) {
+//	logic of checking
+	}
 }
 
