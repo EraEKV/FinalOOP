@@ -73,33 +73,26 @@ public class ResearchProject {
 	}
 
 	@Override
-	public String toString() {
-		return "title= " + title + ", dateOfWritting=" + dateOfWritting + ", publishDate=" + publishDate + ", authors=" + authors + ", papers=" + papers + ", superVisor=" + superVisor;
-	}
-
-	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-
-		ResearchProject r = (ResearchProject) o;
-
-		if (title != r.getTitle()) return false;
-		if (dateOfWritting != r.dateOfWritting) return false;
-		if (publishDate != r.getPublishDate()) return false;
-		if (authors != r.getAuthors()) return false;
-		if (papers != r.getPapers()) return false;
-		return superVisor == r.getSuperVisor();
+		ResearchProject that = (ResearchProject) o;
+		return Objects.equals(title, that.title) && Objects.equals(dateOfWritting, that.dateOfWritting) && Objects.equals(publishDate, that.publishDate) && Objects.equals(authors, that.authors) && Objects.equals(papers, that.papers) && Objects.equals(superVisor, that.superVisor);
 	}
 
 	@Override
 	public int hashCode() {
-		int res = title != null ? title.hashCode() : 0;
-		res = 31 * res + (dateOfWritting != null ? dateOfWritting.hashCode() : 0);
-		res = 31 * res + (publishDate != null ? publishDate.hashCode() : 0);
-		res = 31 * res + (authors != null ? authors.hashCode() : 0);
-		res = 31 * res + (papers != null ? papers.hashCode() : 0);
-		res = 31 * res + (superVisor != null ? superVisor.hashCode() : 0);
-		return res;
+		return Objects.hash(title, dateOfWritting, publishDate, authors, papers, superVisor);
+	}
+
+	@Override
+	public String toString() {
+		return "ResearchProject{" +
+				"title='" + title + '\'' +
+				", dateOfWritting=" + dateOfWritting +
+				", publishDate=" + publishDate +
+				", authors=" + authors +
+				", papers=" + papers +
+				", superVisor=" + superVisor +
+				'}';
 	}
 }

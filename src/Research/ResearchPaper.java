@@ -1,6 +1,7 @@
 package Research;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Vector;
 import Enums.CitationFormat;
 import Users.Researcher;
@@ -97,68 +98,26 @@ public class ResearchPaper {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
-        ResearchPaper r = (ResearchPaper) o;
-
-        if (pages != r.pages) return false;
-
-        if (name != null) {
-            if (!name.equals(r.getName())) return false;
-        } else if (r.getName() != null) {
-            return false;
-        }
-
-        if (researchJournal != null) {
-            if (!researchJournal.equals(r.getResearchJournal())) return false;
-        } else if (r.getResearchJournal() != null) {
-            return false;
-        }
-
-        if (citations != null) {
-            if (!citations.equals(r.getCitations())) return false;
-        } else if (r.getCitations() != null) {
-            return false;
-        }
-
-        if (DOI != null) {
-            if (!DOI.equals(r.getDOI())) return false;
-        } else if (r.getDOI() != null) {
-            return false;
-        }
-
-        if (date != null) {
-            if (!date.equals(r.getDate())) return false;
-        } else if (r.getDate() != null) {
-            return false;
-        }
-
-        if (authors != null) {
-            if (!authors.equals(r.getAuthors())) return false;
-        } else if (r.getAuthors() != null) {
-            return false;
-        }
-
-        return true;
+        ResearchPaper that = (ResearchPaper) o;
+        return pages == that.pages && Objects.equals(name, that.name) && Objects.equals(researchJournal, that.researchJournal) && Objects.equals(citations, that.citations) && Objects.equals(DOI, that.DOI) && Objects.equals(date, that.date) && Objects.equals(authors, that.authors);
     }
-
-
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + pages;
-        result = 31 * result + (researchJournal != null ? researchJournal.hashCode() : 0);
-        result = 31 * result + (citations != null ? citations.hashCode() : 0);
-        result = 31 * result + (DOI != null ? DOI.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (authors != null ? authors.hashCode() : 0);
-        return result;
+        return Objects.hash(name, pages, researchJournal, citations, DOI, date, authors);
     }
 
     @Override
     public String toString() {
-        return "ResearchPaper = " + "name= " + name   + ", pages=" + pages + ", researchJournal=" + researchJournal + ", citations=" + citations + ", DOI= " + DOI + ", date=" + date + ", authors=" + authors;
+        return "ResearchPaper{" +
+                "name='" + name + '\'' +
+                ", pages=" + pages +
+                ", researchJournal=" + researchJournal +
+                ", citations=" + citations +
+                ", DOI='" + DOI + '\'' +
+                ", date=" + date +
+                ", authors=" + authors +
+                '}';
     }
 }
