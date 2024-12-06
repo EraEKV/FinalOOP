@@ -104,23 +104,55 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 	}
 
 	@Override
-	public void deleteOrganization(Organization org) {
+	public void createOrganization(String name) {
+		if (name == null || name.isEmpty()) {
+			System.out.println("Organization name cannot be empty.");
+			return;
+		}
+		Organization org = new Organization(name);
+		org.addMember(this); // Add this student as the first member.
+		org.updateSlogan("A new beginning for " + name + "!"); // Example slogan.
+		System.out.println("Organization '" + name + "' created successfully.");
+	}
 
+	@Override
+	public void deleteOrganization(Organization org) {
+		if (org == null) {
+			System.out.println("Organization cannot be null.");
+			return;
+		}
+		if (org.getMembers().contains(this)) {
+			org.getMembers().clear(); // Remove all members.
+			System.out.println("The organization '" + org.getName() + "' has been deleted successfully.");
+		} else {
+			System.out.println("You do not have the rights to delete the organization: " + org.getName());
+		}
 	}
 
 	@Override
 	public void joinOrganization(Organization org) {
-
-	}
-
-	@Override
-	public void createOrganization(String name) {
-
+		if (org == null) {
+			System.out.println("Organization cannot be null.");
+			return;
+		}
+		if (org.addMember(this)) {
+			System.out.println("You have successfully joined the organization: " + org.getName());
+		} else {
+			System.out.println("You are already a member of the organization: " + org.getName());
+		}
 	}
 
 	@Override
 	public void leaveOrganization(Organization org) {
-
+		if (org == null) {
+			System.out.println("Organization cannot be null.");
+			return;
+		}
+		if (org.removeMember(this)) {
+			System.out.println("You have successfully left the organization: " + org.getName());
+		} else {
+			System.out.println("You are not a member of the organization: " + org.getName());
+		}
 	}
 
 
