@@ -12,13 +12,26 @@ public class Manager extends Employee
 	private String id;
 	private Vector<Request> requests;
 	private ManagerType managerType;
+
 	{
 		requests = new Vector<Request>();
 	}
+
 	public Manager(){
 	}
-	public Manager(String id) {
+	public Manager(String firstname, String lastname) {
+		super(firstname, lastname);
+	}
+	public Manager(String firstname, String lastname, String email) {
+		super(firstname, lastname, email);
+	}
+	public Manager(String firstname, String lastname, String email, String id) {
+		super(firstname, lastname, email);
 		this.id = id;
+	}
+	public Manager(String firstname, String lastname, String email, String id, ManagerType managerType) {
+		this(firstname, lastname, email, id);
+		this.managerType = managerType;
 	}
 
 	public String getId() {
@@ -45,10 +58,6 @@ public class Manager extends Employee
 		this.managerType = managerType;
 	}
 
-	public Manager(String id, ManagerType managerType) {
-		this.id = id;
-		this.managerType = managerType;
-	}
 	public void addCourse(Course c) {}
 	public void viewRequests() {
 		for(Request r : requests) {
