@@ -1,132 +1,86 @@
-package System ;
+package System;
+
+import Users.Student;
+
+import java.util.Date;
+import java.util.Vector;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+public class Organization {
 
-public class Organization
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private String name;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Student head;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private  attribute;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Date dateCreated;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private String slogan;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<Student> members;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Organization(){
-		super();
+
+	public Organization() {
+		this.members = new Vector<>();
+		this.dateCreated = new Date();
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+	public Organization(String name) {
+		this.name = name;
+		this.slogan = "";
+		this.members = new Vector<>();
+		this.dateCreated = new Date();
+	}
+
+	public boolean addMember(Student student) {
+		if (student != null && !members.contains(student)) {
+			members.add(student);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean removeMember(Student student) {
+		return members.remove(student);
+	}
+
+	public boolean isMember(Student student) {
+		return members.contains(student);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Vector<Student> getMembers() {
+		return members;
+	}
+
+	public void updateSlogan(String slogan) {
+		this.slogan = slogan;
+	}
+
 	public void createOrganization() {
-		// TODO implement me	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void deleteOrganization() {
-		// TODO implement me	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void operation3() {
-		// TODO implement me	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void operation4() {
-		// TODO implement me	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void updateSlogan(String parameter) {
 		// TODO implement me
-		return null;	
 	}
-	
+
+	public void deleteOrganization() {
+		// TODO implement me
+	}
+
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public String getSlogan() {
+        return slogan;
+    }
+
+    public void setSlogan(String slogan) {
+        this.slogan = slogan;
+    }
 }
 
