@@ -2,8 +2,6 @@ package Research;
 
 import java.util.Date;
 import java.util.Vector;
-
-
 import Enums.CitationFormat;
 import Users.Researcher;
 
@@ -22,14 +20,12 @@ public class ResearchPaper {
     public ResearchPaper() {
     }
 
-    public ResearchPaper(String name, int pages, ResearchJournal researchJournal, Vector<ResearchPaper> citations, String DOI, Date date, Vector<Researcher> authors) {
+    public ResearchPaper(String name, int pages, ResearchJournal researchJournal, String DOI, Date date) {
         this.name = name;
         this.pages = pages;
         this.researchJournal = researchJournal;
-        this.citations = citations != null ? citations : new Vector<>();
         this.DOI = DOI;
         this.date = date;
-        this.authors = authors != null ? authors : new Vector<>();
     }
 
     public ResearchPaper(String name, int pages, String DOI, Date date) {
@@ -37,8 +33,6 @@ public class ResearchPaper {
         this.pages = pages;
         this.DOI = DOI;
         this.date = date;
-        this.citations = new Vector<>();
-        this.authors = new Vector<>();
     }
 
     public String getName() {
@@ -165,7 +159,6 @@ public class ResearchPaper {
 
     @Override
     public String toString() {
-        return "ResearchPaper = " +
-                "name='" + name   + ", pages=" + pages + ", researchJournal=" + researchJournal + ", citations=" + citations + ", DOI= " + DOI + ", date=" + date + ", authors=" + authors;
+        return "ResearchPaper = " + "name= " + name   + ", pages=" + pages + ", researchJournal=" + researchJournal + ", citations=" + citations + ", DOI= " + DOI + ", date=" + date + ", authors=" + authors;
     }
 }

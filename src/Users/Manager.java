@@ -1,205 +1,101 @@
 package Users ;
 
-
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+import Academic.Course;
+import Enums.News;
+import System.Request;
+import Enums.ManagerType;
+import java.util.Objects;
+import java.util.Vector;
 
 public class Manager extends Employee
 {
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private String id;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Vector<Request> requests;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public  attribute2;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public Vector<Request> requests;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public  attribute;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private ManagerType managerType;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public  attribute3;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
+	{
+		requests = new Vector<Request>();
+	}
 	public Manager(){
-		super();
+	}
+	public Manager(String id) {
+		this.id = id;
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void addCourse(Course parameter) {
-		// TODO implement me
-		return null;	
+	public String getId() {
+		return id;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Vector<Request> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(Vector<Request> requests) {
+		this.requests = requests;
+	}
+
+	public ManagerType getManagerType() {
+		return managerType;
+	}
+
+	public void setManagerType(ManagerType managerType) {
+		this.managerType = managerType;
+	}
+
+	public Manager(String id, ManagerType managerType) {
+		this.id = id;
+		this.managerType = managerType;
+	}
+	public void addCourse(Course c) {}
 	public void viewRequests() {
-		// TODO implement me
-		return null;	
+		for(Request r : requests) {
+			System.out.println(r.toString());
+		}
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public String getReport(Course parameter) {
+	public String getReport(Course c) {
 		// TODO implement me
 		return "";	
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public String getReport(Student parameter) {
 		// TODO implement me
 		return "";	
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void addNews(News parameter) {
-		// TODO implement me
-		return null;	
+	public void addNews(News n) {
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void setRegistration(Student parameter) {
-		// TODO implement me
-		return null;	
+	public void setRegistration(Student s) {
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void redirectRequest(Rector parameter, Request parameter2) {
-		// TODO implement me
-		return null;	
+	public void redirectRequest(Rector rec, Request req) {
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void approveStudentRegistration( parameter) {
-		// TODO implement me
-		return null;	
+	public void approveStudentRegistration() {
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void assignCourseTeachers( parameter) {
-		// TODO implement me
-		return null;	
+	public void assignCourseTeachers() {
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void openRegistration(boolean parameter) {
-		// TODO implement me
-		return null;	
+	public void openRegistration(boolean p) {
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		if (!super.equals(o)) return false;
+		Manager manager = (Manager) o;
+		return Objects.equals(id, manager.id) && Objects.equals(requests, manager.requests) && managerType == manager.managerType;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), id, requests, managerType);
+	}
+
+	@Override
+	public String toString() {
+		return "Manager{" +
+				"id='" + id + '\'' +
+				", requests=" + requests +
+				", managerType=" + managerType +
+				'}';
+	}
 }
 

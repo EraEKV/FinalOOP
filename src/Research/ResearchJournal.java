@@ -73,7 +73,7 @@ public class ResearchJournal {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResearchJournal r = (ResearchJournal) o;
-        return name.equals(r.getName()) && subscribers.equals(r.getSubscribers()) && researchPapers.equals(r.getResearchPapers())
+        return name.equals(r.getName()) && subscribers.equals(r.getSubscribers()) && researchPapers.equals(r.getResearchPapers());
     }
 
     @Override
@@ -83,10 +83,6 @@ public class ResearchJournal {
 
     @Override
     public String toString() {
-        return "ResearchJournal{" +
-                "name='" + name + '\'' +
-                ", subscribers=" + subscribers +
-                ", researchPapers=" + researchPapers +
-                '}';
+        return "name = " + name + " subscribers = " + subscribers + " researchPapers = " + researchPapers;
     }
 }

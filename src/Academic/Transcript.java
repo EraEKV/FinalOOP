@@ -1,154 +1,135 @@
-package Academic ;
+package Academic;
 
+import Enums.GPA;
+import Enums.Mark;
+import Users.Student;
+import java.util.Date;
+import java.util.Objects;
+import java.util.Vector;
+import java.util.Map;
+import System.CustomPair;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class Transcript
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+public class Transcript {
 	private Student owner;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private double totalGpa;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private double currentSemestrGpa;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private int currentSemesterNumberOfCreadits;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private int totalNumberOfCreadits;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+	private double currentSemesterGpa;
+	private int currentSemesterNumberOfCredits;
+	private int totalNumberOfCredits;
 	private Date receivedDate;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private Vector<Pair<Course, gpa>> getTransript;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private Map<SemesterPeriod, Vector<pair<Course, Mark>>> info;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Transcript(){
-		super();
+	private Vector<CustomPair<Course, GPA>> transcriptData;
+	private Map<SemesterPeriod, Vector<CustomPair<Course, Mark>>> semesterInfo;
+
+	public Transcript() {
+		transcriptData = new Vector<>();
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public Vector<Pair<Course, gpa>> getTranscript() {
-		// TODO implement me
-		return null;	
+	public Vector<CustomPair<Course, GPA>> getTranscript() {
+		return transcriptData;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
+	public Student getOwner() {
+		return owner;
+	}
+
+	public void setOwner(Student owner) {
+		this.owner = owner;
+	}
+
+	public void setTotalGpa(double totalGpa) {
+		this.totalGpa = totalGpa;
+	}
+
+	public double getCurrentSemesterGpa() {
+		return currentSemesterGpa;
+	}
+
+	public void setCurrentSemesterGpa(double currentSemesterGpa) {
+		this.currentSemesterGpa = currentSemesterGpa;
+	}
+
+	public int getTotalNumberOfCredits() {
+		return totalNumberOfCredits;
+	}
+
+	public void setTotalNumberOfCredits(int totalNumberOfCredits) {
+		this.totalNumberOfCredits = totalNumberOfCredits;
+	}
+
+	public int getCurrentSemesterNumberOfCredits() {
+		return currentSemesterNumberOfCredits;
+	}
+
+	public void setCurrentSemesterNumberOfCredits(int currentSemesterNumberOfCredits) {
+		this.currentSemesterNumberOfCredits = currentSemesterNumberOfCredits;
+	}
+
+	public Date getReceivedDate() {
+		return receivedDate;
+	}
+
+	public void setReceivedDate(Date receivedDate) {
+		this.receivedDate = receivedDate;
+	}
+
+	public void setTranscriptData(Vector<CustomPair<Course, GPA>> transcriptData) {
+		this.transcriptData = transcriptData;
+	}
+
+	public Map<SemesterPeriod, Vector<CustomPair<Course, Mark>>> getSemesterInfo() {
+		return semesterInfo;
+	}
+
+	public void setSemesterInfo(Map<SemesterPeriod, Vector<CustomPair<Course, Mark>>> semesterInfo) {
+		this.semesterInfo = semesterInfo;
+	}
+
+	public double getTotalGpa() {
+		return totalGpa;
+	}
+
+	public Transcript(Student owner) {
+		this.owner = owner;
+	}
+
 	public double calculateSemesterGPA() {
-		// TODO implement me
-		return null;	
+		return 0.0;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public double calculateTotalGPA() {
-		// TODO implement me
-		return null;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public int calculateTotoalCreditsCounted() {
-		// TODO implement me
-		return 0;	
-	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public int calculateTotoalCreditsTook() {
-		// TODO implement me
-		return 0;	
-	}
-	
-}
 
+	public double calculateTotalGPA() {
+		return 0.0;
+	}
+
+	public int calculateTotalCreditsCounted() {
+		return 0;
+	}
+
+	public int calculateTotalCreditsTook() {
+		return 0;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		Transcript that = (Transcript) o;
+		return Double.compare(totalGpa, that.totalGpa) == 0 && Double.compare(currentSemesterGpa, that.currentSemesterGpa) == 0 && currentSemesterNumberOfCredits == that.currentSemesterNumberOfCredits && totalNumberOfCredits == that.totalNumberOfCredits && Objects.equals(owner, that.owner) && Objects.equals(receivedDate, that.receivedDate) && Objects.equals(transcriptData, that.transcriptData) && Objects.equals(semesterInfo, that.semesterInfo);
+	}
+
+	@Override
+	public String toString() {
+		return "Transcript{" +
+				"owner=" + owner +
+				", totalGpa=" + totalGpa +
+				", currentSemesterGpa=" + currentSemesterGpa +
+				", currentSemesterNumberOfCredits=" + currentSemesterNumberOfCredits +
+				", totalNumberOfCredits=" + totalNumberOfCredits +
+				", receivedDate=" + receivedDate +
+				", transcriptData=" + transcriptData +
+				", semesterInfo=" + semesterInfo +
+				'}';
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(owner, totalGpa, currentSemesterGpa, currentSemesterNumberOfCredits, totalNumberOfCredits, receivedDate, transcriptData, semesterInfo);
+	}
+}

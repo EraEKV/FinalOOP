@@ -1,10 +1,8 @@
 package Research;
 
-
 import Users.Researcher;
 
 import java.util.*;
-
 
 public class ResearchProject {
 	private String title;
@@ -76,14 +74,7 @@ public class ResearchProject {
 
 	@Override
 	public String toString() {
-		return "ResearchProject{" +
-				"title='" + title + '\'' +
-				", dateOfWritting=" + dateOfWritting +
-				", publishDate=" + publishDate +
-				", authors=" + authors +
-				", papers=" + papers +
-				", superVisor=" + superVisor +
-				'}';
+		return "title= " + title + ", dateOfWritting=" + dateOfWritting + ", publishDate=" + publishDate + ", authors=" + authors + ", papers=" + papers + ", superVisor=" + superVisor;
 	}
 
 	@Override
@@ -91,18 +82,16 @@ public class ResearchProject {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		ResearchProject that = (ResearchProject) o;
+		ResearchProject r = (ResearchProject) o;
 
-		if (title != null ? !title.equals(that.title) : that.title != null) return false;
-		if (dateOfWritting != null ? !dateOfWritting.equals(that.dateOfWritting) : that.dateOfWritting != null)
-			return false;
-		if (publishDate != null ? !publishDate.equals(that.publishDate) : that.publishDate != null) return false;
-		if (authors != null ? !authors.equals(that.authors) : that.authors != null) return false;
-		if (papers != null ? !papers.equals(that.papers) : that.papers != null) return false;
-		return superVisor != null ? superVisor.equals(that.superVisor) : that.superVisor == null;
+		if (title != r.getTitle()) return false;
+		if (dateOfWritting != r.dateOfWritting) return false;
+		if (publishDate != r.getPublishDate()) return false;
+		if (authors != r.getAuthors()) return false;
+		if (papers != r.getPapers()) return false;
+		return superVisor == r.getSuperVisor();
 	}
 
-	// hashCode method (Optional but recommended when overriding equals)
 	@Override
 	public int hashCode() {
 		int res = title != null ? title.hashCode() : 0;
