@@ -70,10 +70,9 @@ public class ResearchJournal {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ResearchJournal r = (ResearchJournal) o;
-        return name.equals(r.getName()) && subscribers.equals(r.getSubscribers()) && researchPapers.equals(r.getResearchPapers());
+        ResearchJournal that = (ResearchJournal) o;
+        return Objects.equals(name, that.name) && Objects.equals(subscribers, that.subscribers) && Objects.equals(researchPapers, that.researchPapers);
     }
 
     @Override
@@ -83,6 +82,10 @@ public class ResearchJournal {
 
     @Override
     public String toString() {
-        return "name = " + name + " subscribers = " + subscribers + " researchPapers = " + researchPapers;
+        return "ResearchJournal{" +
+                "name='" + name + '\'' +
+                ", subscribers=" + subscribers +
+                ", researchPapers=" + researchPapers +
+                '}';
     }
 }

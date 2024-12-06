@@ -11,11 +11,12 @@ public class Notification {
 	public Notification() {
 
 	}
-
 	public Notification(User author) {
 		this.author = author;
 	}
-
+	public Notification(String text) {
+		this.text = text;
+	}
 	public Notification(String text, User author) {
 		this.text = text;
 		this.author = author;

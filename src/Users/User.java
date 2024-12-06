@@ -70,6 +70,14 @@ public abstract class User implements Subscriber {
 		this.email = email;
 	}
 
+	public Vector<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(Vector<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if(this == o) return true;
