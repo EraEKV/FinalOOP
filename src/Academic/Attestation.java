@@ -1,52 +1,53 @@
-package Academic ;
+package Academic;
 
+import java.util.Map;
+import java.util.Vector;
+import java.util.HashMap;
+import java.util.Objects;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+public class Attestation {
+	private Map<SemesterPeriod, Vector<Pair<Course, AttestationMark>>> info;
 
-public class Attestation
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public  attribute;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	private Map<SemesterPeriod, Vector<pair<Course, AttestationMark>>> info;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Attestation(){
-		super();
+	public Attestation() {
+		this.info = new HashMap<>();
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void updateAttestation(Course parameter, Student parameter2, AttestationMark parameter3) {
-		// TODO implement me
-		return null;	
+	public Map<SemesterPeriod, Vector<Pair<Course, AttestationMark>>> getInfo() {
+		return info;
 	}
-	
+
+	public void updateAttestation(SemesterPeriod period, Course course, AttestationMark mark) {
+		info.putIfAbsent(period, new Vector<>());
+
+		Vector<Pair<Course, AttestationMark>> attestationList = info.get(period);
+
+		for (Pair<Course, AttestationMark> entry : attestationList) {
+			if (entry.getKey().equals(course)) {
+				entry.setValue(mark);
+				return;
+			}
+		}
+
+		attestationList.add(new Pair<>(course, mark));
+	}
+
+	@Override
+	public String toString() {
+		return "Attestation{" +
+				"info=" + info +
+				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Attestation)) return false;
+		Attestation that = (Attestation) o;
+		return Objects.equals(info, that.info);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(info);
+	}
 }
-
