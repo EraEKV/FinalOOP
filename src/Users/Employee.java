@@ -1,75 +1,23 @@
 package Users ;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+import java.util.Date;
+import java.util.Vector;
 
-public class Employee extends User
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+import System.Message;
+
+public class Employee extends User {
+
 	private String id;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private int salary;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Date dateHired;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
 	private boolean onVacation;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	private Date vacationEndDate;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
 	private Researcher isResearcher;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+
+//	Messages logic will be discussed
 	private Vector<Message> messages;
 	
 	/**
@@ -77,8 +25,12 @@ public class Employee extends User
 	 * <!--  end-user-doc  -->
 	 * @generated
 	 */
-	public Employee(){
-		super();
+	public Employee() {
+
+	}
+
+	public Employee(String firstname, String lastname) {
+		super(firstname, lastname);
 	}
 
 	/**
@@ -102,20 +54,18 @@ public class Employee extends User
 	
 	public void sendMessage(Message parameter2) {
 		// TODO implement me
-		return null;	
+		return;
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+
 	
 	public void sendMessage(Employee parameter, String parameter2) {
 		// TODO implement me
-		return null;	
+		return;
 	}
-	
+
+	@Override
+	public void update() {
+
+	}
 }
 
