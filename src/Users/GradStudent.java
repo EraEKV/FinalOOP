@@ -1,3 +1,5 @@
+package Users;
+
 import Academic.Journal;
 import Enums.Faculty;
 import System.ResearchPaper;
