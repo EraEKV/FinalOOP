@@ -1,70 +1,22 @@
 package Users ;
 
-
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class Admin extends User
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Admin(){
-		super();
+public class Admin extends User {
+	public Admin(String firstname, String lastname, String email) {
+		super(firstname, lastname, email);
 	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void addUser(User parameter2) {
-		// TODO implement me
-		return null;	
+	public void addUser(User user) {
+		System.out.println("User added: " + user.getFirstname() + " " + user.getLastname());
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void deleteUser(User parameter) {
-		// TODO implement me
-		return null;	
+	public void deleteUser(User user) {
+		System.out.println("User deleted: " + user.getFirstname() + " " + user.getLastname());
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void updateUser() {
-		// TODO implement me
-		return null;	
+	public void updateUser(User user) {
+		System.out.println("User updated: " + user.getFirstname() + " " + user.getLastname());
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
 	public String viewLogs() {
-		// TODO implement me
-		return "";	
+		return "Viewing system logs...";
 	}
-	
+	public void update() {
+		System.out.println("Update method implemented in Admin class.");
+	}
 }
-
