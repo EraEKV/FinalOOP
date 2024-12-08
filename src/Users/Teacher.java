@@ -30,6 +30,12 @@ public class Teacher extends Employee implements CanTeach, CanBeResearcher {
 		this.faculty = faculty;
 	}
 
+	public Vector<Integer> getRatings() {
+		if (ratings == null) {
+			ratings = new Vector<>(); // Инициализация, если поле не было установлено
+		}
+		return ratings;
+	}
 //	public void putMarks(Course course, Student student, Date date, double grade) {
 //		// TODO implement me
 //		return null;
