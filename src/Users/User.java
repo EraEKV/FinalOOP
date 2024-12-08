@@ -53,6 +53,7 @@ public abstract class User implements Subscriber {
 //		return null;
 //	}
 
+	public abstract <T> T getUserType();
 
 	public String getFirstname() {
 		return firstname;

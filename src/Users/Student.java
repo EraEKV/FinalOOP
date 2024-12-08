@@ -38,6 +38,11 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 		super();
 	}
 
+	@Override
+	public <T> T getUserType() {
+		return (T) StudentType.BACHELOR;
+	}
+
 	public Student(String id) {
 		this.id = id;
 	}
