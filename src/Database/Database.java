@@ -278,13 +278,6 @@ public class Database implements Serializable {
                 collect(Collectors.toCollection(Vector<Teacher>::new));
     }
 
-    public Vector<Teacher> getTeachers() {
-        return users.values().stream()
-                .filter(n -> n instanceof Teacher)  // Ensure the object is an instance of Teacher
-                .map(n -> (Teacher) n)  // Safely cast to Teacher, because we've already filtered it
-                .collect(Collectors.toCollection(Vector<Teacher>::new));  // Collect into a Vector<Teacher>
-    }
-
 
     public Vector<Manager> getManagers() {
         return users.values().stream()
