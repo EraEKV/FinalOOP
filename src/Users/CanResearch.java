@@ -1,8 +1,9 @@
 package Users;
 
 import Academic.Journal;
-import System.ResearchPaper;
+import Research.ResearchPaper;
 import Enums.Faculty;
+import System.Request;
 import java.util.Vector;
 
 public interface CanResearch {

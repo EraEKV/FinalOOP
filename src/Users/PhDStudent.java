@@ -1,10 +1,12 @@
 package Users;
+import Enums.Speciality;
+import Enums.Faculty;
 
 public class PhDStudent extends GradStudent {
 	private String dissertationTopic;
 
-	public PhDStudent(String name, int age, String researchTopic, String dissertationTopic) {
-		super(name, age, researchTopic);
+	public PhDStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality, String researchTopic, String dissertationTopic) {
+		super(id, firstname, lastname, faculty, speciality, researchTopic);
 		this.dissertationTopic = dissertationTopic;
 	}
 
@@ -18,7 +20,7 @@ public class PhDStudent extends GradStudent {
 
 	@Override
 	public void research() {
-		System.out.println(getName() + " is conducting PhD research on " + dissertationTopic);
+		System.out.println(getFirstname() + " " + getLastname() + " is conducting PhD research on " + dissertationTopic);
 	}
 
 	@Override
@@ -26,3 +28,4 @@ public class PhDStudent extends GradStudent {
 		return super.toString() + ", Dissertation Topic: " + dissertationTopic;
 	}
 }
+

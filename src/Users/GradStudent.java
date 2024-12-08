@@ -1,8 +1,10 @@
 package Users;
 
 import Academic.Journal;
+import Research.ResearchPaper;
 import Enums.Faculty;
-import System.ResearchPaper;
+import Enums.Speciality;
+import System.Request;
 import java.util.Vector;
 
 public class GradStudent extends Student implements CanTeach, CanResearch {
@@ -10,8 +12,8 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 	private Vector<String> publications;
 	private Vector<ResearchPaper> researchPapers;
 
-	public GradStudent(String name, int age, String researchTopic) {
-		super(name, age);
+	public GradStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality, String researchTopic) {
+		super(id, firstname, lastname, faculty, speciality);
 		this.researchTopic = researchTopic;
 		this.publications = new Vector<>();
 		this.researchPapers = new Vector<>();
@@ -33,7 +35,6 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 		publications.add(publication);
 	}
 
-
 	@Override
 	public int calculateHIndex() {
 		return publications.size(); // simplified for now
@@ -43,20 +44,19 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 	public int calculateCitations() {
 		int totalCitations = 0;
 		for (ResearchPaper paper : researchPapers) {
-			totalCitations += paper.getCitations();
+			totalCitations += paper.getCitations().size(); // Using citations count instead of actual citation data
 		}
 		return totalCitations;
 	}
 
-
 	@Override
 	public Vector<ResearchPaper> printPapers(Request request) {
 		Vector<ResearchPaper> filteredPapers = new Vector<>();
+		String requestedTopic = request.getTopic();
 
-		String requestedName = request.getPaperName();
-
+		// Фильтрация по теме запроса
 		for (ResearchPaper paper : researchPapers) {
-			if (paper.getName().equals(requestedName)) {
+			if (paper.getName().contains(requestedTopic)) {
 				filteredPapers.add(paper);
 			}
 		}
@@ -70,7 +70,7 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 
 	@Override
 	public void publishPaper(ResearchPaper paper, Journal journal) {
-		paper.setJournal(journal);
+		paper.setResearchJournal(journal);
 		journal.addPaper(paper);
 		researchPapers.add(paper);
 	}
@@ -87,12 +87,11 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 
 	@Override
 	public void teach() {
-		System.out.println(getName() + " is teaching.");
+		System.out.println(getFirstname() + " " + getLastname() + " is teaching.");
 	}
 
-	@Override
 	public void research() {
-		System.out.println(getName() + " is conducting research on " + researchTopic);
+		System.out.println(getFirstname() + " " + getLastname() + " is conducting research on " + researchTopic);
 	}
 
 	@Override
@@ -100,3 +99,4 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 		return super.toString() + ", Research Topic: " + researchTopic;
 	}
 }
+
