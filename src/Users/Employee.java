@@ -4,30 +4,53 @@ package Users;
 import java.util.Date;
 import java.util.Vector;
 
-public class Employee {
-	private String id;
+
+public class Employee extends User {
+
 	private int salary;
 	private Date dateHired;
 	private boolean onVacation;
 	private Date vacationEndDate;
 	private Vector<Message> messages;
 
-	public Employee(String id, int salary, Date dateHired) {
-		this.id = id;
-		this.salary = salary;
-		this.dateHired = dateHired;
+	public Employee() {
+
+	}
+
+	public Employee(String firstname, String lastname) {
+		super(firstname, lastname);
 		this.onVacation = false;
 		this.vacationEndDate = null;
 		this.messages = new Vector<>();
+		this.salary = 0;
 	}
 
-	public String getId() {
-		return id;
+	public Employee(String firstname, String lastname, String email) {
+		super(firstname, lastname, email);
+		this.onVacation = false;
+		this.vacationEndDate = null;
+		this.messages = new Vector<>();
+		this.salary = 0;
+		this.dateHired = new Date();
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public Employee(String firstname, String lastname, int salary) {
+		this(firstname, lastname);
+		this.salary = salary;
 	}
+
+	public Employee(String firstname, String lastname, String email, int salary) {
+		this(firstname, lastname, email);
+		this.salary = salary;
+	}
+
+	public Employee(String firstname, String lastname, int salary, Date dateHired) {
+		this(firstname, lastname, salary);
+		this.dateHired = dateHired;
+	}
+
+
+//	accessors
 
 	public int getSalary() {
 		return salary;
@@ -61,6 +84,10 @@ public class Employee {
 		this.vacationEndDate = vacationEndDate;
 	}
 
+
+
+
+
 	public Vector<Message> getMessages() {
 		return messages;
 	}
@@ -77,10 +104,15 @@ public class Employee {
 		return false;
 	}
 
-	public void sendMessage(Employee employee, String messageContent) {
-		Message message = new Message(this.id, messageContent);
-		employee.getMessages().add(message);
-		System.out.println("Message sent to Employee ID: " + employee.getId());
+//	public void sendMessage(Employee employee, String messageContent) {
+//		Message message = new Message(this.id, messageContent);
+//		employee.getMessages().add(message);
+//		System.out.println("Message sent to Employee ID: " + employee.getId());
+//	}
+
+	@Override
+	public <T> T getUserType() {
+		return null;
 	}
 }
 
