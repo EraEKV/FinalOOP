@@ -1,55 +1,34 @@
 package Users ;
+import System.Request;
 
+import java.util.Vector;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class Rector extends Employee
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
+public class Rector extends Employee{
 	private Vector<Request> requests;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public Rector(){
-		super();
+
+	public Rector() {
+		this.requests = new Vector<>();
 	}
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void signRequest() {
-		// TODO implement me
-		return null;	
+	public void signRequest(Request request) {
+		if (requests.contains(request)) {
+			System.out.println("Request signed: " + request.getRequestDetails());
+			requests.remove(request);
+		} else {
+			System.out.println("Request not found.");
+		}
 	}
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void rejectRequest() {
-		// TODO implement me
-		return null;	
+
+	public void rejectRequest(Request request) {
+		if (requests.contains(request)) {
+			System.out.println("Request rejected: " + request.getRequestDetails());
+			requests.remove(request);
+		} else {
+			System.out.println("Request not found.");
+		}
 	}
-	
+
+	public void addRequest(Request request) {
+		requests.add(request);
+	}
 }
-

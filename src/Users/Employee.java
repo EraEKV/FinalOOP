@@ -1,49 +1,24 @@
-package Users ;
+package Users;
+
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.Vector;
-import System.Message;
-import System.Notification;
 
-public class Employee extends User {
-
+public class Employee {
 	private String id;
 	private int salary;
 	private Date dateHired;
 	private boolean onVacation;
 	private Date vacationEndDate;
-	private Researcher isResearcher;
-//	Messages logic will be discussed
 	private Vector<Message> messages;
 
-	public Employee() {
-	}
-	public Employee(String firstname, String lastname) {
-		super(firstname, lastname);
-	}
-	public Employee(String firstname, String lastname, String email) {
-		super(firstname, lastname, email);
-	}
-	public Employee(String firstname, String lastname, String email, String id) {
-		super(firstname, lastname, email);
+	public Employee(String id, int salary, Date dateHired) {
 		this.id = id;
-	}
-	public Employee(String firstname, String lastname, String email, String id, int salary) {
-		this(firstname, lastname, email, id);
 		this.salary = salary;
-	}
-	public Employee(String firstname, String lastname, String email, String id, int salary, Date dateHired) {
-		this(firstname, lastname, email, id, salary);
 		this.dateHired = dateHired;
-	}
-	public Employee(String firstname, String lastname, String email, String id, int salary, Date dateHired, boolean onVacation) {
-		this(firstname, lastname, email, id, salary, dateHired);
-		this.onVacation = onVacation;
-	}
-	public Employee(String firstname, String lastname, String email, String id, int salary, Date dateHired, boolean onVacation, Researcher isResearcher) {
-		this(firstname, lastname, email, id, salary, dateHired, onVacation);
-		this.isResearcher = isResearcher;
+		this.onVacation = false;
+		this.vacationEndDate = null;
+		this.messages = new Vector<>();
 	}
 
 	public String getId() {
@@ -86,71 +61,43 @@ public class Employee extends User {
 		this.vacationEndDate = vacationEndDate;
 	}
 
-	public Researcher getIsResearcher() {
-		return isResearcher;
-	}
-
-	public void setIsResearcher(Researcher isResearcher) {
-		this.isResearcher = isResearcher;
-	}
-
 	public Vector<Message> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(Vector<Message> messages) {
-		this.messages = messages;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o == null || getClass() != o.getClass()) return false;
-		if (!super.equals(o)) return false;
-		Employee employee = (Employee) o;
-		return salary == employee.salary && onVacation == employee.onVacation && Objects.equals(id, employee.id) && Objects.equals(dateHired, employee.dateHired) && Objects.equals(vacationEndDate, employee.vacationEndDate) && Objects.equals(isResearcher, employee.isResearcher) && Objects.equals(messages, employee.messages);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(super.hashCode(), id, salary, dateHired, onVacation, vacationEndDate, isResearcher, messages);
-	}
-
-	@Override
-	public String toString() {
-		return "Employee{" +
-				"id='" + id + '\'' +
-				", salary=" + salary +
-				", dateHired=" + dateHired +
-				", onVacation=" + onVacation +
-				", vacationEndDate=" + vacationEndDate +
-				", isResearcher=" + isResearcher +
-				", messages=" + messages +
-				'}';
-	}
-
-	public void getVacation(Date vacationEndDate) {
-		if (onVacation) {
-			System.out.println("Already is on vacation");
-		} else {
-			onVacation = true;
-			this.vacationEndDate = vacationEndDate;
-			System.out.println("Employee is on vacation and will back to work in " + vacationEndDate);
+	public boolean getVacation(Date date) {
+		if (!onVacation) {
+			System.out.println("Vacation is available.");
+			return true;
+		} else if (date.after(vacationEndDate)) {
+			System.out.println("Vacation is available after " + vacationEndDate);
+			return true;
 		}
+		System.out.println("Currently on vacation until " + vacationEndDate);
+		return false;
 	}
 
-	public void receiveMessage(Message message) {
-		messages.add(message);
-	}
-
-	public void sendMessage(Message message, Employee employee) {
-		employee.receiveMessage(message);
-	}
-
-	@Override
-	public void update() {
-		Notification n = new Notification("There is update in ResearchJournal!!!Check it!");
-		super.getNotifications().add(n);
-		System.out.println(n);
+	public void sendMessage(Employee employee, String messageContent) {
+		Message message = new Message(this.id, messageContent);
+		employee.getMessages().add(message);
+		System.out.println("Message sent to Employee ID: " + employee.getId());
 	}
 }
 
+class Message {
+	private String senderId;
+	private String content;
+
+	public Message(String senderId, String content) {
+		this.senderId = senderId;
+		this.content = content;
+	}
+
+	public String getSenderId() {
+		return senderId;
+	}
+
+	public String getContent() {
+		return content;
+	}
+}

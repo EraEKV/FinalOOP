@@ -1,7 +1,7 @@
 package Users ;
 
 
-import Enums.News;
+import System.News;
 import Research.Subscriber;
 import System.Credentials;
 import System.Notification;
@@ -76,6 +76,11 @@ public abstract class User implements Subscriber {
 
 	public void setNotifications(Vector<Notification> notifications) {
 		this.notifications = notifications;
+	}
+	//Observer pattern
+	public void update(){
+		notifications.add(new Notification("New post in research journal!!!"));
+		System.out.println("New post in research journal!!!");
 	}
 
 	@Override
