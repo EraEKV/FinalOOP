@@ -5,7 +5,7 @@ import Enums.Semester;
 import java.util.Objects;
 
 public class SemesterPeriod {
-    private Years years;
+    private String years;
     private Semester semester;
 
     public Semester getSemester() {
@@ -16,11 +16,11 @@ public class SemesterPeriod {
         this.semester = semester;
     }
 
-    public Years getYears() {
+    public String getYears() {
         return years;
     }
 
-    public void setYears(Years years) {
+    public void setYears(String years) {
         this.years = years;
     }
 
@@ -28,7 +28,7 @@ public class SemesterPeriod {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         SemesterPeriod that = (SemesterPeriod) o;
-        return years == that.years && semester == that.semester;
+        return Objects.equals(years, that.years) && semester == that.semester;
     }
 
     @Override
