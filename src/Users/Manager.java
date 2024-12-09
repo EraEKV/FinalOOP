@@ -7,6 +7,7 @@ import Enums.ManagerType;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Vector;
+import System.News;
 
 public class Manager extends Employee {
 	private String id;
