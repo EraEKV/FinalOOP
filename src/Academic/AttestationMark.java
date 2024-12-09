@@ -1,5 +1,7 @@
 package Academic;
 
+import Enums.Mark;
+
 public class AttestationMark {
 	private double firstAtt;
 	private double secondAtt;
@@ -45,12 +47,11 @@ public class AttestationMark {
 	}
 
 	private void calculateFullAtt() {
-		// Example calculation: 30% first attestation, 30% second attestation, 40% final exam
-		double total = (firstAtt * 0.3) + (secondAtt * 0.3) + (finalExam * 0.4);
 
-		// Map total grade to Mark enum (example thresholds)
+		double total = firstAtt + secondAtt + finalExam;
+
 		if (total >= 90) {
-			fullAtt = Mark.A_PLUS;
+			fullAtt = Mark.A;
 		} else if (total >= 85) {
 			fullAtt = Mark.A;
 		} else if (total >= 80) {
