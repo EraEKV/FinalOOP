@@ -3,7 +3,7 @@ package Database ;
 
 import Academic.Journal;
 import Academic.SemesterPeriod;
-import Academic.Transcript;
+import Pakita.Transcript;
 import CustomExceptions.UserTypeException;
 import Enums.*;
 import Research.ResearchJournal;
@@ -13,6 +13,7 @@ import Users.*;
 import System.Organization;
 import Academic.Course;
 import System.Credentials;
+import System.News;
 
 import java.io.*;
 import java.util.HashMap;
