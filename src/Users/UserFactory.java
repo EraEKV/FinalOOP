@@ -55,7 +55,14 @@ public class UserFactory {
 //	}
 
 
+
 	// generating ID for new User
+
+	public static String formatCountID(int number) {
+		int length = Math.max(5, String.valueOf(number).length());
+		return String.format("%0" + length + "d", number);
+	}
+
 	private <T extends Enum<T>> String generateId(UserType userType, T specificType) {
 		String idSuffix;
 		String id;
@@ -78,7 +85,7 @@ public class UserFactory {
 						default:
 							throw new UserTypeException("Unknown student type: " + specificType);
 					}
-					idSuffix += db.getStudentsCount((StudentType) specificType);
+					idSuffix += formatCountID(db.getStudentsCount((StudentType) specificType));
 				} else {
 					throw new UserTypeException("Invalid specific type for student: " + specificType);
 				}
@@ -86,7 +93,7 @@ public class UserFactory {
 
 			case TCH:
 				if (specificType instanceof TeacherType) {
-					idSuffix = "T" + db.getUsersCount(userType);
+					idSuffix = "T" + formatCountID(db.getUsersCount(userType));
 				} else {
 					throw new UserTypeException("Invalid specific type for teacher: " + specificType);
 				}
@@ -94,7 +101,7 @@ public class UserFactory {
 
 			case MNG:
 				if (specificType instanceof ManagerType) {
-					idSuffix = "M" + db.getUsersCount(userType);
+					idSuffix = "M" + formatCountID(db.getUsersCount(userType));
 				} else {
 					throw new UserTypeException("Invalid specific type for manager: " + specificType);
 				}
