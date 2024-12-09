@@ -1,6 +1,7 @@
 package Users;
 
 import Academic.Journal;
+import Research.CanResearch;
 import Research.ResearchPaper;
 import Enums.Faculty;
 import Enums.Speciality;

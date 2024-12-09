@@ -3,6 +3,8 @@ package Users ;
 
 import Enums.Faculty;
 import Enums.TeacherType;
+import Research.CanBeResearcher;
+import Research.Researcher;
 
 import java.util.Vector;
 

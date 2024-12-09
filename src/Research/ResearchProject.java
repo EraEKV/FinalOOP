@@ -1,7 +1,5 @@
 package Research;
 
-import Users.Researcher;
-
 import java.util.*;
 
 public class ResearchProject {
