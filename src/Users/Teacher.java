@@ -104,12 +104,10 @@ public class Teacher extends Employee implements CanTeach, CanBeResearcher {
 
 	@Override
 	public String toString() {
-		return "Teacher{" +
-				"id='" + id + '\'' +
+		return ", id='" + id + '\'' +
 				", teacher=" + teacherType +
 				", faculty=" + faculty +
-				", isResearcher=" + isResearcher +
-				'}';
+				", isResearcher=" + isResearcher;
 	}
 }
 

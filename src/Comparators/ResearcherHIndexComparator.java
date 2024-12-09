@@ -1,22 +1,12 @@
 package Comparators ;
 
+import Users.Researcher;
+import java.util.Comparator;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class ResearcherHIndexComparator  implements Comparator<Researcher>
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public ResearcherHIndexComparator (){
-		super();
+public class ResearcherHIndexComparator  implements Comparator<Researcher> {
+	@Override
+	public int compare(Researcher o1, Researcher o2) {
+		return 0;
 	}
-
 }
 

@@ -1,22 +1,12 @@
 package Comparators ;
 
+import Research.ResearchPaper;
+import java.util.Comparator;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class ResearchPaperLengthComparator  implements Comparator<ResearchPaper>
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public ResearchPaperLengthComparator (){
-		super();
+public class ResearchPaperLengthComparator  implements Comparator<ResearchPaper> {
+	@Override
+	public int compare(ResearchPaper o1, ResearchPaper o2) {
+		return Integer.compare(o1.getPages(), o2.getPages());
 	}
-
 }
 

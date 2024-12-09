@@ -1,22 +1,13 @@
 package Comparators ;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
+import Academic.Course;
+import java.util.Comparator;
 
-public class CourseCreditComparator implements Comparator<Course>
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public CourseCreditComparator(){
-		super();
+public class CourseCreditComparator implements Comparator<Course> {
+	@Override
+	public int compare(Course o1, Course o2) {
+		return Integer.compare(o1.getCredits(), o2.getCredits());
 	}
-
 }
 

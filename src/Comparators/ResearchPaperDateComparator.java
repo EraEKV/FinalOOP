@@ -1,28 +1,13 @@
 package Comparators ;
 
-
 import Research.ResearchPaper;
+import java.util.Comparator;
+import java.util.Date;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class ResearchPaperDateComparator implements Comparator<ResearchPaper>
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public ResearchPaperDateComparator(){
-		super();
-	}
-
+public class ResearchPaperDateComparator implements Comparator<ResearchPaper> {
 	@Override
 	public int compare(ResearchPaper c1, ResearchPaper c2) {
-		return 0;
+		return 1;
 	}
 }
 

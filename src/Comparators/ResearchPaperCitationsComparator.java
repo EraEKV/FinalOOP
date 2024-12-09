@@ -1,28 +1,11 @@
-package Comparators ;
+package Comparators;
 
+import java.util.Comparator;
+import Research.ResearchPaper;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-import Research.ResearchPaper
-
-public class ResearchPaperCitationsComparator implements Comparator<ResearchPaper>
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public ResearchPaperCitationsComparator(){
-		super();
-	}
-
-	@Override
-	public int compare(ResearchPaper c1, ResearchPaper c2) {
-		return 0;
+public class ResearchPaperCitationsComparator implements Comparator<ResearchPaper> {
+	public int compare(ResearchPaper r1, ResearchPaper r2) {
+		return Integer.compare(r1.getCitations().size(), r2.getCitations().size());
 	}
 }
 
