@@ -1,5 +1,5 @@
 package Enums;
 
 public enum Status {
-    DELIVERED, PENDING, DONE
+    DELIVERED, PENDING, DONE, REJECTED
 }

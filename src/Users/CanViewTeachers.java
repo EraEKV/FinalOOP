@@ -1,32 +1,11 @@
 package Users ;
 
 
+import Academic.Course;
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-public  interface CanViewTeachers 
-{
-    /**
-     * <!-- begin-user-doc -->
-     * <!--  end-user-doc  -->
-     * @generated
-     * @ordered
-     */
-    
-    public Vector<Teacher>... viewCourseTeacherInfo = null;
+import java.util.Vector;
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public Vector<Teacher>... viewCourseTeachersInfo(Course parameter) ;
-	
-	
+public  interface CanViewTeachers {
+	public Vector<Teacher> viewCourseTeachersInfo(Course parameter) ;
 }
 

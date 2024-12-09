@@ -1,6 +1,8 @@
 package Users;
 
 import java.util.Vector;
+import System.Complaint;
+import System.Organization;
 
 public class DisciplinaryCommittee extends Employee {
 
