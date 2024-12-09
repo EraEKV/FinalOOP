@@ -1,4 +1,4 @@
-package Pakita;
+package Academic;
 
 import Enums.Mark;
 

@@ -1,25 +1,22 @@
 package Academic;
 
-import java.util.Map;
-import java.util.Vector;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class Attestation {
-	private Map<SemesterPeriod, Vector<Pair<Course, AttestationMark>>> info;
+	private Map<SemesterPeriod, List<Pair<Course, AttestationMark>>> info;
 
 	public Attestation() {
 		this.info = new HashMap<>();
 	}
 
-	public Map<SemesterPeriod, Vector<Pair<Course, AttestationMark>>> getInfo() {
+	public Map<SemesterPeriod, List<Pair<Course, AttestationMark>>> getInfo() {
 		return info;
 	}
 
 	public void updateAttestation(SemesterPeriod period, Course course, AttestationMark mark) {
-		info.putIfAbsent(period, new Vector<>());
+		info.putIfAbsent(period, new ArrayList<>());
 
-		Vector<Pair<Course, AttestationMark>> attestationList = info.get(period);
+		List<Pair<Course, AttestationMark>> attestationList = info.get(period);
 
 		for (Pair<Course, AttestationMark> entry : attestationList) {
 			if (entry.getKey().equals(course)) {
