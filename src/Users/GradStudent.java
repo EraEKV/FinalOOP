@@ -70,9 +70,9 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 
 	@Override
 	public void publishPaper(ResearchPaper paper, Journal journal) {
-		paper.setResearchJournal(journal);
-		journal.addPaper(paper);
-		researchPapers.add(paper);
+//		paper.setResearchJournal(journal);
+//		journal.addPaper(paper);
+//		researchPapers.add(paper);
 	}
 
 	@Override

@@ -6,7 +6,6 @@ import Academic.SemesterPeriod;
 import Academic.Transcript;
 import CustomExceptions.UserTypeException;
 import Enums.*;
-import Enums.News;
 import Research.ResearchJournal;
 import Research.ResearchPaper;
 import Research.ResearchProject;
@@ -21,7 +20,7 @@ import java.util.PriorityQueue;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-public class Database implements Serializable {
+public class Database {
 	private static Database DATABASE;
 	
 	private boolean isRegistrationOpened;
@@ -52,7 +51,7 @@ public class Database implements Serializable {
 
 	private Vector<Journal> journals;
 
-	private Years years;
+//	private Years years;
 	
 	private Semester semester;
 	
@@ -263,6 +262,17 @@ public class Database implements Serializable {
 			throw new UserTypeException(type);
 		}
 	}
+
+    public <T> int getStudentsCount(StudentType type) throws UserTypeException {
+        try {
+            return (int) users.values().stream()
+                    .filter(u -> u.getUserType() == type)
+                    .count();
+        } catch (UserTypeException e) {
+            throw new UserTypeException(type);
+        }
+    }
+
 
     public Vector<Student> getStudents() {
         return users.values().stream().

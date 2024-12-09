@@ -2,8 +2,6 @@ package Users;
 
 import Academic.Course;
 import Database.Database;
-import Users.Student;
-import Enums.News;
 import System.Request;
 import Enums.ManagerType;
 import java.util.Objects;

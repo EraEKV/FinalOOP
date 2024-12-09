@@ -78,7 +78,7 @@ public class UserFactory {
 						default:
 							throw new UserTypeException("Unknown student type: " + specificType);
 					}
-					idSuffix += db.getStudentsCount(specificType);
+					idSuffix += db.getStudentsCount((StudentType) specificType);
 				} else {
 					throw new UserTypeException("Invalid specific type for student: " + specificType);
 				}
