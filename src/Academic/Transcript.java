@@ -18,14 +18,14 @@ public class Transcript {
 	private int currentSemesterNumberOfCredits;
 	private int totalNumberOfCredits;
 	private Date receivedDate;
-	private Vector<CustomPair<Course, GPA>> transcriptData;
+	private Vector<CustomPair<Course, Mark>> transcriptData;
 	private Map<SemesterPeriod, Vector<CustomPair<Course, Mark>>> semesterInfo;
 
 	public Transcript() {
 		transcriptData = new Vector<>();
 	}
 
-	public Vector<CustomPair<Course, GPA>> getTranscript() {
+	public Vector<CustomPair<Course, Mark>> getTranscript() {
 		return transcriptData;
 	}
 
@@ -73,7 +73,7 @@ public class Transcript {
 		this.receivedDate = receivedDate;
 	}
 
-	public void setTranscriptData(Vector<CustomPair<Course, GPA>> transcriptData) {
+	public void setTranscriptData(Vector<CustomPair<Course, Mark>> transcriptData) {
 		this.transcriptData = transcriptData;
 	}
 

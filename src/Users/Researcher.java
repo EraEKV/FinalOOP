@@ -5,6 +5,4 @@ public class Researcher {
     public Researcher() {
 
     }
-
-
 }

@@ -1,6 +1,7 @@
 package Academic ;
 
 
+import Enums.Mark;
 import Enums.MarkType;
 
 import java.util.Objects;
@@ -10,7 +11,6 @@ public class TranscriptMark
 	private MarkType markType;
 	private double markDouble;
 	private Mark mark;
-	private GPA gpa;
 	public TranscriptMark(){
 	}
 
@@ -29,10 +29,9 @@ public class TranscriptMark
 		this.mark = mark;
 	}
 
-	public TranscriptMark(MarkType markType, Mark mark, GPA gpa, double markDouble) {
+	public TranscriptMark(MarkType markType, Mark mark, double markDouble) {
 		this.markType = markType;
 		this.mark = mark;
-		this.gpa = gpa;
 		this.markDouble = markDouble;
 	}
 
@@ -60,24 +59,16 @@ public class TranscriptMark
 		this.mark = mark;
 	}
 
-	public GPA getGpa() {
-		return gpa;
-	}
-
-	public void setGpa(GPA gpa) {
-		this.gpa = gpa;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (o == null || getClass() != o.getClass()) return false;
 		TranscriptMark that = (TranscriptMark) o;
-		return Double.compare(markDouble, that.markDouble) == 0 && markType == that.markType && mark == that.mark && gpa == that.gpa;
+		return Double.compare(markDouble, that.markDouble) == 0 && markType == that.markType && mark == that.mark;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(markType, markDouble, mark, gpa);
+		return Objects.hash(markType, markDouble, mark);
 	}
 
 	@Override
@@ -86,7 +77,6 @@ public class TranscriptMark
 				"markType=" + markType +
 				", markDouble=" + markDouble +
 				", mark=" + mark +
-				", gpa=" + gpa +
 				'}';
 	}
 }
