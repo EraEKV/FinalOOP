@@ -13,26 +13,24 @@ import Enums.Speciality;
 import Enums.Faculty;
 
 
-public class DiplomaProject extends Student {
+public class DiplomaProject {
 	private String topic;
 	private Teacher supervisor;
 	private Date endDate;
 	private Status status;
-	private boolean isPassed;
 	private Mark grade;
 	private Vector<ResearchPaper> researchPapers;
 
-	public DiplomaProject(String id, Faculty faculty, int startYear, Speciality speciality,
-						  String topic, Teacher supervisor, Date endDate) {
-		super(id, faculty, startYear, speciality);
+
+	public DiplomaProject(String topic, Teacher supervisor, Date endDate) {
 		this.topic = topic;
 		this.supervisor = supervisor;
 		this.endDate = endDate;
-		this.status = Status.IN_PROGRESS; //
-		this.isPassed = false;
 		this.grade = null;
 		this.researchPapers = new Vector<>();
 	}
+
+
 	public String getTopic() {
 		return topic;
 	}
@@ -65,14 +63,6 @@ public class DiplomaProject extends Student {
 		this.status = status;
 	}
 
-	public boolean isPassed() {
-		return isPassed;
-	}
-
-	public void setPassed(boolean isPassed) {
-		this.isPassed = isPassed;
-	}
-
 	public Mark getGrade() {
 		return grade;
 	}
@@ -90,21 +80,20 @@ public class DiplomaProject extends Student {
 	}
 
 	public void submit() {
-		this.status = Status.SUBMITTED;
+		this.status = Status.DELIVERED;
 		System.out.println("Diploma project submitted.");
 	}
 
 	public void evaluate(boolean passed, Mark grade) {
-		this.isPassed = passed;
 		this.grade = grade;
-		this.status = passed ? Status.APPROVED : Status.REJECTED;
+		this.status = passed ? Status.DONE : Status.REJECTED;
 		System.out.println("Diploma project evaluated with grade: " + grade);
 	}
 
 	@Override
 	public String toString() {
 		return "DiplomaProject [topic=" + topic + ", supervisor=" + supervisor + ", endDate=" + endDate +
-				", status=" + status + ", isPassed=" + isPassed + ", grade=" + grade +
+				", status=" + status + ", grade=" + grade +
 				", researchPapers=" + researchPapers + "]";
 	}
 }
