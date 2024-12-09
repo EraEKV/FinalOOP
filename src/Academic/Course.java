@@ -5,7 +5,6 @@ import Enums.Faculty;
 import Enums.Speciality;
 import Users.Teacher;
 import Enums.Semester;
-import Enums.Years;
 
 public class Course {
     private String code;

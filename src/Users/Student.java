@@ -98,6 +98,10 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 //	}
 
 
+
+
+//	interface realization
+
 	@Override
 	public void beReseacrher() {
 
@@ -108,6 +112,7 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 
 	}
 
+
 	@Override
 	public void createOrganization(String name) {
 		if (name == null || name.isEmpty()) {
@@ -116,7 +121,6 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 		}
 		Organization org = new Organization(name);
 		org.addMember(this); // Add this student as the first member.
-		org.updateSlogan("A new beginning for " + name + "!"); // Example slogan.
 		System.out.println("Organization '" + name + "' created successfully.");
 	}
 

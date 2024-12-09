@@ -1,8 +1,6 @@
 package Academic ;
 
 
-import Enums.GPA;
-import Enums.Mark;
 import Enums.MarkType;
 
 import java.util.Objects;

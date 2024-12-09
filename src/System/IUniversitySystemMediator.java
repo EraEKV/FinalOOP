@@ -1,50 +1,17 @@
 package System ;
 
+import Enums.NewsTopic;
+import Users.Student;
+import Users.User;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-public  interface IUniversitySystemMediator  
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+public interface IUniversitySystemMediator {
+	public void notifyUser(User parameter, Notification parameter2);
 	
-	public void notifyUser(User parameter, Notification parameter2) ;
+	public void publishNews(String parameter, String parameter2, NewsTopic parameter3);
 	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
+	public void registerUser(Credentials parameter);
 	
-	public void publishNews(String parameter, String parameter2, NewsTopic parameter3) ;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void registerUser(Credentials parameter) ;
-	
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 * @ordered
-	 */
-	
-	public void sendMessage(Student parameter, String parameter2) ;
-	
-	
+	public void sendMessage(Student parameter, String parameter2);	
 }
 

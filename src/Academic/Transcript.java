@@ -1,7 +1,5 @@
 package Academic;
 
-import Enums.GPA;
-import Enums.Mark;
 import Users.Student;
 import java.util.Date;
 import java.util.Objects;

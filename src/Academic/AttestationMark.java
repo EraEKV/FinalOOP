@@ -1,7 +1,5 @@
 package Academic;
 
-import Enums.Mark;
-
 public class AttestationMark {
 	private double firstAtt;
 	private double secondAtt;

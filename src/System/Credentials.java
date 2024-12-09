@@ -28,7 +28,7 @@ public class Credentials {
 
 
 //  SHA-256 algorithm for hash without using salt so hash can be weak
-    public static String generateHash(String password) {
+    public  String generateHash(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hashBytes = digest.digest(password.getBytes());
@@ -62,7 +62,7 @@ public class Credentials {
     }
 
 
-    public static boolean verifyPassword(String originalPassword, String hashedPassword) {
+    public boolean verifyPassword(String originalPassword, String hashedPassword) {
         String newHash = generateHash(originalPassword);
 
         return newHash.equals(hashedPassword);
