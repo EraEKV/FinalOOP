@@ -9,6 +9,7 @@ import Enums.*;
 import Research.ResearchJournal;
 import Research.ResearchPaper;
 import Research.ResearchProject;
+import Research.Researcher;
 import Users.*;
 import System.Organization;
 import Academic.Course;

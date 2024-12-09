@@ -1,7 +1,6 @@
-package Users;
+package Research;
 
 import Academic.Journal;
-import Research.ResearchPaper;
 import Enums.Faculty;
 import System.Request;
 import java.util.Vector;

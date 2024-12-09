@@ -1,6 +1,6 @@
 package Comparators ;
 
-import Users.Researcher;
+import Research.Researcher;
 import java.util.Comparator;
 
 public class ResearcherHIndexComparator  implements Comparator<Researcher> {

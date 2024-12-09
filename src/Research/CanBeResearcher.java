@@ -1,4 +1,4 @@
-package Users;
+package Research;
 
 
 public  interface CanBeResearcher {
