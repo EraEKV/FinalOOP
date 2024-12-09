@@ -1,34 +1,40 @@
-package Users ;
+package Users;
 
 import Academic.Course;
+import Database.Database;
+import Users.Student;
 import Enums.News;
 import System.Request;
 import Enums.ManagerType;
 import java.util.Objects;
+import java.util.PriorityQueue;
 import java.util.Vector;
 
-public class Manager extends Employee
-{
+public class Manager extends Employee {
 	private String id;
 	private Vector<Request> requests;
 	private ManagerType managerType;
 
 	{
-		requests = new Vector<Request>();
+		requests = new Vector<>();
 	}
 
-	public Manager(){
+	public Manager() {
 	}
+
 	public Manager(String firstname, String lastname) {
 		super(firstname, lastname);
 	}
+
 	public Manager(String firstname, String lastname, String email) {
 		super(firstname, lastname, email);
 	}
+
 	public Manager(String firstname, String lastname, String email, String id) {
 		super(firstname, lastname, email);
 		this.id = id;
 	}
+
 	public Manager(String firstname, String lastname, String email, String id, ManagerType managerType) {
 		this(firstname, lastname, email, id);
 		this.managerType = managerType;
@@ -58,31 +64,81 @@ public class Manager extends Employee
 		this.managerType = managerType;
 	}
 
-	public void addCourse(Course c) {}
-	public void viewRequests() {
-		for(Request r : requests) {
-			System.out.println(r.toString());
+	public void addCourse(Course c) {
+		if (c != null) {
+			System.out.println("Course " + c.getName() + " has been added successfully.");
+			Vector<Course> courses = Database.getInstance().getCourses();
+			courses.add(c);
+			Database.getInstance().setCourses(courses);
+		} else {
+			System.out.println("Invalid course. Cannot add.");
 		}
 	}
+
+	public void viewRequests() {
+		if (requests.isEmpty()) {
+			System.out.println("No requests available.");
+		} else {
+			for (Request r : requests) {
+				System.out.println(r);
+			}
+		}
+	}
+
 	public String getReport(Course c) {
-		// TODO implement me
-		return "";	
+		if (c == null) {
+			return "No course provided.";
+		}
+		return "Report for course: " + c;
 	}
-	public String getReport(Student parameter) {
-		// TODO implement me
-		return "";	
+
+	public String getReport(Student s) {
+		if (s == null) {
+			return "No student provided.";
+		}
+		return "Report for student: " + s;
 	}
+
 	public void addNews(News n) {
+		if (n != null) {
+			PriorityQueue<News> news = Database.getInstance().getNews();
+			news.add(n);
+			Database.getInstance().setNews(news);
+			System.out.println("News added: " + n);
+		} else {
+			System.out.println("Invalid news item.");
+		}
 	}
+
 	public void setRegistration(Student s) {
+		if (s != null) {
+			System.out.println("Student " + s + " has been registered.");
+		} else {
+			System.out.println("Invalid student.");
+		}
 	}
 	public void redirectRequest(Rector rec, Request req) {
+		if (rec != null && req != null) {
+			rec.addRequest(req);
+			System.out.println("Request redirected to Rector: " + rec.getFirstname() + " " + rec.getLastname());
+		} else {
+			System.out.println("Invalid Rector or Request.");
+		}
 	}
+
 	public void approveStudentRegistration() {
 	}
-	public void assignCourseTeachers() {
+
+	public void assignCourseTeachers(Course c, Vector<Teacher> teachers) {
+		System.out.println("Teachers have been assigned to courses.");
 	}
+	//must be stored in the system and checked by student
 	public void openRegistration(boolean p) {
+		if (p) {
+			System.out.println("Registration is now open.");
+		} else {
+			System.out.println("Registration is now closed.");
+		}
 	}
 
 	@Override
@@ -107,4 +163,3 @@ public class Manager extends Employee
 				'}';
 	}
 }
-

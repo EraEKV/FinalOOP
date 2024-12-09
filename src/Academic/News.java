@@ -7,5 +7,5 @@ package Enums ;
  */
 public enum News
 {
-	;
+
 }

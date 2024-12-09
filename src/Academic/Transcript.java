@@ -1,11 +1,15 @@
-package Academic;
+package Pakita;
 
+import Enums.Mark;
 import Users.Student;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
 import java.util.Map;
 import System.CustomPair;
+import Academic.SemesterPeriod;
+import Academic.Course;
+
 
 public class Transcript {
 	private Student owner;
