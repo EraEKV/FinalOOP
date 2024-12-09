@@ -1,22 +1,7 @@
-package AppExceptions ;
+package CustomExceptions;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class CourseFullException extends Exception
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public CourseFullException(){
-		super();
-	}
-
+public class CourseFullException extends Exception {
+	public CourseFullException(String message) { super(message); }
 }
 

@@ -1,22 +1,6 @@
-package AppExceptions ;
+package CustomExceptions ;
 
-
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class RetakeLimitExceededException extends Exception
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public RetakeLimitExceededException(){
-		super();
-	}
-
+public class RetakeLimitExceededException extends Exception {
+	public RetakeLimitExceededException(String message) { super(message); }
 }
 

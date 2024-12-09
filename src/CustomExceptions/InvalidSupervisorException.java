@@ -1,22 +1,7 @@
-package AppExceptions ;
+package CustomExceptions;
 
 
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class InvalidSupervisorException extends Exception
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public InvalidSupervisorException(){
-		super();
-	}
-
+public class InvalidSupervisorException extends Exception {
+	public InvalidSupervisorException(String message) { super(message); }
 }
 

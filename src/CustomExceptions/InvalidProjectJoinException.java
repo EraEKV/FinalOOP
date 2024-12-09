@@ -1,22 +1,7 @@
-package AppExceptions ;
+package CustomExceptions;
 
-
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class InvalidProjectJoinException extends Exception
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public InvalidProjectJoinException(){
-		super();
-	}
+public class InvalidProjectJoinException extends Exception {
+	public InvalidProjectJoinException(String message) { super(message); }
 
 }
 

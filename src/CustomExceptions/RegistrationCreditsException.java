@@ -1,22 +1,6 @@
-package AppExceptions ;
+package CustomExceptions ;
 
-
-/**
- * <!-- begin-user-doc -->
- * <!--  end-user-doc  -->
- * @generated
- */
-
-public class RegistrationCreditsException extends Exception
-{
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!--  end-user-doc  -->
-	 * @generated
-	 */
-	public RegistrationCreditsException(){
-		super();
-	}
-
+public class RegistrationCreditsException extends Exception {
+	public RegistrationCreditsException(String message) { super(message); }
 }
 
