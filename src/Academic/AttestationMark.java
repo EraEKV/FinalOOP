@@ -1,4 +1,4 @@
-package Academic;
+package Pakita;
 
 import Enums.Mark;
 
@@ -47,11 +47,10 @@ public class AttestationMark {
 	}
 
 	private void calculateFullAtt() {
-
 		double total = firstAtt + secondAtt + finalExam;
 
 		if (total >= 90) {
-			fullAtt = Mark.A;
+			fullAtt = Mark.A_PLUS;
 		} else if (total >= 85) {
 			fullAtt = Mark.A;
 		} else if (total >= 80) {
@@ -83,4 +82,3 @@ public class AttestationMark {
 				'}';
 	}
 }
-
