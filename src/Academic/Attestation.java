@@ -24,7 +24,6 @@ public class Attestation {
 				return;
 			}
 		}
-
 		attestationList.add(new Pair<>(course, mark));
 	}
 
