@@ -15,9 +15,9 @@ public class Course {
     private Vector<Teacher> teachers;
     private int credits;
     private Semester semester;
-    private Years year;
+//    private Years year;
 
-    public Course(String code, String name, Faculty faculty, Speciality speciality, int credits, Semester semester, Years year) {
+    public Course(String code, String name, Faculty faculty, Speciality speciality, int credits, Semester semester) {
         this.code = code;
         this.name = name;
         this.faculty = faculty;
@@ -26,7 +26,7 @@ public class Course {
         this.teachers = new Vector<>();
         this.credits = credits;
         this.semester = semester;
-        this.year = year;
+//        this.year = year;
     }
 
     public String getCode() {
@@ -93,18 +93,18 @@ public class Course {
         this.semester = semester;
     }
 
-    public Years getYear() {
-        return year;
-    }
-
-    public void setYear(Years year) {
-        this.year = year;
-    }
+//    public Years getYear() {
+//        return year;
+//    }
+//
+//    public void setYear(Years year) {
+//        this.year = year;
+//    }
 
     @Override
     public String toString() {
         return "Course [code=" + code + ", name=" + name + ", faculty=" + faculty +
                 ", speciality=" + speciality + ", credits=" + credits +
-                ", semester=" + semester + ", year=" + year + "]";
+                ", semester=" + semester;
     }
 }
