@@ -3,7 +3,7 @@ package Users;
 
 import java.util.Date;
 import java.util.Vector;
-
+import System.Message;
 
 public class Employee extends User {
 
@@ -42,11 +42,6 @@ public class Employee extends User {
 	public Employee(String firstname, String lastname, String email, int salary) {
 		this(firstname, lastname, email);
 		this.salary = salary;
-	}
-
-	public Employee(String firstname, String lastname, int salary, Date dateHired) {
-		this(firstname, lastname, salary);
-		this.dateHired = dateHired;
 	}
 
 

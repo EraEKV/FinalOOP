@@ -1,19 +1,31 @@
-package System ;
+package System;
 
 import Users.User;
 
 import java.util.Date;
 import java.util.Objects;
 
-public class Comment extends News
-{
+
+public class Comment {
 
 	private Date date;
 	private String text;
 	private User author;
-	public Comment(){
-		super();
+
+
+//	constructors
+
+	public Comment() {
 	}
+
+	public Comment(User author, String text) {
+		this.author = author;
+		this.text = text;
+		this.date = new Date();
+	}
+
+
+//	accessors
 
 	public Date getDate() {
 		return date;
@@ -38,6 +50,9 @@ public class Comment extends News
 	public void setAuthor(User author) {
 		this.author = author;
 	}
+
+
+
 
 	@Override
 	public boolean equals(Object o) {

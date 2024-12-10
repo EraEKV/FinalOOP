@@ -2,40 +2,64 @@ package System;
 
 import Enums.NewsTopic;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
 
 public class News {
+
+    private String author;
+    private Date date;
+    private String title;
+    private String content;
     private NewsTopic newsTopic;
     private Vector<Comment> comment;
 
+
+//    constructors
     public News() {
+
     }
 
-    public News(NewsTopic newsTopic) {
+    public News(String author, String title, String content, NewsTopic newsTopic) {
+        this.author = author;
+        this.title = title;
+        this.content = content;
+        this.date = new Date();
         this.newsTopic = newsTopic;
+
+        this.comment = new Vector<>();
     }
 
-    public News(NewsTopic newsTopic, Vector<Comment> comment) {
-        this.newsTopic = newsTopic;
-        this.comment = comment;
-    }
+
+
+//    accessors
 
     public NewsTopic getNewsTopic() {
         return newsTopic;
-    }
-
-    public void setNewsTopic(NewsTopic newsTopic) {
-        this.newsTopic = newsTopic;
     }
 
     public Vector<Comment> getComment() {
         return comment;
     }
 
-    public void setComment(Vector<Comment> comment) {
-        this.comment = comment;
+    public String getAuthor() {
+        return author;
     }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {
@@ -53,7 +77,10 @@ public class News {
     public String toString() {
         return "News{" +
                 "newsTopic=" + newsTopic +
-                ", comment=" + comment +
+                ", title='" + title +
+                ", content='" + content +
+                ", author='" + author +
+                ", date=" + date +
                 '}';
     }
 }

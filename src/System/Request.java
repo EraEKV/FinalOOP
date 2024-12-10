@@ -9,6 +9,10 @@ public class Request extends Notification {
     private Boolean isSigned;
     private Status status;
 
+    public Request() {
+
+    }
+
     public String getTopic() {
         return topic;
     }

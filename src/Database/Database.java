@@ -13,11 +13,11 @@ import Research.Researcher;
 import Users.*;
 import System.Organization;
 import Academic.Course;
-import System.Credentials;
 import System.News;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
 import java.util.Vector;
 import java.util.stream.Collectors;
@@ -26,12 +26,17 @@ public class Database {
 	private static Database DATABASE;
 	
 	private boolean isRegistrationOpened;
-	
-	private HashMap<Credentials, User> users;
-	
+
+
+	private HashMap<String, User> users; // email, class User
+
+    private Rector rector; // must be singleton
+
+    private DisciplinaryCommittee disciplinaryCommittee; // must be singleton
+
+
 	private Vector<Course> courses;
-	
-	private Rector rector;
+
 
     private Vector<Teacher> teachers;
 
@@ -119,11 +124,11 @@ public class Database {
 
 //    accessors
 
-    public HashMap<Credentials, User> getUsers() {
+    public HashMap<String, User> getUsers() {
     return users;
 }
 
-    public void setUsers(HashMap<Credentials, User> users) {
+    public void setUsers(HashMap<String, User> users) {
         this.users = users;
     }
 
@@ -134,6 +139,15 @@ public class Database {
     public void setRector(Rector rector) {
         this.rector = rector;
     }
+
+    public DisciplinaryCommittee getDisciplinaryCommittee() {
+        return disciplinaryCommittee;
+    }
+
+    public void setDisciplinaryCommittee(DisciplinaryCommittee disciplinaryCommittee) {
+        this.disciplinaryCommittee = disciplinaryCommittee;
+    }
+
 
     public Vector<Researcher> getResearchers() {
         return researchers;
@@ -217,63 +231,33 @@ public class Database {
 
 
 
-
-//	public int getUsersCount(UserType userType) {
-//		int count = 0;
-//		switch (userType) {
-//			case MNG:
-//				count = ++managersCount;
-//				break;
-//			case TCH:
-//				count = ++teachersCount;
-//				break;
-//			default:
-//				throw new UserTypeException("Unknown user type: " + userType); // Обрабатываем неизвестный тип
-//		}
-//		return count;
-//	}
-//
-//	public <T extends Enum<T>> int getStudentsCount(T studentType) {
-//		int count = 0;
-//
-//		if (studentType instanceof StudentType) {
-//			switch ((StudentType) studentType) {
-//				case PHD:
-//					count = ++phdStudentsCount;
-//					break;
-//				case MASTER:
-//					count = ++masterStudentsCount;
-//					break;
-//				case BACHELOR:
-//					count = ++bachelorStudentsCount;
-//					break;
-//				default:
-//					throw new UserTypeException("Unknown student type: " + studentType);
-//			}
-//		}
-//		return count;
-//	}
-
-
-	public <T> int getUsersCount(UserType type) throws UserTypeException {
-		try {
-			return (int) users.values().stream()
-					.filter(u -> u.getUserType() == type)
-					.count();
-		} catch (UserTypeException e) {
-			throw new UserTypeException(type);
-		}
-	}
-
-    public <T> int getStudentsCount(StudentType type) throws UserTypeException {
-        try {
-            return (int) users.values().stream()
-                    .filter(u -> u.getUserType() == type)
-                    .count();
-        } catch (UserTypeException e) {
-            throw new UserTypeException(type);
+    public int getUsersCount(Class<? extends User> userClass) throws UserTypeException {
+        if (userClass == null) {
+            throw new UserTypeException(null);
         }
+
+        if (!User.class.isAssignableFrom(userClass)) {
+            throw new UserTypeException(userClass.getName());
+        }
+
+//        checking instance or not, same instance will be counted
+        return (int) users.values().stream()
+                .filter(userClass::isInstance)
+                .count();
     }
+
+
+
+//
+//    public <T> int getStudentsCount(Student type) throws UserTypeException {
+//        try {
+//            return (int) users.values().stream()
+//                    .filter(u -> u instanceof type)
+//                    .count();
+//        } catch (UserTypeException e) {
+//            throw new UserTypeException(type);
+//        }
+//    }
 
 
     public Vector<Student> getStudents() {
@@ -298,6 +282,12 @@ public class Database {
                 .collect(Collectors.toCollection(Vector<Manager>::new));
     }
 
+    public User findUserByEmail(String email) throws NoSuchElementException {
+        return users.values().stream()
+                .filter(u -> u.getEmail().equals(email))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
+    }
 
 
 

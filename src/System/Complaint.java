@@ -3,17 +3,22 @@ package System;
 import Enums.Status;
 import Enums.Urgency;
 import Users.Student;
+import Users.User;
+
+import java.util.Date;
 
 public class Complaint extends Notification {
     private Urgency urgency;
     private Student student;
     private Status status;
 
+
     public Complaint() {
 
     }
 
-    public Complaint(Student student, Urgency urgency) {
+    public Complaint(User author, Student student, String text, Urgency urgency) {
+        super(author, text);
         this.student = student;
         this.urgency = urgency;
         this.status = Status.DELIVERED;
@@ -21,6 +26,7 @@ public class Complaint extends Notification {
 
 
 
+//  accessors
 
     public void setStatus(Status status) {
         this.status = status;
@@ -29,6 +35,16 @@ public class Complaint extends Notification {
     public Status getStatus() {
         return status;
     }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public Urgency getUrgency() {
+        return urgency;
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

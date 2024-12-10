@@ -14,7 +14,7 @@ public abstract class User implements Subscriber {
 	private String firstname;
 	private String lastname;
 	private String email;
-
+	private Credentials credentials;
 	
 	private Vector<Notification> notifications;
 	
@@ -31,11 +31,7 @@ public abstract class User implements Subscriber {
 		this(firstname, lastname);
 		this.email = email;
 	}
-	
-	public boolean login(Credentials c) {
-		// TODO implement me
-		return false;	
-	}
+
 	
 	public Vector<News> viewNews() {
 		// TODO implement me
@@ -53,7 +49,8 @@ public abstract class User implements Subscriber {
 //		return null;
 //	}
 
-	public abstract <T> T getUserType();
+
+//	accessors
 
 	public String getFirstname() {
 		return firstname;
@@ -69,6 +66,13 @@ public abstract class User implements Subscriber {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Credentials getCredentials() {
+		return credentials;
+	}
+	public void setCredentials(Credentials credentials) {
+		this.credentials = credentials;
 	}
 
 	public Vector<Notification> getNotifications() {

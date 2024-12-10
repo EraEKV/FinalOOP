@@ -8,19 +8,49 @@ public class Notification {
 	private Date date;
 	private String text;
 	private User author;
+
 	public Notification() {
 
 	}
+
 	public Notification(User author) {
 		this.author = author;
+		this.date = new Date();
 	}
+
 	public Notification(String text) {
 		this.text = text;
+		this.date = new Date();
 	}
-	public Notification(String text, User author) {
-		this.text = text;
+
+	public Notification(User author, String text) {
+		this(text);
 		this.author = author;
 	}
+
+
+
+//	accessors
+	public void setAuthor(User author) {
+		this.author = author;
+	}
+
+	public User getAuthor() {
+		return author;
+	}
+
+	public void setText(String text) {
+		this.text = text;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
 
 
 	@Override

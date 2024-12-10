@@ -49,6 +49,11 @@ public class Credentials {
     }
 
 
+    public boolean compareHash(String password) {
+        return password.equals(generateHash(password));
+    }
+
+
 //    logic of generating email if we have collisions with them
     public String generateEmail(String firstname, String lastname) {
         String newEmail = "";
