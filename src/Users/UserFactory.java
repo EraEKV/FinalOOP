@@ -23,7 +23,7 @@ public class UserFactory {
 
 	//	new Student (Bachelor)
 	public User createUser(String firstname, String lastname, UserType userType, Faculty faculty, Speciality speciality) {
-		String id = generateId(userType, StudentType.BACHELOR);
+		String id = generateId(userType, new Student());
 		return new Student(id, firstname, lastname, faculty, speciality);
 	}
 
@@ -63,15 +63,15 @@ public class UserFactory {
 		return String.format("%0" + length + "d", number);
 	}
 
-	private <T extends Enum<T>> String generateId(UserType userType, T specificType) {
+	private <T extends Enum<T>> String generateId(User user) {
 		String idSuffix;
 		String id;
 
 		Database db = Database.getInstance();
 
-		switch (userType) {
-			case STU:
-				if (specificType instanceof StudentType) {
+		switch (user) {
+			case instanceof Student:
+				if (specificType instanceof Student) {
 					switch ((StudentType) specificType) {
 						case PHD:
 							idSuffix = "P";
@@ -83,11 +83,11 @@ public class UserFactory {
 							idSuffix = "B";
 							break;
 						default:
-							throw new UserTypeException("Unknown student type: " + specificType);
+							throw new UserTypeException(specificType);
 					}
 					idSuffix += formatCountID(db.getStudentsCount((StudentType) specificType));
 				} else {
-					throw new UserTypeException("Invalid specific type for student: " + specificType);
+					throw new UserTypeException(specificType);
 				}
 				break;
 
@@ -95,7 +95,7 @@ public class UserFactory {
 				if (specificType instanceof TeacherType) {
 					idSuffix = "T" + formatCountID(db.getUsersCount(userType));
 				} else {
-					throw new UserTypeException("Invalid specific type for teacher: " + specificType);
+					throw new UserTypeException(specificType);
 				}
 				break;
 
@@ -103,12 +103,12 @@ public class UserFactory {
 				if (specificType instanceof ManagerType) {
 					idSuffix = "M" + formatCountID(db.getUsersCount(userType));
 				} else {
-					throw new UserTypeException("Invalid specific type for manager: " + specificType);
+					throw new UserTypeException(specificType);
 				}
 				break;
 
 			default:
-				throw new UserTypeException("Unknown user type: " + userType);
+				throw new UserTypeException(userType);
 		}
 
 

@@ -4,7 +4,6 @@ import Academic.Course;
 import Academic.Journal;
 import Enums.Faculty;
 import Enums.Speciality;
-import Enums.StudentType;
 import Research.CanBeResearcher;
 import Research.Researcher;
 import System.Complaint;
@@ -20,7 +19,6 @@ import java.util.Vector;
 public class Student extends User implements CanBeResearcher, ManageOrganization {
 
 	private String id;
-	private StudentType type;
 	private Faculty faculty;
 	private int startYear;
 	private Speciality speciality;
@@ -40,7 +38,7 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 
 	@Override
 	public <T> T getUserType() {
-		return (T) StudentType.BACHELOR;
+			return (T) new Student();
 	}
 
 	public Student(String id) {
