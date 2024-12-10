@@ -1,30 +1,31 @@
 package Academic;
 
 import java.util.*;
+import System.CustomPair;
 
 public class Attestation {
-	private Map<SemesterPeriod, List<Pair<Course, AttestationMark>>> info;
+	private Map<SemesterPeriod, List<CustomPair<Course, AttestationMark>>> info;
 
 	public Attestation() {
 		this.info = new HashMap<>();
 	}
 
-	public Map<SemesterPeriod, List<Pair<Course, AttestationMark>>> getInfo() {
+	public Map<SemesterPeriod, List<CustomPair<Course, AttestationMark>>> getInfo() {
 		return info;
 	}
 
 	public void updateAttestation(SemesterPeriod period, Course course, AttestationMark mark) {
 		info.putIfAbsent(period, new ArrayList<>());
 
-		List<Pair<Course, AttestationMark>> attestationList = info.get(period);
+		List<CustomPair<Course, AttestationMark>> attestationList = info.get(period);
 
-		for (Pair<Course, AttestationMark> entry : attestationList) {
-			if (entry.getKey().equals(course)) {
-				entry.setValue(mark);
+		for (CustomPair<Course, AttestationMark> entry : attestationList) {
+			if (entry.getFirst().equals(course)) {
+				entry.setSecond(mark);
 				return;
 			}
 		}
-		attestationList.add(new Pair<>(course, mark));
+		attestationList.add(new CustomPair<>(course, mark));
 	}
 
 	@Override

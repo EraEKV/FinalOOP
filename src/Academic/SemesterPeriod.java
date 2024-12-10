@@ -8,6 +8,14 @@ public class SemesterPeriod {
     private String years;
     private Semester semester;
 
+    public SemesterPeriod() {
+    }
+
+    public SemesterPeriod(String years, Semester semester) {
+        this.years = years;
+        this.semester = semester;
+    }
+
     public Semester getSemester() {
         return semester;
     }
