@@ -1,6 +1,0 @@
-package Menu;
-
-
-class Menu {
-
-}
