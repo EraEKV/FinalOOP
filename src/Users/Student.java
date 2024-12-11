@@ -31,7 +31,9 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 	private HashMap<Course, Integer> countRetakes;
 
 	private Vector<Notification> notifications;
-	
+
+	private boolean registered;
+
 	public Student() {
 		super();
 	}
@@ -52,7 +54,39 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 		this.faculty = faculty;
 		this.speciality = speciality;
 	}
-	
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public Faculty getFaculty() {
+		return faculty;
+	}
+
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
+	}
+
+	public Speciality getSpeciality() {
+		return speciality;
+	}
+
+	public void setSpeciality(Speciality speciality) {
+		this.speciality = speciality;
+	}
+
+	public boolean isRegistered() {
+		return registered;
+	}
+
+	public void setRegistered(boolean registered) {
+		this.registered = registered;
+	}
+
 	public void viewMarks() {
 		// TODO implement me
 		return;
@@ -118,7 +152,7 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 			return;
 		}
 		Organization org = new Organization(name);
-		org.addMember(this); // Add this student as the first member.
+		org.addMember(this);
 		System.out.println("Organization '" + name + "' created successfully.");
 	}
 
@@ -129,7 +163,7 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 			return;
 		}
 		if (org.getMembers().contains(this)) {
-			org.getMembers().clear(); // Remove all members.
+			org.getMembers().clear(); // remove all members.
 			System.out.println("The organization '" + org.getName() + "' has been deleted successfully.");
 		} else {
 			System.out.println("You do not have the rights to delete the organization: " + org.getName());
