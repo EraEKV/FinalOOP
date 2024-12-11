@@ -38,9 +38,8 @@ public class Attestation {
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
-		if (!(o instanceof Attestation)) return false;
-		Attestation that = (Attestation) o;
-		return Objects.equals(info, that.info);
+		if (!(o instanceof Attestation that)) return false;
+        return Objects.equals(info, that.info);
 	}
 
 	@Override
