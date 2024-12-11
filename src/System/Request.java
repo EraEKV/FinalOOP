@@ -1,16 +1,28 @@
 package System;
 
 import Enums.Status;
-
 import java.util.Objects;
+import java.util.UUID; // Import for generating unique IDs
 
 public class Request extends Notification {
+    private String id;
     private String topic;
     private Boolean isSigned;
     private Status status;
 
     public Request() {
+        this.id = UUID.randomUUID().toString();
+    }
 
+    public String getId() {
+        return id;
+    }
+
+    public Request(String topic, Boolean isSigned, Status status) {
+        this.id = UUID.randomUUID().toString(); // Generate a unique ID for the request
+        this.topic = topic;
+        this.isSigned = isSigned;
+        this.status = status;
     }
 
     public String getTopic() {
@@ -42,21 +54,24 @@ public class Request extends Notification {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Request request = (Request) o;
-        return Objects.equals(topic, request.topic) && Objects.equals(isSigned, request.isSigned) && status == request.status;
+        return Objects.equals(id, request.id) &&
+                Objects.equals(topic, request.topic) &&
+                Objects.equals(isSigned, request.isSigned) &&
+                status == request.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), topic, isSigned, status);
+        return Objects.hash(super.hashCode(), id, topic, isSigned, status);
     }
 
     @Override
     public String toString() {
         return "Request{" +
-                "topic='" + topic + '\'' +
+                "id='" + id + '\'' +
+                ", topic='" + topic + '\'' +
                 ", isSigned=" + isSigned +
                 ", status=" + status +
                 '}';
     }
 }
-
