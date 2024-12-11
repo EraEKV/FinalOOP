@@ -1,25 +1,27 @@
 package Users ;
 
-
+import Academic.Journal;
+import Enums.Faculty;
+import Research.*;
 import System.News;
-import Research.Subscriber;
 import System.Credentials;
 import System.Notification;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 
 // NewsSubscriber interface
-public abstract class User implements Subscriber {
+public abstract class User implements Subscriber, CanBeResearcher {
 
 	private String firstname;
 	private String lastname;
 	private String email;
 	private Credentials credentials;
-	
+	private Researcher isResearcher;
 	private Vector<Notification> notifications;
 	
 	public User() {
-
 	}
 
 	public User(String firstname, String lastname) {
@@ -32,7 +34,6 @@ public abstract class User implements Subscriber {
 		this.email = email;
 	}
 
-	
 	public Vector<News> viewNews() {
 		// TODO implement me
 		return null;	
@@ -87,6 +88,56 @@ public abstract class User implements Subscriber {
 		notifications.add(new Notification("New post in research journal!!!"));
 		System.out.println("New post in research journal!!!");
 	}
+	//researcher realization
+	@Override
+	public void beReseacrher() {
+		this.isResearcher = new Researcher();
+	}
+
+	public int calculateHIndex() {
+		if (isResearcher != null) {
+			return isResearcher.calculateHIndex();
+		}
+		throw new IllegalStateException("User is not a researcher");
+	}
+
+//	public int calculateCitations() {
+//		if (isResearcher != null) {
+//			return isResearcher.calculateCitations();
+//		}
+//		throw new IllegalStateException("User is not a researcher");
+//	}
+
+	public List<ResearchPaper> printPapers(Comparator c) {
+		if (isResearcher != null) {
+			return isResearcher.printPapers(c);
+		}
+		throw new IllegalStateException("User is not a researcher");
+	}
+
+	public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
+		if (isResearcher != null) {
+			isResearcher.publishPaper(paper, journal);
+		} else {
+			throw new IllegalStateException("User is not a researcher");
+		}
+	}
+
+//	public void topCitedSchoolResearcher(Faculty faculty) {
+//		if (isResearcher != null) {
+//			isResearcher.topCitedSchoolResearcher(faculty);
+//		} else {
+//			throw new IllegalStateException("User is not a researcher");
+//		}
+//	}
+
+//	public void topCitedResearcher() {
+//		if (isResearcher != null) {
+//			isResearcher.topCitedResearcher();
+//		} else {
+//			throw new IllegalStateException("User is not a researcher");
+//		}
+//	}
 
 	@Override
 	public boolean equals(Object o) {

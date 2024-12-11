@@ -8,6 +8,7 @@ import Enums.CitationFormat;
 public class ResearchPaper {
     private String name;
     private int pages;
+    private String author;
     private ResearchJournal researchJournal;
     private Vector<ResearchPaper> citations;
     private String DOI;
@@ -92,8 +93,46 @@ public class ResearchPaper {
     }
 
     public String getCitation(CitationFormat format) {
-        return "";
+        StringBuilder citation = new StringBuilder();
+
+        switch (format) {
+            case PLAIN_TEXT:
+                citation.append("Title: ").append(name).append("\n")
+                        .append("Authors: ");
+                for (int i = 0; i < authors.size(); i++) {
+                    citation.append(authors.get(i));
+                    if (i < authors.size() - 1) citation.append(", ");
+                }
+                citation.append("\n")
+                        .append("Journal: ").append(researchJournal.getName()).append("\n")
+                        .append("DOI: ").append(DOI).append("\n")
+                        .append("Date: ").append(date.toString()).append("\n")
+                        .append("Pages: ").append(pages);
+                break;
+
+            case BIBTEX:
+                citation.append("@article{").append(DOI.replaceAll("[^a-zA-Z0-9]", "")).append(",\n") // Use DOI as the citation key
+                        .append("  author = {");
+                for (int i = 0; i < authors.size(); i++) {
+                    citation.append(authors.get(i));
+                    if (i < authors.size() - 1) citation.append(" and ");
+                }
+                citation.append("},\n")
+                        .append("  title = {").append(name).append("},\n")
+                        .append("  journal = {").append(researchJournal.getName()).append("},\n")
+                        .append("  year = {").append(date.getYear() + 1900).append("},\n")
+                        .append("  pages = {").append(pages).append("},\n")
+                        .append("  doi = {").append(DOI).append("}\n")
+                        .append("}");
+                break;
+
+            default:
+                throw new IllegalArgumentException("Unsupported citation format: " + format);
+        }
+
+        return citation.toString();
     }
+
 
     @Override
     public boolean equals(Object o) {

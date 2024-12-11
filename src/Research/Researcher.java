@@ -1,44 +1,46 @@
 package Research;
 
-
-import Academic.Journal;
 import Enums.Faculty;
+import Users.User;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 
-public class Researcher implements CanResearch {
+public class Researcher {
+
+    List<ResearchPaper> papers;
 
     public Researcher() {
-
+        papers = new ArrayList<>();
     }
 
-    @Override
     public int calculateHIndex() {
         return 0;
     }
 
-    @Override
-    public int calculateCitations() {
-        return 0;
+//    public int calculateCitations() {
+//        return 0;
+//    }
+
+    public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
+        papers.add(paper);
+        Vector<ResearchPaper> prev = journal.getResearchPapers();
+        prev.add(paper);
+        journal.setResearchPapers(prev);
     }
 
-    @Override
-    public void publishPaper(ResearchPaper paper, Journal journal) {
-
+    public List<ResearchPaper> printPapers(Comparator<ResearchPaper> comparator) {
+        papers.sort(comparator);
+        return papers;
     }
 
-    @Override
-    public void topCitedSchoolResearcher(Faculty faculty) {
-
-    }
-
-    @Override
-    public void topCitedResearcher() {
-
-    }
-
-    @Override
-    public Vector<ResearchPaper> printPapers(System.Request request) {
-        return null;
-    }
+//    public void topCitedSchoolResearcher(Faculty faculty) {
+//
+//    }
+//
+//    public void topCitedResearcher() {
+//
+//    }
 }

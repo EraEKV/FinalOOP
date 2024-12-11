@@ -16,7 +16,7 @@ import java.util.Vector;
 
 // CanViewTeachers interface
 
-public class Student extends User implements CanBeResearcher, ManageOrganization {
+public class Student extends User implements ManageOrganization {
 
 	private String id;
 	private Faculty faculty;
@@ -24,7 +24,6 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 	private Speciality speciality;
 	private Employee advisor;
 	private Vector<Complaint> warnings;
-	private Researcher isResearcher;
 	private Vector<Journal> journal;
 	private Researcher researchSupervisor;
 
@@ -38,7 +37,7 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 		super();
 	}
 
-	@Override
+
 	public <T> T getUserType() {
 			return (T) new Student();
 	}
@@ -133,12 +132,6 @@ public class Student extends User implements CanBeResearcher, ManageOrganization
 
 
 //	interface realization
-
-	@Override
-	public void beReseacrher() {
-
-	}
-
 	@Override
 	public void update() {
 
