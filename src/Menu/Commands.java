@@ -1,20 +1,23 @@
 package Menu;
 
+import Academic.JournalLesson;
 import Enums.*;
 import Users.*;
 import System.Organization;
 import Database.Database;
 import Academic.Course;
 import System.News;
+import System.Message;
+import System.Notification;
 import System.Request;
 import Users.Rector;
+import System.UniversitySystemMediator;
 
 import java.io.BufferedReader;
 import java.io.*;
 import java.util.*;
 
 public class Commands {
-
     public static class ViewMarksCommand implements Command {
         private final Student student;
 
@@ -25,6 +28,8 @@ public class Commands {
         @Override
         public void execute() {
             student.viewMarks();
+
+            logging("ViewMarks", student);
         }
     }
     // ViewTranscriptCommand
@@ -38,6 +43,8 @@ public class Commands {
         @Override
         public void execute() {
             student.viewTranscript();
+
+            logging("ViewTranscript", student);
         }
     }
 
@@ -238,6 +245,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("ViewRequests", manager);
             try {
                 System.out.println("Displaying all requests...");
                 for (Request request : manager.getRequests()) {
@@ -260,6 +268,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("AddNews", manager);
             try {
                 System.out.println("Enter author's name:");
                 String author = reader.readLine();
@@ -298,6 +307,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("RedirectRequest", manager);
             try {
                 System.out.println("Enter request ID to redirect:");
                 String requestId = reader.readLine();
@@ -349,6 +359,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("OpenCloseRegistration", manager);
             try {
                 System.out.println("Enter 'open' to open registration, 'close' to close it:");
                 String status = reader.readLine();
@@ -377,6 +388,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("GetCourseReport", manager);
             try {
                 System.out.println("=== Course Report ===");
                 Vector<Course> courses = Database.getInstance().getCourses();
@@ -410,6 +422,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("GetStudentReport", manager);
             try {
                 System.out.println("=== Student Report ===");
                 Vector<Student> students = Database.getInstance().getStudents();
@@ -444,6 +457,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("SetStudentRegistration", manager);
             try {
                 System.out.println("=== Set Student Registration Status ===");
                 Vector<Student> students = Database.getInstance().getStudents();
@@ -473,6 +487,492 @@ public class Commands {
                 System.out.println("Registration status updated for " + student.getFirstname() + " " + student.getLastname());
             } catch (IOException | NumberFormatException e) {
                 System.out.println("Invalid input. Please try again.");
+            }
+        }
+    }
+
+
+
+//
+//
+//    TEACHER MENU
+//
+//
+
+    public static class ViewCoursesCommand implements Command {
+        private final Teacher teacher;
+
+        public ViewCoursesCommand(Teacher teacher) {
+            this.teacher = teacher;
+        }
+
+        @Override
+        public void execute() {
+            logging("ViewCourses", teacher);
+            try {
+                System.out.println("=== View Courses ===");
+                Vector<Course> courses = teacher.getCurrentCourses();
+
+                if (courses.isEmpty()) {
+                    System.out.println("No courses available.");
+                    return;
+                }
+
+                System.out.println("Available courses:");
+                for (int i = 0; i < courses.size(); i++) {
+                    Course course = courses.get(i);
+                    System.out.println("[" + (i + 1) + "] " + course.getName() + " (" + course.getCode() + ")");
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error occurred while fetching the courses.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static class ManageCourseCommand implements Command {
+        private final Teacher teacher;
+        private final BufferedReader reader;
+
+        public ManageCourseCommand(Teacher teacher, BufferedReader reader) {
+            this.teacher = teacher;
+            this.reader = reader;
+        }
+
+
+        @Override
+        public void execute() {
+            logging("ManageCourse", teacher);
+            Database db = Database.getInstance();
+            try {
+                System.out.println("=== Manage Course ===");
+                Vector<Course> courses = db.getCourses();
+                if (courses.isEmpty()) {
+                    System.out.println("No courses available.");
+                    return;
+                } else {
+
+                }
+            } catch (Exception e) {
+                System.out.println("Error occurred while fetching the courses.");
+            }
+        }
+    }
+
+
+    public static class ViewStudentsInfoCommand implements Command {
+        private final Teacher teacher;
+        private final BufferedReader reader;
+
+        public ViewStudentsInfoCommand(Teacher teacher, BufferedReader reader) {
+            this.teacher = teacher;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("ViewStudentsInfo", teacher);
+            try {
+                System.out.println("=== View Students Info ===");
+                Vector<Course> courses = teacher.getCurrentCourses();
+
+                if (courses.isEmpty()) {
+                    System.out.println("No courses available.");
+                    return;
+                }
+
+                while (true) {
+                    System.out.println("Choose a course to view students:");
+                    for (int i = 0; i < courses.size(); i++) {
+                        System.out.println("[" + (i + 1) + "] " + courses.get(i).getName());
+                    }
+
+                    String input = reader.readLine();
+                    int courseChoice;
+
+                    try {
+                        courseChoice = Integer.parseInt(input);
+
+                        if (courseChoice < 1 || courseChoice > courses.size()) {
+                            System.out.println("Invalid course choice. Try again.");
+                            continue;
+                        }
+
+                        Course selectedCourse = courses.get(courseChoice - 1);
+                        Vector<Student> students = selectedCourse.getStudents();
+
+                        if (students.isEmpty()) {
+                            System.out.println("No students are enrolled in this course.");
+                        } else {
+                            System.out.println("Students enrolled in " + selectedCourse.getName() + ":");
+                            for (Student student : students) {
+                                System.out.println("- " + student.getFirstname() + " " + student.getLastname());
+                            }
+                        }
+
+                        System.out.println("Would you like to view another course? (y/n):");
+                        String response = reader.readLine();
+
+                        if ("n".equalsIgnoreCase(response)) {
+                            break;
+                        } else if (!"y".equalsIgnoreCase(response)) {
+                            System.out.println("Invalid response. Please enter 'y' or 'n'.");
+                        }
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid number.");
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error occurred while fetching the courses.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+//
+//    PUT MARKS LOGIC NEEDS TO BE REALIZED
+//
+
+//    public static class PutMarksCommand implements Command {
+//        private final Teacher teacher;
+//        private final BufferedReader reader;
+//
+//        public PutMarksCommand(Teacher teacher, BufferedReader reader) {
+//            this.teacher = teacher;
+//            this.reader = reader;
+//        }
+//
+//        @Override
+//        public void execute() {
+//            logging("SendMessage", teacher);
+//            try {
+//                System.out.println("=== Put Marks ===");
+//
+//                while (true) {
+//                    System.out.println("Choose an option:");
+//                    System.out.println("1. Journal Marks");
+//                    System.out.println("2. Attestation");
+//                    System.out.println("3. Exit");
+//
+//                    String input = reader.readLine();
+//                    int choice;
+//
+//                    try {
+//                        choice = Integer.parseInt(input);
+//
+//                        switch (choice) {
+//                            case 1:
+//                                handleJournalMarks();
+//                                break;
+//                            case 2:
+//                                handleAttestationMarks();
+//                                break;
+//                            case 3:
+//                                System.out.println("Exiting Put Marks.");
+//                                return;
+//                            default:
+//                                System.out.println("Invalid choice. Please select 1, 2, or 3.");
+//                        }
+//                    } catch (NumberFormatException e) {
+//                        System.out.println("Invalid input. Please enter a valid number.");
+//                    }
+//                }
+//
+//            } catch (Exception e) {
+//                System.out.println("Error occurred while fetching the courses.");
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        private void handleJournalMarks() {
+//            try {
+//                System.out.println("=== Journal Marks ===");
+//                Vector<Course> courses = teacher.getCurrentCourses();
+//
+//                if (courses.isEmpty()) {
+//                    System.out.println("No courses available.");
+//                    return;
+//                }
+//
+//                System.out.println("Choose a course:");
+//                for (int i = 0; i < courses.size(); i++) {
+//                    System.out.println("[" + (i + 1) + "] " + courses.get(i).getName());
+//                }
+//
+//                String input = reader.readLine();
+//                int courseChoice = Integer.parseInt(input);
+//
+//                if (courseChoice < 1 || courseChoice > courses.size()) {
+//                    System.out.println("Invalid course choice. Try again.");
+//                    return;
+//                }
+//
+//                Course selectedCourse = courses.get(courseChoice - 1);
+//                Vector<Student> students = selectedCourse.getStudents();
+//
+//                if (students.isEmpty()) {
+//                    System.out.println("No students enrolled in this course.");
+//                    return;
+//                }
+//
+//                System.out.println("Enter marks for students in " + selectedCourse.getName() + ":");
+//                for (Student student : students) {
+//                    System.out.println("Enter marks for " + student.getFirstname() + " " + student.getLastname() + ":");
+//                    String marksInput = reader.readLine();
+//
+//                    try {
+//                        double marks = Double.parseDouble(marksInput);
+//                        student.getJournal(selectedCourse).addMark(marks);
+//                        System.out.println("Marks added for " + student.getFirstname() + " " + student.getLastname() + ".");
+//                    } catch (NumberFormatException e) {
+//                        System.out.println("Invalid marks. Skipping this student.");
+//                    }
+//                }
+//
+//            } catch (Exception e) {
+//                System.out.println("Error occurred while updating journal marks.");
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        private void handleAttestationMarks() {
+//            try {
+//                System.out.println("=== Attestation Marks ===");
+//                Vector<Course> courses = teacher.getCurrentCourses();
+//
+//                if (courses.isEmpty()) {
+//                    System.out.println("No courses available.");
+//                    return;
+//                }
+//
+//                System.out.println("Choose a course:");
+//                for (int i = 0; i < courses.size(); i++) {
+//                    System.out.println("[" + (i + 1) + "] " + courses.get(i).getName());
+//                }
+//
+//                String input = reader.readLine();
+//                int courseChoice = Integer.parseInt(input);
+//
+//                if (courseChoice < 1 || courseChoice > courses.size()) {
+//                    System.out.println("Invalid course choice. Try again.");
+//                    return;
+//                }
+//
+//                Course selectedCourse = courses.get(courseChoice - 1);
+//                System.out.println("Enter attestation marks for students in " + selectedCourse.getName() + ":");
+//
+//                Vector<Student> students = selectedCourse.getStudents();
+//
+//                if (students.isEmpty()) {
+//                    System.out.println("No students enrolled in this course.");
+//                    return;
+//                }
+//
+//                for (Student student : students) {
+//                    System.out.println("Enter attestation marks for " + student.getFirstname() + " " + student.getLastname() + ":");
+//                    String marksInput = reader.readLine();
+//
+//                    try {
+//                        double marks = Double.parseDouble(marksInput);
+//                        selectedCourse.getAttestation().updateAttestation(student, marks);
+//                        System.out.println("Attestation marks updated for " + student.getFirstname() + " " + student.getLastname() + ".");
+//                    } catch (NumberFormatException e) {
+//                        System.out.println("Invalid marks. Skipping this student.");
+//                    }
+//                }
+//
+//            } catch (Exception e) {
+//                System.out.println("Error occurred while updating attestation marks.");
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
+
+    public static class PutAttendanceCommand implements Command {
+        private final Teacher teacher;
+        private final BufferedReader reader;
+
+        public PutAttendanceCommand(Teacher teacher, BufferedReader reader) {
+            this.teacher = teacher;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("PutAttendance", teacher);
+            try {
+                System.out.println("=== Put Marks ===");
+
+                Vector<Course> courses = teacher.getCurrentCourses();
+                course: while (true) {
+                    System.out.println("Choose a Course:");
+                    for (int i = 0; i < courses.size(); i++) {
+                        System.out.println("[" + (i + 1) + "] " + courses.get(i).getName());
+                    }
+
+                    String input = reader.readLine();
+                    int courseChoice;
+
+                    try {
+                        courseChoice = Integer.parseInt(input);
+                        if (courseChoice < 1 || courseChoice > courses.size()) {
+                            System.out.println("Invalid course choice. Try again.");
+                            continue;
+                        }
+
+                        Course selectedCourse = courses.get(courseChoice - 1);
+                        Vector<Student> students = selectedCourse.getStudents();
+
+                        student: while (true) {
+                            System.out.println("Choose a Student:");
+                            int i = 1;
+                            for (Student student : students) {
+                                System.out.println("[" + i + "] " + student.getFirstname() + " " + student.getLastname());
+                                i++;
+                            }
+
+                            String studentInput = reader.readLine();
+                            int studentChoice;
+
+                            try {
+                                studentChoice = Integer.parseInt(studentInput);
+                                if (studentChoice < 1 || studentChoice > students.size()) {
+                                    System.out.println("Invalid student choice. Try again.");
+                                    continue;
+                                }
+
+                                Student selectedStudent = students.get(studentChoice - 1);
+                                System.out.println("Choose attendance type (1 - Attend, 2 - Absent, 3 - Late): ");
+                                String attendanceInput = reader.readLine();
+                                int attendanceType;
+
+                                try {
+                                    attendanceType = Integer.parseInt(attendanceInput);
+                                    JournalLesson jl = new JournalLesson(new Date(), LessonType.LECTURE);
+
+                                    switch (attendanceType) {
+                                        case 1:
+                                            jl.setAttendance(Attendance.ATTEND);
+                                            break;
+                                        case 2:
+                                            jl.setAttendance(Attendance.ABSENSE);
+                                            break;
+                                        case 3:
+                                            jl.setAttendance(Attendance.LATE);
+                                            break;
+                                        default:
+                                            System.out.println("Invalid attendance type. Try again.");
+                                            continue;
+                                    }
+
+                                    selectedStudent.getJournal(selectedCourse).addJournalLesson(selectedStudent, jl);
+                                    System.out.println("Attendance updated for " + selectedStudent.getFirstname() + " " + selectedStudent.getLastname());
+
+                                } catch (NumberFormatException e) {
+                                    System.out.println("Invalid input. Please enter a number for attendance.");
+                                    continue;
+                                }
+
+                                System.out.println("Would you like to mark attendance for another student? (y/n): ");
+                                String response = reader.readLine();
+                                if ("n".equalsIgnoreCase(response)) {
+                                    break student;
+                                } else if (!"y".equalsIgnoreCase(response)) {
+                                    System.out.println("Invalid response. Please enter 'y' or 'n'.");
+                                }
+
+                            } catch (NumberFormatException e) {
+                                System.out.println("Invalid student number. Please enter a valid number.");
+                                continue;
+                            }
+                        }
+
+                        System.out.println("Would you like to choose another course? (y/n): ");
+                        String response = reader.readLine();
+                        if ("n".equalsIgnoreCase(response)) {
+                            break course;
+                        } else if (!"y".equalsIgnoreCase(response)) {
+                            System.out.println("Invalid response. Please enter 'y' or 'n'.");
+                        }
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid number for course selection.");
+                        continue;
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error occurred while fetching the courses.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    public static class SendMessageCommand implements Command {
+        private final User sender;
+        private final BufferedReader reader;
+
+        public SendMessageCommand(User sender, BufferedReader reader) {
+            this.sender = sender;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("SendMessage", sender);
+            try {
+                System.out.println("=== Send Message ===");
+                Database db = Database.getInstance();
+
+                recipient: while (true) {
+                    System.out.println("Enter a recipient email without domain(like: e_kokenov):\n");
+
+                    String input = reader.readLine();
+                    String recipientChoice;
+
+                    try {
+                        recipientChoice = input;
+                        User selectedRecipient = db.findUserByEmail(recipientChoice + "@kbtu.kz");
+                        if (selectedRecipient == null) {
+                            System.out.println("Invalid recipient choice. Try again.");
+                            continue;
+                        }
+
+                        System.out.println("Enter your message:");
+                        String messageContent = reader.readLine();
+
+                        if (messageContent.trim().isEmpty()) {
+                            System.out.println("Message cannot be empty. Try again.");
+                            continue;
+                        }
+
+                        selectedRecipient.getNotifications().add(new Message(sender, messageContent));
+
+                        System.out.println("Message sent to " + selectedRecipient.getFirstname() + " " + selectedRecipient.getLastname() + ".");
+
+                        System.out.println("Would you like to send another message? (y/n):");
+                        String response = reader.readLine();
+                        if ("n".equalsIgnoreCase(response)) {
+                            break recipient;
+                        } else if (!"y".equalsIgnoreCase(response)) {
+                            System.out.println("Invalid response. Please enter 'y' or 'n'.");
+                        }
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid number for recipient selection.");
+                        continue;
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending the message.");
+                e.printStackTrace();
             }
         }
     }

@@ -3,6 +3,7 @@ package Academic;
 import java.util.Vector;
 import Enums.Faculty;
 import Enums.Speciality;
+import Users.Student;
 import Users.Teacher;
 import Enums.Semester;
 
@@ -13,6 +14,7 @@ public class Course {
     private Speciality speciality;
     private Vector<Teacher> instructors;
     private Vector<Teacher> teachers;
+    private Vector<Student> students;
     private int credits;
     private Semester semester;
 //    private Years year;
@@ -87,6 +89,10 @@ public class Course {
 
     public Semester getSemester() {
         return semester;
+    }
+
+    public Vector<Student> getStudents() {
+        return students;
     }
 
     public void setSemester(Semester semester) {

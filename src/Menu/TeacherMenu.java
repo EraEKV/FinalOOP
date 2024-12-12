@@ -1,25 +1,38 @@
 package Menu;
 
-import java.io.*;
-import java.util.*;
+import Users.Manager;
+import Users.Teacher;
 
-class StudentMenu {
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+
+public class TeacherMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public void addCommand(int option, Command command) {
-        commands.put(option, command);
+    public TeacherMenu(Teacher teacher) {
+        // adding commands to the map
+        commands.put(1, new Commands.ViewCoursesCommand(teacher));
+        commands.put(2, new Commands.ManageCourseCommand(teacher, reader));
+        commands.put(3, new Commands.ViewStudentsInfoCommand(teacher, reader));
+//        commands.put(4, new Commands.PutMarksCommand(teacher, reader));
+        commands.put(5, new Commands.PutAttendanceCommand(teacher, reader));
+        commands.put(6, new Commands.SendMessageCommand(teacher, reader));
     }
 
     public void displayMenu() {
         while (true) {
             try {
-                System.out.println("\n=== Student Menu ===");
-                System.out.println("1. View Marks");
-                System.out.println("2. View Transcript");
-                System.out.println("3. Rate a Teacher");
-                System.out.println("4. View Teacher Information");
-                System.out.println("5. Manage Organizations");
+                System.out.println("\n=== Teacher Menu ===");
+                System.out.println("1. View Courses");
+                System.out.println("2. Manage Course");
+                System.out.println("3. View Students Information");
+                System.out.println("4. Put Marks");
+                System.out.println("5. Put Attendance");
+                System.out.println("6. Send Message");
                 System.out.println("0. Exit");
                 System.out.print("Enter your choice: ");
 

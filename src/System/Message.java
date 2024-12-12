@@ -15,7 +15,7 @@ public class Message extends Notification {
     }
 
     public Message(User author, String text) {
-        super(text, author);
+        super(author, text);
     }
 
 

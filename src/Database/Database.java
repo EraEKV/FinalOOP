@@ -12,6 +12,7 @@ import Research.ResearchProject;
 import Research.Researcher;
 import Users.*;
 import System.Organization;
+import System.Log;
 import Academic.Course;
 import System.News;
 
@@ -52,7 +53,7 @@ public class Database {
 	
 	private Vector<Student> students;
 	
-	private Vector<String> logs;
+	private Vector<Log> logs;
 	
 	private PriorityQueue<News> news;
 
@@ -201,16 +202,9 @@ public class Database {
         this.news = news;
     }
 
-    public Vector<String> getLogs() {
+    public Vector<Log> getLogs() {
         return logs;
     }
-
-    public void setLogs(Vector<String> logs) {
-        this.logs = logs;
-    }
-
-
-
 
 
 
@@ -282,13 +276,16 @@ public class Database {
                 .collect(Collectors.toCollection(Vector<Manager>::new));
     }
 
+
+
+
+//    methods like orm
     public User findUserByEmail(String email) throws NoSuchElementException {
         return users.values().stream()
                 .filter(u -> u.getEmail().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
     }
-
 
 
 //	public void newUserAdded(User user) {

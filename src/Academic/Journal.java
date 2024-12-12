@@ -42,6 +42,7 @@ public class Journal {
 	}
 
 
+
 //	update journal
 	public void updateJournalData(Student s, Date date, Attendance attendance) {
 		Vector<JournalLesson> lessons = journalData.get(s);

@@ -1,6 +1,8 @@
 package System;
 
 
+import Database.Database;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -57,10 +59,11 @@ public class Credentials {
 //    logic of generating email if we have collisions with them
     public String generateEmail(String firstname, String lastname) {
         String newEmail = "";
+        Database db = Database.getInstance();
 
         for(int i = 0; i < firstname.length(); i++) {
             newEmail = firstname.charAt(i) + "_" + lastname + "@kbtu.kz";
-            if(checkForEmail(newEmail)) break;
+            if(db.findUserByEmail(newEmail) == null) break;
         }
 
         return newEmail;
@@ -72,17 +75,6 @@ public class Credentials {
 
         return newHash.equals(hashedPassword);
     }
-
-
-
-//    return true if everything is ok
-    private Boolean checkForEmail(String email) {
-//        Database db = Database.getInstance();
-//        HashMap<Credentials, User> = db.getUsers();
-
-        return true;
-    }
-
 
 
 

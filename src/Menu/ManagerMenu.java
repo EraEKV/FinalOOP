@@ -52,7 +52,7 @@ public class ManagerMenu {
                 if (command != null) {
                     command.execute();
                 } else {
-                    System.out.println("Invalid option. Please try again.");
+                    System.err.println("Invalid option. Please try again.");
                 }
             } catch (IOException e) {
                 System.out.println("An error occurred while reading input. Please try again.");

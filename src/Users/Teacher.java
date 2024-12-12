@@ -1,6 +1,7 @@
 package Users ;
 
 
+import Academic.Course;
 import Enums.Faculty;
 import Enums.TeacherType;
 import Research.CanBeResearcher;
@@ -9,7 +10,7 @@ import Research.Researcher;
 import java.util.Vector;
 
 // CanViewStudents interface
-public class Teacher extends Employee implements CanTeach, CanBeResearcher {
+public class Teacher extends Employee implements CanViewStudents, CanBeResearcher {
 
 	private String id;
 	private String subjectName;
@@ -17,6 +18,9 @@ public class Teacher extends Employee implements CanTeach, CanBeResearcher {
 	private Researcher isResearcher;
 	private Faculty faculty;
 	private Vector<Integer> ratings;
+	private Vector<Course> currentCourses;
+
+
 
 //	Constructors
 	public Teacher() {	}
@@ -38,6 +42,8 @@ public class Teacher extends Employee implements CanTeach, CanBeResearcher {
 		}
 		return ratings;
 	}
+
+
 //	public void putMarks(Course course, Student student, Date date, double grade) {
 //		// TODO implement me
 //		return null;
@@ -57,7 +63,35 @@ public class Teacher extends Employee implements CanTeach, CanBeResearcher {
 //		// TODO implement me
 //		return null;
 //	}
-	
+
+
+//	accessors
+
+
+	public Faculty getFaculty() {
+		return faculty;
+	}
+
+	public void setTeacherType(TeacherType teacherType) {
+		this.teacherType = teacherType;
+	}
+
+	public TeacherType getTeacherType() {
+		return teacherType;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setCurrentCourses(Vector<Course> currentCourses) {
+		this.currentCourses = currentCourses;
+	}
+
+	public Vector<Course> getCurrentCourses() {
+		return currentCourses;
+	}
+
 	public double getRating() {
 		// TODO implement me
 		return 0.0;
@@ -71,15 +105,10 @@ public class Teacher extends Employee implements CanTeach, CanBeResearcher {
 	}
 
 	@Override
-	public void teach() {
-		System.out.println("Teacher " + id + " is teaching");
+	public Vector<Student> viewStudentsInfo(Course course) {
+
+		return ;
 	}
-
-//	@Override
-//	public Vector<Student> viewStudentsInfo(Course parameter) {
-//		return null;
-//	}
-
 
 	@Override
 	public boolean equals(Object o) {

@@ -1,5 +1,6 @@
 package Users;
 
+import Academic.Attestation;
 import Academic.Course;
 import Academic.Journal;
 import Enums.Faculty;
@@ -22,10 +23,14 @@ public class Student extends User implements ManageOrganization {
 	private Faculty faculty;
 	private int startYear;
 	private Speciality speciality;
-	private Employee advisor;
 	private Vector<Complaint> warnings;
-	private Vector<Journal> journal;
 	private Researcher researchSupervisor;
+	private Vector<Journal> journals;
+
+
+
+	private Attestation attestation;
+
 
 	private HashMap<Course, Integer> countRetakes;
 
@@ -34,12 +39,6 @@ public class Student extends User implements ManageOrganization {
 	private boolean registered;
 
 	public Student() {
-		super();
-	}
-
-
-	public <T> T getUserType() {
-			return (T) new Student();
 	}
 
 	public Student(String id) {
@@ -68,6 +67,17 @@ public class Student extends User implements ManageOrganization {
 
 	public void setFaculty(Faculty faculty) {
 		this.faculty = faculty;
+	}
+
+	public Vector<Journal> getJournals() {
+		return journals;
+	}
+
+	public Journal getJournal(Course course) {
+		return journals.stream()
+				.filter(journal -> journal.getCourse().equals(course))
+				.findFirst()
+				.orElse(null);
 	}
 
 	public Speciality getSpeciality() {
