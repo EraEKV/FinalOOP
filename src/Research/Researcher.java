@@ -1,15 +1,13 @@
 package Research;
 
 import Enums.Faculty;
-import Users.User;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
-public class Researcher {
-
+public class Researcher implements CanResearch{
+    private int citations;
     List<ResearchPaper> papers;
 
     public Researcher() {
@@ -20,9 +18,13 @@ public class Researcher {
         return 0;
     }
 
-//    public int calculateCitations() {
-//        return 0;
-//    }
+    public int calculateCitations() {
+        int totalCitations = 0;
+        for (ResearchPaper paper : papers) {
+            totalCitations += paper.getCitations().size();
+        }
+        return totalCitations;
+    }
 
     public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
         papers.add(paper);
@@ -31,16 +33,36 @@ public class Researcher {
         journal.setResearchPapers(prev);
     }
 
-    public List<ResearchPaper> printPapers(Comparator<ResearchPaper> comparator) {
+    public void printPapers(Comparator comparator) {
         papers.sort(comparator);
+        for (ResearchPaper paper : papers) {
+            System.out.println(paper);
+        }
+    }
+
+    public void topCitedSchoolResearcher(Faculty faculty) {
+
+    }
+
+    public void topCitedResearcher() {
+
+    }
+
+    public List<ResearchPaper> getPapers() {
         return papers;
     }
 
-//    public void topCitedSchoolResearcher(Faculty faculty) {
-//
-//    }
-//
-//    public void topCitedResearcher() {
-//
-//    }
+    public void setPapers(List<ResearchPaper> papers) {
+        this.papers = papers;
+    }
+
+    public int getCitations() {
+        return citations;
+    }
+
+    public void setCitations(int citations) {
+        this.citations = citations;
+    }
+
+
 }

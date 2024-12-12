@@ -1,6 +1,7 @@
 package Users ;
 
 import Academic.Journal;
+import CustomExceptions.NotAResearcherException;
 import Enums.Faculty;
 import Research.*;
 import System.News;
@@ -88,56 +89,19 @@ public abstract class User implements Subscriber, CanBeResearcher {
 		notifications.add(new Notification("New post in research journal!!!"));
 		System.out.println("New post in research journal!!!");
 	}
+
 	//researcher realization
 	@Override
 	public void beReseacrher() {
 		this.isResearcher = new Researcher();
 	}
 
-	public int calculateHIndex() {
-		if (isResearcher != null) {
-			return isResearcher.calculateHIndex();
+	public Researcher getIsResearcher() {
+		if (isResearcher == null) {
+			throw new NotAResearcherException("Access denied: User is not a researcher.");
 		}
-		throw new IllegalStateException("User is not a researcher");
+		return isResearcher;
 	}
-
-//	public int calculateCitations() {
-//		if (isResearcher != null) {
-//			return isResearcher.calculateCitations();
-//		}
-//		throw new IllegalStateException("User is not a researcher");
-//	}
-
-	public List<ResearchPaper> printPapers(Comparator c) {
-		if (isResearcher != null) {
-			return isResearcher.printPapers(c);
-		}
-		throw new IllegalStateException("User is not a researcher");
-	}
-
-	public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
-		if (isResearcher != null) {
-			isResearcher.publishPaper(paper, journal);
-		} else {
-			throw new IllegalStateException("User is not a researcher");
-		}
-	}
-
-//	public void topCitedSchoolResearcher(Faculty faculty) {
-//		if (isResearcher != null) {
-//			isResearcher.topCitedSchoolResearcher(faculty);
-//		} else {
-//			throw new IllegalStateException("User is not a researcher");
-//		}
-//	}
-
-//	public void topCitedResearcher() {
-//		if (isResearcher != null) {
-//			isResearcher.topCitedResearcher();
-//		} else {
-//			throw new IllegalStateException("User is not a researcher");
-//		}
-//	}
 
 	@Override
 	public boolean equals(Object o) {
