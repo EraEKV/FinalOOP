@@ -70,6 +70,15 @@ public abstract class User implements Subscriber, CanBeResearcher {
 		this.email = email;
 	}
 
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+
 	public Credentials getCredentials() {
 		return credentials;
 	}
