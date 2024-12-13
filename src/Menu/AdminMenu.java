@@ -14,17 +14,11 @@ import java.util.Map;
 public class AdminMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private final Admin admin;
 
-    public AdminMenu(Admin admin) {
-        this.admin = admin;
-        initializeCommands();
-    }
-
-    private void initializeCommands() {
+    public AdminMenu(Admin admin, Database database) {
         commands.put(1, new Commands.AddUserCommand(admin, reader));
         commands.put(2, new Commands.DeleteUserCommand(admin, reader));
-//        commands.put(3, new Commands.UpdateUserCommand(admin, reader));
+        commands.put(3, new Commands.UpdateUserCommand(database, reader));
         commands.put(4, new Commands.ViewLogsCommand(admin));
         commands.put(5, new Commands.ExitCommand());
     }

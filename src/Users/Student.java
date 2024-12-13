@@ -17,7 +17,7 @@ import java.util.Vector;
 
 // CanViewTeachers interface
 
-public class Student extends User implements ManageOrganization {
+public class Student extends User implements ManageOrganization, CanViewTeachers {
 
 	private String id;
 	private Faculty faculty;
@@ -207,6 +207,10 @@ public class Student extends User implements ManageOrganization {
 
 	}
 
+	@Override
+	public Vector<Teacher> viewCourseTeachersInfo(Course course) {
+		return course.getTeachers();
+	}
 
 	@Override
 	public void createOrganization(String name) {

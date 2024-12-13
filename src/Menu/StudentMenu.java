@@ -2,7 +2,7 @@ package Menu;
 
 import Users.Student;
 import Users.Teacher;
-
+import System.Organization;
 import java.io.*;
 import java.util.*;
 
@@ -14,17 +14,16 @@ class StudentMenu {
         commands.put(option, command);
     }
 
-    public StudentMenu(Student student) {
-        // adding commands to the map
+    public StudentMenu(Student student, List<Organization> organizations, List<Teacher> teachers) {
+        // Adding commands to the map
         commands.put(1, new Commands.ViewMarksCommand(student));
         commands.put(2, new Commands.ViewTranscriptCommand(student));
         commands.put(3, new Commands.RateTeacherCommand(student, reader));
-//        commands.put(4, new Commands.ViewTeacherInfoCommand(student, reader));
-//        commands.put(5, new Commands.ManageOrganizationsCommand(student, reader));
-        commands.put(5, new Commands.SendMessageCommand(student, reader));
-        commands.put(6, new Commands.RegisterToCourses(student, reader));
+        commands.put(4, new Commands.ViewTeacherInfoCommand(teachers, reader));
+        commands.put(5, new Commands.ManageOrganizationsCommand(student, organizations, reader));
+        commands.put(6, new Commands.SendMessageCommand(student, reader));
+        commands.put(7, new Commands.RegisterToCourses(student, reader));
     }
-
 
     public void displayMenu() {
         while (true) {
@@ -35,7 +34,8 @@ class StudentMenu {
                 System.out.println("[3] Rate a Teacher");
                 System.out.println("[4] View Teacher Information");
                 System.out.println("[5] Manage Organizations");
-                System.out.println("[6] Register to courses");
+                System.out.println("[6] Send Message");
+                System.out.println("[7] Register to Courses");
                 System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
@@ -50,7 +50,7 @@ class StudentMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5, 6 -> {
+                    case 1, 2, 3, 4, 5, 6, 7 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();

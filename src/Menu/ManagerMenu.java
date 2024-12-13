@@ -14,13 +14,13 @@ public class ManagerMenu {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public ManagerMenu(Manager manager, UniversitySystemMediator mediator) {
-
-        // adding commands to the map
+        // Adding commands to the map
         commands.put(1, new Commands.AddCourseCommand(manager, reader));
         commands.put(2, new Commands.ViewRequestsCommand(manager));
         commands.put(3, new Commands.AddNewsCommand(manager, reader, mediator));
         commands.put(4, new Commands.RedirectRequestCommand(manager, reader));
         commands.put(5, new Commands.OpenCloseRegistrationCommand(manager, reader));
+        commands.put(6, new Commands.SendMessageCommand(manager, reader));
     }
 
     public void displayMenu() {
@@ -32,7 +32,8 @@ public class ManagerMenu {
                 System.out.println("3. Add News");
                 System.out.println("4. Redirect Request to Rector");
                 System.out.println("5. Open/Close Registration");
-                System.out.println("6. Exit");
+                System.out.println("6. Send Message");
+                System.out.println("0. Exit");
                 System.out.print("Enter your choice: ");
 
                 String input = reader.readLine();
@@ -45,16 +46,20 @@ public class ManagerMenu {
                     continue;
                 }
 
-                if (choice == 6) {
-                    System.out.println("Exiting...");
-                    return;
-                }
-
-                Command command = commands.get(choice);
-                if (command != null) {
-                    command.execute();
-                } else {
-                    System.err.println("Invalid option. Please try again.");
+                switch (choice) {
+                    case 1, 2, 3, 4, 5, 6 -> {
+                        Command command = commands.get(choice);
+                        if (command != null) {
+                            command.execute();
+                        } else {
+                            System.err.println("Command not implemented yet.");
+                        }
+                    }
+                    case 0 -> {
+                        System.out.println("Exiting the menu. Goodbye!");
+                        return;
+                    }
+                    default -> System.out.println("Invalid choice. Try again.");
                 }
             } catch (IOException e) {
                 System.out.println("An error occurred while reading input. Please try again.");
@@ -62,3 +67,4 @@ public class ManagerMenu {
         }
     }
 }
+
