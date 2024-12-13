@@ -70,7 +70,7 @@ public class Attestation {
 		}
 
 		double average = totalMarks / count;
-		System.out.println("Average Mark: " + average);
+		System.out.println("Average Mark for " + owner.getId() + " is  : " + average);
 	}
 
 
