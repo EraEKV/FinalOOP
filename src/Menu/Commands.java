@@ -228,7 +228,7 @@ public class Commands {
 
 
 
-    public class RegisterToCourses implements Command {
+    public static class RegisterToCourses implements Command {
         private final Student student;
         private final BufferedReader reader;
 
@@ -290,7 +290,6 @@ public class Commands {
                         continue;
                     }
 
-                    // Teacher selection loop for the selected course
                     Teacher selectedTeacher = null;
                     teacherLoop: while (true) {
                         System.out.println("Select a teacher for " + selectedCourse.getName() + ":");

@@ -22,7 +22,7 @@ class StudentMenu {
 //        commands.put(4, new Commands.ViewTeacherInfoCommand(student, reader));
 //        commands.put(5, new Commands.ManageOrganizationsCommand(student, reader));
         commands.put(5, new Commands.SendMessageCommand(student, reader));
-//        commands.put(6, new Commands.RegisterToCourses(student, reader));
+        commands.put(6, new Commands.RegisterToCourses(student, reader));
     }
 
 
