@@ -192,6 +192,13 @@ public class Database {
         this.researchProjects = researchProjects;
     }
 
+    public Vector<ResearchJournal> getResearchJournals() {
+        return researchJournals;
+    }
+
+    public void setResearchJournals(Vector<ResearchJournal> researchJournals) {
+        this.researchJournals = researchJournals;
+    }
 
     public Vector<ResearchPaper> getResearchPapers() {
         return researchPapers;

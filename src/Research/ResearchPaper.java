@@ -8,7 +8,7 @@ import Enums.CitationFormat;
 public class ResearchPaper {
     private String name;
     private int pages;
-    private String author;
+    private Researcher author;
     private ResearchJournal researchJournal;
     private Vector<ResearchPaper> citations;
     private String DOI;
@@ -90,6 +90,14 @@ public class ResearchPaper {
 
     public void setAuthors(Vector<Researcher> authors) {
         this.authors = authors;
+    }
+
+    public Researcher getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Researcher author) {
+        this.author = author;
     }
 
     public String getCitation(CitationFormat format) {

@@ -9,6 +9,6 @@ public interface CanResearch {
 	int calculateCitations();
 	void printPapers(Comparator c);
 	void publishPaper(ResearchPaper paper, ResearchJournal journal);
-	void topCitedSchoolResearcher(Faculty faculty);
+	static void topCitedSchoolResearcher(Faculty faculty){};
 	void topCitedResearcher();
 }
