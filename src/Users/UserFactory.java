@@ -3,6 +3,7 @@ package Users ;
 import CustomExceptions.UserTypeException;
 import Enums.*;
 import Database.Database;
+import Research.Researcher;
 
 import java.time.Year;
 
@@ -16,38 +17,39 @@ public class UserFactory {
 
 
 	//	new Manager
-//	public User createUser(String firstname, String lastname, UserType userType, ManagerType managerType) {
-//		String id = generateId(userType, managerType);
-//		return new Manager(id, firstname, lastname, managerType);
-//	}
+	public User createUser(String firstname, String lastname, UserType userType) {
+		String id = generateId(Manager.class);
+		return new Manager(id, firstname, lastname);
+	}
 
 	//	new Student (Bachelor)
 	public User createUser(String firstname, String lastname, UserType userType, Faculty faculty, Speciality speciality) {
-		String id = generateId(userType, new Student());
+		String id = generateId(Student.class);
 		return new Student(id, firstname, lastname, faculty, speciality);
 	}
 
 	//	new GradStudent
-//	public User createUser(String firstname, String lastname, UserType userType, Faculty faculty, Speciality speciality, StudentType studType) {
-//		String id = generateId(userType, studType);
-//		if(studType.equals(StudentType.MASTER)) {
+//	public User createUser(String firstname, String lastname, UserType userType, Faculty faculty, Speciality speciality) {
+//		String id;
+//		if(userType.equals(UserType.MAS)) {
+//			id = generateId(MasterStudent.class);
 //			return new MasterStudent(id, firstname, lastname, faculty, speciality);
-//		} else {
+//		} else if(userType.equals(UserType.PHD)) {
+//			id = generateId(PhDStudent.class);
 //			return new PhDStudent(id, firstname, lastname, faculty, speciality);
 //		}
 //	}
 
 	// new Teacher
 	public User createUser(String firstname, String lastname, UserType userType, TeacherType teacherType, Faculty faculty) {
-		String id = generateId(userType, teacherType);
+		String id = generateId(Teacher.class);
 		return new Teacher(id, firstname, lastname, teacherType, faculty);
 	}
 
 
-//	public Researcher createUser(Teacher t) {
-//		// TODO implement me
-//		return null;
-//	}
+	public Researcher createUser() {
+		return new Researcher();
+	}
 //
 //	public Researcher createUser(Student s) {
 //		// TODO implement me
@@ -58,66 +60,31 @@ public class UserFactory {
 
 	// generating ID for new User
 
-	public static String formatCountID(int number) {
-		int length = Math.max(5, String.valueOf(number).length());
-		return String.format("%0" + length + "d", number);
-	}
-
-	private <T extends Enum<T>> String generateId(User user) {
+	private String generateId(Class<? extends User> userClass) throws UserTypeException {
 		String idSuffix;
-		String id;
 
 		Database db = Database.getInstance();
 
-		switch (user) {
-			case instanceof Student:
-				if (specificType instanceof Student) {
-					switch ((StudentType) specificType) {
-						case PHD:
-							idSuffix = "P";
-							break;
-						case MASTER:
-							idSuffix = "M";
-							break;
-						case BACHELOR:
-							idSuffix = "B";
-							break;
-						default:
-							throw new UserTypeException(specificType);
-					}
-					idSuffix += formatCountID(db.getStudentsCount((StudentType) specificType));
-				} else {
-					throw new UserTypeException(specificType);
-				}
-				break;
-
-			case TCH:
-				if (specificType instanceof TeacherType) {
-					idSuffix = "T" + formatCountID(db.getUsersCount(userType));
-				} else {
-					throw new UserTypeException(specificType);
-				}
-				break;
-
-			case MNG:
-				if (specificType instanceof ManagerType) {
-					idSuffix = "M" + formatCountID(db.getUsersCount(userType));
-				} else {
-					throw new UserTypeException(specificType);
-				}
-				break;
-
-			default:
-				throw new UserTypeException(userType);
+		if (Student.class.isAssignableFrom(userClass)) {
+			idSuffix = "B";
+		} else if (PhDStudent.class.isAssignableFrom(userClass)) {
+			idSuffix = "P";
+		} else if (MasterStudent.class.isAssignableFrom(userClass)) {
+			idSuffix = "M";
+		} else if (Teacher.class.isAssignableFrom(userClass)) {
+			idSuffix = "T";
+		} else if (Manager.class.isAssignableFrom(userClass)) {
+			idSuffix = "O";
+		} else {
+			throw new UserTypeException();
 		}
 
 
-		String yearPart = String.valueOf(Year.now().getValue()).substring(2);
+		idSuffix += String.format("%05d", db.getUsersCount(userClass));
 
-		id = yearPart + idSuffix;
-
-		return id;
+		return String.valueOf(Year.now().getValue()).substring(2) + idSuffix;
 	}
+
 
 }
 

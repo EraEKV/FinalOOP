@@ -3,16 +3,17 @@ package Users;
 import Academic.Course;
 import Database.Database;
 import System.Request;
-import Enums.ManagerType;
+
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Vector;
 import System.News;
 
 public class Manager extends Employee {
+
 	private String id;
 	private Vector<Request> requests;
-	private ManagerType managerType;
+
 
 	{
 		requests = new Vector<>();
@@ -34,10 +35,6 @@ public class Manager extends Employee {
 		this.id = id;
 	}
 
-	public Manager(String firstname, String lastname, String email, String id, ManagerType managerType) {
-		this(firstname, lastname, email, id);
-		this.managerType = managerType;
-	}
 
 	public String getId() {
 		return id;
@@ -55,13 +52,7 @@ public class Manager extends Employee {
 		this.requests = requests;
 	}
 
-	public ManagerType getManagerType() {
-		return managerType;
-	}
 
-	public void setManagerType(ManagerType managerType) {
-		this.managerType = managerType;
-	}
 
 	public void addCourse(Course c) {
 		if (c != null) {
@@ -109,6 +100,11 @@ public class Manager extends Employee {
 		}
 	}
 
+	public void setRegistration() {
+		Database db = Database.getInstance();
+		db.setRegistrationOpened(!db.getRegistrationOpened());
+	}
+
 	public void setRegistration(Student s) {
 		if (s != null) {
 			System.out.println("Student " + s + " has been registered.");
@@ -145,12 +141,12 @@ public class Manager extends Employee {
 		if (o == null || getClass() != o.getClass()) return false;
 		if (!super.equals(o)) return false;
 		Manager manager = (Manager) o;
-		return Objects.equals(id, manager.id) && Objects.equals(requests, manager.requests) && managerType == manager.managerType;
+		return Objects.equals(id, manager.id) && Objects.equals(requests, manager.requests);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), id, requests, managerType);
+		return Objects.hash(super.hashCode(), id, requests);
 	}
 
 	@Override
@@ -158,7 +154,6 @@ public class Manager extends Employee {
 		return "Manager{" +
 				"id='" + id + '\'' +
 				", requests=" + requests +
-				", managerType=" + managerType +
 				'}';
 	}
 }

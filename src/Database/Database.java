@@ -63,7 +63,7 @@ public class Database {
 	
 	private Semester semester;
 	
-	public boolean regIsOpen;
+	public boolean IsRegOpened = false;
 	
 	private SemesterPeriod semesterPeriod;
 	
@@ -149,6 +149,13 @@ public class Database {
         this.disciplinaryCommittee = disciplinaryCommittee;
     }
 
+    public Boolean getRegistrationOpened() {
+        return isRegistrationOpened;
+    }
+
+    public void setRegistrationOpened(Boolean registrationOpened) {
+        isRegistrationOpened = registrationOpened;
+    }
 
     public Vector<Researcher> getResearchers() {
         return researchers;
@@ -227,11 +234,11 @@ public class Database {
 
     public int getUsersCount(Class<? extends User> userClass) throws UserTypeException {
         if (userClass == null) {
-            throw new UserTypeException(null);
+            throw new UserTypeException();
         }
 
         if (!User.class.isAssignableFrom(userClass)) {
-            throw new UserTypeException(userClass.getName());
+            throw new UserTypeException();
         }
 
 //        checking instance or not, same instance will be counted
