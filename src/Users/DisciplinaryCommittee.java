@@ -1,6 +1,8 @@
 package Users;
 
 import java.util.Vector;
+
+import Database.Database;
 import System.Complaint;
 import System.Organization;
 
@@ -9,8 +11,6 @@ public class DisciplinaryCommittee extends Employee {
 //    private int countOfMembers;
 
     private Vector<Complaint> complaints;
-
-
 
 //    constructors
 
@@ -34,28 +34,32 @@ public class DisciplinaryCommittee extends Employee {
         super(firstname, lastname, email, salary);
     }
 
-
-
 //    accessor
-
     public Vector<Complaint> getComplaints() {
         return complaints;
     }
 
+    public void setComplaints(Vector<Complaint> complaints) {
+        this.complaints = complaints;
+    }
 
-
-//    methods
-
+    //    methods
     public void makeWarning(Student student, Complaint complaint) {
-
+        Vector<Complaint> currentComplaints = student.getWarnings();
+        currentComplaints.add(complaint);
+        student.setWarnings(currentComplaints);
+        System.out.println(student + " was got warning for " + complaint);
     }
 
     public void kick(Student student) {
-
+        Vector<Student> students = Database.getInstance().getStudents();
+        students.remove(student);
+        student = null;
+        System.out.println(student + " was kicked");
     }
 
     public void reviewCase(Complaint complaint) {
-
+        System.out.println(complaint);
     }
 
     public void assignPenalty(Student student, Complaint complaint) {
@@ -63,8 +67,15 @@ public class DisciplinaryCommittee extends Employee {
     }
 
     public void deleteOrganization(Organization organization) {
+        Vector<Organization> organizations = Database.getInstance().getStudentOrganizations();
 
+        if (organizations.remove(organization)) {
+            System.out.println("Organization " + organization + " removed successfully.");
+        } else {
+            System.out.println("Organization not found.");
+        }
     }
+
 
 
     @Override

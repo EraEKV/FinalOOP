@@ -96,6 +96,59 @@ public class Student extends User implements ManageOrganization {
 		this.registered = registered;
 	}
 
+	public int getStartYear() {
+		return startYear;
+	}
+
+	public void setStartYear(int startYear) {
+		this.startYear = startYear;
+	}
+
+	public Vector<Complaint> getWarnings() {
+		return warnings;
+	}
+
+	public void setWarnings(Vector<Complaint> warnings) {
+		this.warnings = warnings;
+	}
+
+	public Researcher getResearchSupervisor() {
+		return researchSupervisor;
+	}
+
+	public void setResearchSupervisor(Researcher researchSupervisor) {
+		this.researchSupervisor = researchSupervisor;
+	}
+
+	public void setJournals(Vector<Journal> journals) {
+		this.journals = journals;
+	}
+
+	public Attestation getAttestation() {
+		return attestation;
+	}
+
+	public void setAttestation(Attestation attestation) {
+		this.attestation = attestation;
+	}
+
+	public HashMap<Course, Integer> getCountRetakes() {
+		return countRetakes;
+	}
+
+	public void setCountRetakes(HashMap<Course, Integer> countRetakes) {
+		this.countRetakes = countRetakes;
+	}
+
+	@Override
+	public Vector<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(Vector<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
 	public void viewMarks() {
 		// TODO implement me
 		return;
