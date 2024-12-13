@@ -2,22 +2,45 @@ package Users;
 
 import Academic.Journal;
 import Research.CanResearch;
+import Research.ResearchJournal;
 import Research.ResearchPaper;
 import Enums.Faculty;
 import Enums.Speciality;
 import System.Request;
+
+import java.util.Comparator;
+import java.util.List;
 import java.util.Vector;
 
-public class GradStudent extends Student implements CanTeach, CanResearch {
+public class GradStudent extends Student implements CanResearch {
 	private String researchTopic;
 	private Vector<String> publications;
-	private Vector<ResearchPaper> researchPapers;
+	private Teacher teacher;
 
-	public GradStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality, String researchTopic) {
+	private int citations;
+	List<ResearchPaper> papers;
+
+
+
+	public GradStudent() {
+
+	}
+
+	public GradStudent(String id) {
+		super(id);
+	}
+
+	public GradStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality) {
 		super(id, firstname, lastname, faculty, speciality);
-		this.researchTopic = researchTopic;
+		this.publications = new Vector<>();
+		this.papers = new List<>();
+	}
+
+	public GradStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality, Teacher teacher) {
+		super(id, firstname, lastname, faculty, speciality);
 		this.publications = new Vector<>();
 		this.researchPapers = new Vector<>();
+		this.teacher = teacher;
 	}
 
 	public String getResearchTopic() {
@@ -36,6 +59,10 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 		publications.add(publication);
 	}
 
+
+
+
+//	Researcher
 	@Override
 	public int calculateHIndex() {
 		return publications.size(); // simplified for now
@@ -50,30 +77,30 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 		return totalCitations;
 	}
 
-	@Override
-	public Vector<ResearchPaper> printPapers(Request request) {
-		Vector<ResearchPaper> filteredPapers = new Vector<>();
-		String requestedTopic = request.getTopic();
-
-		// Фильтрация по теме запроса
-		for (ResearchPaper paper : researchPapers) {
-			if (paper.getName().contains(requestedTopic)) {
-				filteredPapers.add(paper);
-			}
-		}
-
-		if (filteredPapers.isEmpty()) {
-			System.out.println("No papers match the request.");
-		}
-
-		return filteredPapers;
+	public int calculateHIndex() {
+		return 0;
 	}
 
-	@Override
-	public void publishPaper(ResearchPaper paper, Journal journal) {
-//		paper.setResearchJournal(journal);
-//		journal.addPaper(paper);
-//		researchPapers.add(paper);
+	public int calculateCitations() {
+		int totalCitations = 0;
+		for (ResearchPaper paper : papers) {
+			totalCitations += paper.getCitations().size();
+		}
+		return totalCitations;
+	}
+
+	public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
+		papers.add(paper);
+		Vector<ResearchPaper> prev = journal.getResearchPapers();
+		prev.add(paper);
+		journal.setResearchPapers(prev);
+	}
+
+	public void printPapers(Comparator comparator) {
+		papers.sort(comparator);
+		for (ResearchPaper paper : papers) {
+			System.out.println(paper);
+		}
 	}
 
 	@Override
@@ -86,10 +113,6 @@ public class GradStudent extends Student implements CanTeach, CanResearch {
 		System.out.println("Finding the top-cited researcher.");
 	}
 
-	@Override
-	public void teach() {
-		System.out.println(getFirstname() + " " + getLastname() + " is teaching.");
-	}
 
 	public void research() {
 		System.out.println(getFirstname() + " " + getLastname() + " is conducting research on " + researchTopic);

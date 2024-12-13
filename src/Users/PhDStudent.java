@@ -3,11 +3,15 @@ import Enums.Speciality;
 import Enums.Faculty;
 
 public class PhDStudent extends GradStudent {
+
 	private String dissertationTopic;
 
-	public PhDStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality, String researchTopic, String dissertationTopic) {
-		super(id, firstname, lastname, faculty, speciality, researchTopic);
-		this.dissertationTopic = dissertationTopic;
+	public PhDStudent(String id) {
+		super(id);
+	}
+
+	public PhDStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality) {
+		super(id, firstname, lastname, faculty, speciality);
 	}
 
 	public String getDissertationTopic() {
