@@ -59,7 +59,7 @@ public class Attestation {
 		for (Map.Entry<SemesterPeriod, List<CustomPair<Course, AttestationMark>>> entry : info.entrySet()) {
 			for (CustomPair<Course, AttestationMark> pair : entry.getValue()) {
 				AttestationMark mark = pair.getSecond();
-//				totalMarks += mark.getNumericValue();
+				totalMarks += mark.getNumericValue();
 				count++;
 			}
 		}
@@ -70,7 +70,7 @@ public class Attestation {
 		}
 
 		double average = totalMarks / count;
-		System.out.println("Average Mark: " + average);
+		System.out.println("Average Mark for " + owner.getId() + " is  : " + average);
 	}
 
 

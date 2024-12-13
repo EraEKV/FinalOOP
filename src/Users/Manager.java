@@ -1,14 +1,13 @@
 package Users;
 
 import Academic.Course;
+import Academic.Journal;
 import Academic.JournalLesson;
 import Database.Database;
 import System.Request;
 
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.PriorityQueue;
-import java.util.Vector;
+import java.util.*;
+
 import System.News;
 
 public class Manager extends Employee {
@@ -85,8 +84,20 @@ public class Manager extends Employee {
 	}
 
 	public String getReport() {
-//		HashMap<Student, Vector<JournalLesson>> journalData = Database.getInstance().getUsers();
-		return "Report : " ;
+		double total = 0;
+		int count = 0;
+		Vector<Journal> journalData = Database.getInstance().getJournals();
+		for(Journal j : journalData) {
+			Collection<Vector<JournalLesson>> JournalLessons = j.getJournalData().values();
+			for(Vector<JournalLesson> jl : JournalLessons) {
+				for(JournalLesson jls : jl) {
+					total += jls.getMark();
+					count++;
+				}
+			}
+		}
+		double average = total/count;
+		return "Report : "  + average;
 	}
 
 	public void addNews(News n) {

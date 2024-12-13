@@ -6,6 +6,7 @@ public class AttestationMark {
 	private double firstAtt;
 	private double secondAtt;
 	private double finalExam;
+	private int numericValue;
 	private Mark fullAtt;
 
 	public AttestationMark(double firstAtt, double secondAtt, double finalExam) {
@@ -46,8 +47,21 @@ public class AttestationMark {
 		return fullAtt;
 	}
 
+	public int getNumericValue() {
+		return numericValue;
+	}
+
+	public void setNumericValue(int numericValue) {
+		this.numericValue = numericValue;
+	}
+
+	public void setFullAtt(Mark fullAtt) {
+		this.fullAtt = fullAtt;
+	}
+
 	private void calculateFullAtt() {
 		double total = firstAtt + secondAtt + finalExam;
+		this.numericValue = (int) Math.ceil(total);
 
 		if (total >= 90) {
 			fullAtt = Mark.A_PLUS;
