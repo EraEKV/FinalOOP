@@ -1,9 +1,10 @@
 package Users;
 
-
 import java.util.Date;
+import java.util.Objects;
 import java.util.Vector;
 import System.Message;
+
 
 public class Employee extends User {
 
@@ -14,7 +15,6 @@ public class Employee extends User {
 	private Vector<Message> messages;
 
 	public Employee() {
-
 	}
 
 	public Employee(String firstname, String lastname) {
@@ -43,9 +43,6 @@ public class Employee extends User {
 		this(firstname, lastname, email);
 		this.salary = salary;
 	}
-
-
-//	accessors
 
 	public int getSalary() {
 		return salary;
@@ -79,10 +76,6 @@ public class Employee extends User {
 		this.vacationEndDate = vacationEndDate;
 	}
 
-
-
-
-
 	public Vector<Message> getMessages() {
 		return messages;
 	}
@@ -99,15 +92,25 @@ public class Employee extends User {
 		return false;
 	}
 
-//	public void sendMessage(Employee employee, String messageContent) {
-//		Message message = new Message(this.id, messageContent);
-//		employee.getMessages().add(message);
-//		System.out.println("Message sent to Employee ID: " + employee.getId());
-//	}
-
 	@Override
 	public <T> T getUserType() {
 		return null;
 	}
-}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(salary, dateHired, onVacation, vacationEndDate, messages);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		Employee employee = (Employee) obj;
+		return salary == employee.salary &&
+				onVacation == employee.onVacation &&
+				Objects.equals(dateHired, employee.dateHired) &&
+				Objects.equals(vacationEndDate, employee.vacationEndDate) &&
+				Objects.equals(messages, employee.messages);
+	}
+}

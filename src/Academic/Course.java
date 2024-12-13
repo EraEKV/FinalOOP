@@ -1,5 +1,6 @@
 package Academic;
 
+import java.util.Objects;
 import java.util.Vector;
 import Enums.Faculty;
 import Enums.Speciality;
@@ -17,7 +18,12 @@ public class Course {
     private Vector<Student> students;
     private int credits;
     private Semester semester;
-//    private Years year;
+
+    public Course() {
+        this.instructors = new Vector<>();
+        this.teachers = new Vector<>();
+        this.students = new Vector<>();
+    }
 
     public Course(String code, String name, Faculty faculty, Speciality speciality, int credits, Semester semester) {
         this.code = code;
@@ -26,9 +32,9 @@ public class Course {
         this.speciality = speciality;
         this.instructors = new Vector<>();
         this.teachers = new Vector<>();
+        this.students = new Vector<>();
         this.credits = credits;
         this.semester = semester;
-//        this.year = year;
     }
 
     public String getCode() {
@@ -91,26 +97,39 @@ public class Course {
         return semester;
     }
 
-    public Vector<Student> getStudents() {
-        return students;
-    }
-
     public void setSemester(Semester semester) {
         this.semester = semester;
     }
 
-//    public Years getYear() {
-//        return year;
-//    }
-//
-//    public void setYear(Years year) {
-//        this.year = year;
-//    }
+    public Vector<Student> getStudents() {
+        return students;
+    }
 
     @Override
     public String toString() {
         return "Course [code=" + code + ", name=" + name + ", faculty=" + faculty +
                 ", speciality=" + speciality + ", credits=" + credits +
                 ", semester=" + semester;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, name, faculty, speciality, instructors, teachers, students, credits, semester);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Course course = (Course) obj;
+        return credits == course.credits &&
+                Objects.equals(code, course.code) &&
+                Objects.equals(name, course.name) &&
+                faculty == course.faculty &&
+                speciality == course.speciality &&
+                Objects.equals(instructors, course.instructors) &&
+                Objects.equals(teachers, course.teachers) &&
+                Objects.equals(students, course.students) &&
+                semester == course.semester;
     }
 }

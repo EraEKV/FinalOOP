@@ -1,11 +1,10 @@
 package Academic;
+
 import Users.Teacher;
 import Enums.Faculty;
 import Enums.LessonType;
-
-
-
 import java.util.Date;
+import java.util.Objects;
 
 public class Lesson {
 	private String name;
@@ -13,6 +12,9 @@ public class Lesson {
 	private Faculty faculty;
 	private LessonType lessonType;
 	private Date date;
+
+	public Lesson() {
+	}
 
 	public Lesson(String name, Teacher teacher, Faculty faculty, LessonType lessonType, Date date) {
 		this.name = name;
@@ -66,5 +68,22 @@ public class Lesson {
 	public String toString() {
 		return "Lesson [name=" + name + ", teacher=" + teacher + ", faculty=" + faculty +
 				", lessonType=" + lessonType + ", date=" + date + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, teacher, faculty, lessonType, date);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		Lesson lesson = (Lesson) obj;
+		return Objects.equals(name, lesson.name) &&
+				Objects.equals(teacher, lesson.teacher) &&
+				faculty == lesson.faculty &&
+				lessonType == lesson.lessonType &&
+				Objects.equals(date, lesson.date);
 	}
 }

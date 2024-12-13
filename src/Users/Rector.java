@@ -2,10 +2,10 @@ package Users;
 
 import System.Request;
 import Enums.Status;
+import java.util.Objects;
 import java.util.Vector;
 
 public class Rector extends Employee {
-	// Static instance of Rector
 	private static Rector instance;
 	private Vector<Request> requests;
 
@@ -30,8 +30,8 @@ public class Rector extends Employee {
 
 	public void signRequest(Request request) {
 		if (requests.contains(request)) {
-			request.setSigned(true);  // Mark the request as signed
-			request.setStatus(Status.DONE);  // Set status to DONE
+			request.setSigned(true);
+			request.setStatus(Status.DONE);
 			System.out.println("Request signed: " + request.getTopic());
 			requests.remove(request);
 		} else {
@@ -47,5 +47,18 @@ public class Rector extends Employee {
 		} else {
 			System.out.println("Request not found.");
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(requests);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		Rector rector = (Rector) obj;
+		return Objects.equals(requests, rector.requests);
 	}
 }

@@ -1,17 +1,12 @@
-package Academic ;
-
+package Academic;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Vector;
-
 import Enums.Mark;
-import Users.Student;
 import Users.Teacher;
 import Enums.Status;
 import Research.ResearchPaper;
-import Enums.Speciality;
-import Enums.Faculty;
-
 
 public class DiplomaProject {
 	private String topic;
@@ -21,6 +16,9 @@ public class DiplomaProject {
 	private Mark grade;
 	private Vector<ResearchPaper> researchPapers;
 
+	public DiplomaProject() {
+		this.researchPapers = new Vector<>();
+	}
 
 	public DiplomaProject(String topic, Teacher supervisor, Date endDate) {
 		this.topic = topic;
@@ -29,7 +27,6 @@ public class DiplomaProject {
 		this.grade = null;
 		this.researchPapers = new Vector<>();
 	}
-
 
 	public String getTopic() {
 		return topic;
@@ -95,5 +92,23 @@ public class DiplomaProject {
 		return "DiplomaProject [topic=" + topic + ", supervisor=" + supervisor + ", endDate=" + endDate +
 				", status=" + status + ", grade=" + grade +
 				", researchPapers=" + researchPapers + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(topic, supervisor, endDate, status, grade, researchPapers);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null || getClass() != obj.getClass()) return false;
+		DiplomaProject that = (DiplomaProject) obj;
+		return Objects.equals(topic, that.topic) &&
+				Objects.equals(supervisor, that.supervisor) &&
+				Objects.equals(endDate, that.endDate) &&
+				status == that.status &&
+				grade == that.grade &&
+				Objects.equals(researchPapers, that.researchPapers);
 	}
 }
