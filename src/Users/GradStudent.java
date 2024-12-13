@@ -17,8 +17,6 @@ public class GradStudent extends Student  {
 	private int citations;
 	List<ResearchPaper> papers;
 
-
-
 	public GradStudent() {
 
 	}

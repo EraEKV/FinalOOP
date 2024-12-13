@@ -62,10 +62,6 @@ public class DisciplinaryCommittee extends Employee {
         System.out.println(complaint);
     }
 
-    public void assignPenalty(Student student, Complaint complaint) {
-
-    }
-
     public void deleteOrganization(Organization organization) {
         Vector<Organization> organizations = Database.getInstance().getStudentOrganizations();
 
