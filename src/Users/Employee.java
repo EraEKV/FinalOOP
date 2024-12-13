@@ -92,7 +92,6 @@ public class Employee extends User {
 		return false;
 	}
 
-	@Override
 	public <T> T getUserType() {
 		return null;
 	}
