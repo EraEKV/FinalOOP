@@ -8,33 +8,22 @@ import System.Organization;
 
 public class DisciplinaryCommittee extends Employee {
 
-//    private int countOfMembers;
+    private static DisciplinaryCommittee INSTANCE;
 
     private Vector<Complaint> complaints;
 
-//    constructors
-
-    public DisciplinaryCommittee() {
-        Vector<Complaint> complaints = new Vector<>();
+    private DisciplinaryCommittee() {
+        this.complaints = new Vector<>();
     }
 
-    public DisciplinaryCommittee(String firstName, String lastName) {
-        super(firstName, lastName);
+    public static DisciplinaryCommittee getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new DisciplinaryCommittee();
+        }
+        return INSTANCE;
     }
 
-    public DisciplinaryCommittee(String firstName, String lastName, String email) {
-        super(firstName, lastName, email);
-    }
-
-    public DisciplinaryCommittee(String firstname, String lastname, int salary) {
-        super(firstname, lastname, salary);
-    }
-
-    public DisciplinaryCommittee(String firstname, String lastname, String email, int salary) {
-        super(firstname, lastname, email, salary);
-    }
-
-//    accessor
+    // Accessors
     public Vector<Complaint> getComplaints() {
         return complaints;
     }
@@ -43,7 +32,7 @@ public class DisciplinaryCommittee extends Employee {
         this.complaints = complaints;
     }
 
-    //    methods
+    // Methods
     public void makeWarning(Student student, Complaint complaint) {
         Vector<Complaint> currentComplaints = student.getWarnings();
         currentComplaints.add(complaint);
@@ -53,13 +42,15 @@ public class DisciplinaryCommittee extends Employee {
 
     public void kick(Student student) {
         Vector<Student> students = Database.getInstance().getStudents();
-        students.remove(student);
-        student = null;
-        System.out.println(student + " was kicked");
+        if (students.remove(student)) {
+            System.out.println(student + " was kicked from the university.");
+        } else {
+            System.out.println("Student not found.");
+        }
     }
 
     public void reviewCase(Complaint complaint) {
-        System.out.println(complaint);
+        System.out.println("Reviewing complaint: " + complaint);
     }
 
     public void deleteOrganization(Organization organization) {
@@ -71,8 +62,6 @@ public class DisciplinaryCommittee extends Employee {
             System.out.println("Organization not found.");
         }
     }
-
-
 
     @Override
     public String toString() {

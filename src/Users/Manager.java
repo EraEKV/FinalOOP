@@ -1,9 +1,11 @@
 package Users;
 
 import Academic.Course;
+import Academic.JournalLesson;
 import Database.Database;
 import System.Request;
 
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.PriorityQueue;
 import java.util.Vector;
@@ -82,11 +84,9 @@ public class Manager extends Employee {
 		return "Report for course: " + c;
 	}
 
-	public String getReport(Student s) {
-		if (s == null) {
-			return "No student provided.";
-		}
-		return "Report for student: " + s;
+	public String getReport() {
+//		HashMap<Student, Vector<JournalLesson>> journalData = Database.getInstance().getUsers();
+		return "Report : " ;
 	}
 
 	public void addNews(News n) {
