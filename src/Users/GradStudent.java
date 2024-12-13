@@ -51,52 +51,6 @@ public class GradStudent extends Student  {
 		publications.add(publication);
 	}
 
-
-
-
-//	Researcher
-//	@Override
-//	public int calculateHIndex() {
-//		return publications.size(); // simplified for now
-//	}
-//
-//	@Override
-//	public int calculateCitations() {
-//		int totalCitations = 0;
-//		for (ResearchPaper paper : researchPapers) {
-//			totalCitations += paper.getCitations().size(); // Using citations count instead of actual citation data
-//		}
-//		return totalCitations;
-//	}
-//
-//	public int calculateHIndex() {
-//		return 0;
-//	}
-//
-//	public int calculateCitations() {
-//		int totalCitations = 0;
-//		for (ResearchPaper paper : papers) {
-//			totalCitations += paper.getCitations().size();
-//		}
-//		return totalCitations;
-//	}
-//
-//	public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
-//		papers.add(paper);
-//		Vector<ResearchPaper> prev = journal.getResearchPapers();
-//		prev.add(paper);
-//		journal.setResearchPapers(prev);
-//	}
-//
-//	public void printPapers(Comparator comparator) {
-//		papers.sort(comparator);
-//		for (ResearchPaper paper : papers) {
-//			System.out.println(paper);
-//		}
-//	}
-
-
-
 	public void research() {
 		System.out.println(getFirstname() + " " + getLastname() + " is conducting research on " + researchTopic);
 	}
