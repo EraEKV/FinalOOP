@@ -27,9 +27,8 @@ public class Commands {
 
         @Override
         public void execute() {
-            student.viewMarks();
-
             logging("ViewMarks", student);
+            student.viewMarks();
         }
     }
     // ViewTranscriptCommand
@@ -42,9 +41,8 @@ public class Commands {
 
         @Override
         public void execute() {
-            student.viewTranscript();
-
             logging("ViewTranscript", student);
+            student.viewTranscript();
         }
     }
 
@@ -60,6 +58,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("RateTeacher", (User) teachers);
             try {
                 System.out.println("Select a teacher to rate:");
                 for (int i = 0; i < teachers.size(); i++) {
@@ -101,6 +100,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("ViewTeacherInfo", (User) teachers);
             try {
                 System.out.println("Select a teacher to view their information:");
                 for (int i = 0; i < teachers.size(); i++) {
@@ -136,6 +136,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("ManageOrganization", student);
             while (true) {
                 try {
                     System.out.println("\n=== Manage Organizations ===");
@@ -203,6 +204,7 @@ public class Commands {
 
         @Override
         public void execute() {
+            logging("AddCourse", manager);
             try {
                 System.out.println("Enter course code:");
                 String code = reader.readLine();
@@ -260,10 +262,12 @@ public class Commands {
     public static class AddNewsCommand implements Command {
         private final Manager manager;
         private final BufferedReader reader;
+        private final UniversitySystemMediator mediator;
 
-        public AddNewsCommand(Manager manager, BufferedReader reader) {
+        public AddNewsCommand(Manager manager, BufferedReader reader, UniversitySystemMediator mediator) {
             this.manager = manager;
             this.reader = reader;
+            this.mediator = mediator;
         }
 
         @Override
@@ -272,25 +276,16 @@ public class Commands {
             try {
                 System.out.println("Enter author's name:");
                 String author = reader.readLine();
-
                 System.out.println("Enter news title:");
                 String title = reader.readLine();
-
                 System.out.println("Enter news content:");
                 String content = reader.readLine();
-
-                System.out.println("Enter news topic (e.g., POLITICS, SPORTS, TECHNOLOGY):");
+                System.out.println("Enter news topic:");
                 String topicInput = reader.readLine();
                 NewsTopic newsTopic = NewsTopic.valueOf(topicInput.toUpperCase());
-
-                News news = new News(author, title, content, newsTopic);
-
-                manager.addNews(news);
-                System.out.println("News added successfully!");
-            } catch (IOException e) {
+                mediator.publishNews(author, newsTopic, title, content);
+            } catch (IOException | IllegalArgumentException e) {
                 System.out.println("Error occurred while adding news.");
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid news topic provided.");
             }
         }
     }
@@ -976,5 +971,126 @@ public class Commands {
             }
         }
     }
+
+//ADMIN MENU
+    public static class AddUserCommand implements Command {
+        private final Admin admin;
+        private final BufferedReader reader;
+
+        public AddUserCommand(Admin admin, BufferedReader reader) {
+            this.admin = admin;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("AddUser", admin);
+            try {
+                System.out.print("Enter first name: ");
+                String firstname = reader.readLine();
+
+                System.out.print("Enter last name: ");
+                String lastname = reader.readLine();
+
+                System.out.print("Enter email: ");
+                String email = reader.readLine();
+
+               // User newUser = new User(firstname, lastname, email);
+               // admin.addUser(newUser);
+            } catch (IOException e) {
+                System.out.println("An error occurred while adding the user.");
+            }
+        }
+    }
+
+    public static class DeleteUserCommand implements Command {
+        private final Admin admin;
+        private final BufferedReader reader;
+
+        public DeleteUserCommand(Admin admin, BufferedReader reader) {
+            this.admin = admin;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("DeleteUser", admin);
+            try {
+                System.out.print("Enter user email to delete: ");
+                String email = reader.readLine();
+
+                User userToDelete = Database.getInstance().findUserByEmail(email);
+                if (userToDelete != null) {
+                    admin.deleteUser(userToDelete);
+                } else {
+                    System.out.println("User not found.");
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred while deleting the user.");
+            }
+        }
+    }
+
+    public static class UpdateUserCommand implements Command {
+        private final Database database;
+        private final BufferedReader reader;
+
+        public UpdateUserCommand(Database database, BufferedReader reader) {
+            this.database = database;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("UpdateUser", null); // No direct reference to Admin here
+            try {
+                System.out.print("Enter user email to update: ");
+                String email = reader.readLine();
+
+                User userToUpdate = database.findUserByEmail(email);
+                if (userToUpdate != null) {
+                    System.out.println("Updating user: " + userToUpdate);
+                    System.out.print("Enter new first name (leave blank to keep unchanged): ");
+                    String firstname = reader.readLine();
+
+                    System.out.print("Enter new last name (leave blank to keep unchanged): ");
+                    String lastname = reader.readLine();
+
+                    if (!firstname.isEmpty()) userToUpdate.setFirstname(firstname);
+                    if (!lastname.isEmpty()) userToUpdate.setLastname(lastname);
+
+                    database.updateUser(userToUpdate); // Use Database to manage user update
+                } else {
+                    System.out.println("User not found.");
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred while updating the user.");
+            }
+        }
+    }
+
+
+    public static class ViewLogsCommand implements Command {
+        private final Admin admin;
+
+        public ViewLogsCommand(Admin admin) {
+            this.admin = admin;
+        }
+
+        @Override
+        public void execute() {
+            logging("ViewLogs", admin);
+            System.out.println(admin.viewLogs());
+        }
+    }
+
+    public static class ExitCommand implements Command {
+        @Override
+        public void execute() {
+            System.out.println("Exiting...");
+            System.exit(0);
+        }
+    }
+
 
 }
