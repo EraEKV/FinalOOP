@@ -242,7 +242,7 @@ public class Commands {
             try {
                 Database db = Database.getInstance();
                 Vector<Course> availableCourses = db.getCourses();
-                Vector<Course> registeredCourses = new Vector<>();
+                Map<Course, Teacher> registeredCoursesMap = new HashMap<>();
                 int totalCredits = 0;
                 int remainingCredits = 25;
 
@@ -264,7 +264,7 @@ public class Commands {
                             continue;
                         }
 
-                        if (isCourseAlreadyAssigned(course, registeredCourses)) {
+                        if (isCourseAlreadyAssigned(course, registeredCoursesMap)) {
                             continue;
                         }
                     }
@@ -323,7 +323,7 @@ public class Commands {
 
                     selectedCourse.assignTeacher(selectedTeacher);
 
-                    registeredCourses.add(selectedCourse);
+                    registeredCoursesMap.put(selectedCourse, selectedTeacher);
                     totalCredits += selectedCourse.getCredits();
                     remainingCredits = 25 - totalCredits;
 
@@ -341,7 +341,15 @@ public class Commands {
                     }
                 }
 
-                student.setRegisteredCourses(registeredCourses);
+                student.setRegisteredCourses(new Vector<>(registeredCoursesMap.keySet()));
+
+                for (Map.Entry<Course, Teacher> entry : registeredCoursesMap.entrySet()) {
+                    Course course = entry.getKey();
+                    Teacher teacher = entry.getValue();
+
+                    course.addStudentToTeacher(teacher, student);
+                }
+
 
             } catch (IOException | NumberFormatException e) {
                 System.out.println("Invalid input. Please try again.");
@@ -350,14 +358,11 @@ public class Commands {
 
 
 
-        private boolean isCourseAlreadyAssigned(Course course, Vector<Course> registeredCourses) {
-            for (Course c : registeredCourses) {
-                if (c == course) {
-                    return true;
-                }
-            }
-            return false;
+
+        private boolean isCourseAlreadyAssigned(Course course, Map<Course, Teacher> registeredCoursesMap) {
+            return registeredCoursesMap.containsKey(course);
         }
+
 
         private Discipline checkCourse(Student student, Speciality speciality) {
             if (student.getSpeciality().equals(speciality)) {

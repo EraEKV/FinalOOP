@@ -106,6 +106,11 @@ public class Course {
         this.semester = semester;
     }
 
+
+    public void addStudentToTeacher(Teacher teacher, Student student) {
+        this.members.get(teacher).add(student);
+    }
+
     public Vector<Student> getStudents() {
         Vector<Student> allStudents = new Vector<>();
         for (Vector<Student> students : members.values()) {
@@ -118,6 +123,9 @@ public class Course {
         return members.get(teacher);
     }
 
+    public Map<Teacher, Vector<Student>> getMembers() {
+        return members;
+    }
 
 
 
