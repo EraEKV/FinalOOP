@@ -1186,13 +1186,14 @@ public class Commands {
                 System.out.print("Enter email: ");
                 String email = reader.readLine();
 
-               // User newUser = new User(firstname, lastname, email);
-               // admin.addUser(newUser);
+                RegularUser newUser = new RegularUser(firstname, lastname, email);  // use concrete subclass
+                admin.addUser(newUser);
             } catch (IOException e) {
                 System.out.println("An error occurred while adding the user.");
             }
         }
     }
+
 
     public static class DeleteUserCommand implements Command {
         private final Admin admin;
