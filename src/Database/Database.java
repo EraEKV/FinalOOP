@@ -1,9 +1,7 @@
 package Database ;
 
 
-import Academic.Journal;
-import Academic.SemesterPeriod;
-import Pakita.Transcript;
+import Academic.*;
 import CustomExceptions.UserTypeException;
 import Enums.*;
 import Research.ResearchJournal;
@@ -13,7 +11,6 @@ import Research.Researcher;
 import Users.*;
 import System.Organization;
 import System.Log;
-import Academic.Course;
 import System.News;
 
 import java.io.*;
@@ -58,6 +55,7 @@ public class Database {
 	private PriorityQueue<News> news;
 
 	private Vector<Journal> journals;
+
 
 //	private Years years;
 	
@@ -220,11 +218,15 @@ public class Database {
         return logs;
     }
 
+    public Vector<Journal> getJournals() {
+        return journals;
+    }
 
+    public void setJournals(Vector<Journal> journals) {
+        this.journals = journals;
+    }
 
-
-
-//    public HashMap<String, HashMap<Language, String>> getLanguageData() {
+    //    public HashMap<String, HashMap<Language, String>> getLanguageData() {
 //        return languageData;
 //    }
 //
