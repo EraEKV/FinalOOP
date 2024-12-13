@@ -26,8 +26,7 @@ public class Student extends User implements ManageOrganization {
 	private Vector<Complaint> warnings;
 	private Researcher researchSupervisor;
 	private Vector<Journal> journals;
-
-
+	private Vector<Course> registeredCourses;
 
 	private Attestation attestation;
 
@@ -38,7 +37,10 @@ public class Student extends User implements ManageOrganization {
 
 	private boolean registered;
 
+
+//	constructors
 	public Student() {
+
 	}
 
 	public Student(String id) {
@@ -52,6 +54,10 @@ public class Student extends User implements ManageOrganization {
 		this.faculty = faculty;
 		this.speciality = speciality;
 	}
+
+
+
+	//	accessors
 
 	public String getId() {
 		return id;
@@ -69,6 +75,7 @@ public class Student extends User implements ManageOrganization {
 		this.faculty = faculty;
 	}
 
+
 	public Vector<Journal> getJournals() {
 		return journals;
 	}
@@ -79,6 +86,7 @@ public class Student extends User implements ManageOrganization {
 				.findFirst()
 				.orElse(null);
 	}
+
 
 	public Speciality getSpeciality() {
 		return speciality;
@@ -100,16 +108,8 @@ public class Student extends User implements ManageOrganization {
 		return startYear;
 	}
 
-	public void setStartYear(int startYear) {
-		this.startYear = startYear;
-	}
-
 	public Vector<Complaint> getWarnings() {
 		return warnings;
-	}
-
-	public void setWarnings(Vector<Complaint> warnings) {
-		this.warnings = warnings;
 	}
 
 	public Researcher getResearchSupervisor() {
@@ -140,14 +140,21 @@ public class Student extends User implements ManageOrganization {
 		this.countRetakes = countRetakes;
 	}
 
+	public Vector<Course> getRegisteredCourses() {
+		return registeredCourses;
+	}
+
+	public void setRegisteredCourses(Vector<Course> registeredCourses) {
+		this.registeredCourses = registeredCourses;
+	}
+
+
 	@Override
 	public Vector<Notification> getNotifications() {
 		return notifications;
 	}
 
-	public void setNotifications(Vector<Notification> notifications) {
-		this.notifications = notifications;
-	}
+
 
 	public void viewMarks() {
 		// TODO implement me

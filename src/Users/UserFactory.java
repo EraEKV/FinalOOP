@@ -15,21 +15,20 @@ public class UserFactory {
 	}
 
 
-
 	//	new Manager
-	public User createUser(String firstname, String lastname, UserType userType) {
+	public User createUser(String firstname, String lastname) {
 		String id = generateId(Manager.class);
 		return new Manager(id, firstname, lastname);
 	}
 
 	//	new Student (Bachelor)
-	public User createUser(String firstname, String lastname, UserType userType, Faculty faculty, Speciality speciality) {
+	public User createUser(String firstname, String lastname, Faculty faculty, Speciality speciality) {
 		String id = generateId(Student.class);
 		return new Student(id, firstname, lastname, faculty, speciality);
 	}
 
 	//	new GradStudent
-//	public User createUser(String firstname, String lastname, UserType userType, Faculty faculty, Speciality speciality) {
+//	public User createUser(String firstname, String lastname, Faculty faculty, Speciality speciality) {
 //		String id;
 //		if(userType.equals(UserType.MAS)) {
 //			id = generateId(MasterStudent.class);
@@ -41,7 +40,7 @@ public class UserFactory {
 //	}
 
 	// new Teacher
-	public User createUser(String firstname, String lastname, UserType userType, TeacherType teacherType, Faculty faculty) {
+	public User createUser(String firstname, String lastname, TeacherType teacherType, Faculty faculty) {
 		String id = generateId(Teacher.class);
 		return new Teacher(id, firstname, lastname, teacherType, faculty);
 	}
@@ -59,7 +58,6 @@ public class UserFactory {
 
 
 	// generating ID for new User
-
 	private String generateId(Class<? extends User> userClass) throws UserTypeException {
 		String idSuffix;
 

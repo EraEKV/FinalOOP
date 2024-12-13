@@ -16,6 +16,7 @@ import System.UniversitySystemMediator;
 import java.io.BufferedReader;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Commands {
     public static class ViewMarksCommand implements Command {
@@ -48,42 +49,75 @@ public class Commands {
 
     // RateTeacherCommand
     public static class RateTeacherCommand implements Command {
-        private final List<Teacher> teachers;
+        Database db = Database.getInstance();
+
+        private final Student student;
+        private final Vector<Teacher> teachers;
         private final BufferedReader reader;
 
-        public RateTeacherCommand(List<Teacher> teachers, BufferedReader reader) {
-            this.teachers = teachers;
+
+
+
+        public RateTeacherCommand(Student student, BufferedReader reader) {
+            this.student = student;
             this.reader = reader;
+            teachers = student.getRegisteredCourses().stream()
+                    .map(Course::getTeachers)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toCollection(Vector::new));
+
         }
 
         @Override
         public void execute() {
-            logging("RateTeacher", (User) teachers);
             try {
+                logging("RateTeacher", student);
                 System.out.println("Select a teacher to rate:");
+
+
                 for (int i = 0; i < teachers.size(); i++) {
-                    System.out.println((i + 1) + ". " + teachers.get(i).getFirstname() + " " + teachers.get(i).getLastname());
+                    System.out.println("[" + (i + 1) + "] " + teachers.get(i).getFirstname() + " " + teachers.get(i).getLastname());
                 }
+
                 System.out.print("Enter your choice: ");
                 String input = reader.readLine();
-                int teacherIndex = Integer.parseInt(input) - 1;
+                int teacherIndex;
 
-                if (teacherIndex < 0 || teacherIndex >= teachers.size()) {
-                    System.out.println("Invalid choice.");
+                try {
+                    teacherIndex = Integer.parseInt(input) - 1;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a number.");
                     return;
                 }
+
+                if (teacherIndex < 0 || teacherIndex >= teachers.size()) {
+                    System.out.println("Invalid choice. Please select a valid teacher.");
+                    return;
+                }
+
                 Teacher teacher = teachers.get(teacherIndex);
 
                 System.out.print("Enter your rating (1-5): ");
-                int rating = Integer.parseInt(reader.readLine());
+                int rating;
+
+                try {
+                    rating = Integer.parseInt(reader.readLine());
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid rating. Please enter a number between 1 and 5.");
+                    return;
+                }
+
                 if (rating < 1 || rating > 5) {
                     System.out.println("Invalid rating. Please enter a number between 1 and 5.");
                     return;
                 }
+
                 teacher.getRatings().add(rating);
                 System.out.println("Rating added successfully!");
-            } catch (IOException | NumberFormatException e) {
-                System.out.println("Invalid input. Please try again.");
+            } catch (IOException e) {
+                System.out.println("Error reading input. Please try again.");
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred: " + e.getMessage());
             }
         }
     }
@@ -191,6 +225,159 @@ public class Commands {
             }
         }
     }
+
+
+
+    public class RegisterToCourses implements Command {
+        private final Student student;
+        private final BufferedReader reader;
+
+        public RegisterToCourses(Student student, BufferedReader reader) {
+            this.student = student;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                Database db = Database.getInstance();
+                Vector<Course> availableCourses = db.getCourses();
+                Vector<Course> registeredCourses = new Vector<>();
+                int totalCredits = 0;
+                int remainingCredits = 25;
+
+                courseLoop: while (totalCredits < 25) {
+                    System.out.println("Total credits: " + totalCredits + " | Remaining credits: " + remainingCredits);
+                    System.out.println("Select a course to register:");
+
+                    for (int i = 0; i < availableCourses.size(); i++) {
+                        Course course = availableCourses.get(i);
+
+                        if (course.getCredits() > remainingCredits) {
+                            continue;
+                        }
+
+                        Discipline courseType = checkCourse(student, course.getSpeciality());
+                        System.out.println("[" + (i + 1) + "] " + course.getName() + " (Credits: " + course.getCredits() + ") - [" + courseType + "]");
+
+                        if (course.getTeachers().isEmpty()) {
+                            continue;
+                        }
+
+                        if (isCourseAlreadyAssigned(course, registeredCourses)) {
+                            continue;
+                        }
+                    }
+
+                    if (remainingCredits <= 0) {
+                        System.out.println("You have reached the maximum credit limit.");
+                        break;
+                    }
+
+                    System.out.print("Enter your choice: ");
+                    String input = reader.readLine();
+                    int courseIndex = Integer.parseInt(input) - 1;
+
+                    if (courseIndex < 0 || courseIndex >= availableCourses.size()) {
+                        System.out.println("Invalid course choice.");
+                        continue;
+                    }
+
+                    Course selectedCourse = availableCourses.get(courseIndex);
+
+                    if (selectedCourse.getCredits() > remainingCredits) {
+                        System.out.println("This course exceeds the remaining credit limit.");
+                        continue;
+                    }
+
+                    // Teacher selection loop for the selected course
+                    Teacher selectedTeacher = null;
+                    teacherLoop: while (true) {
+                        System.out.println("Select a teacher for " + selectedCourse.getName() + ":");
+
+                        for (int i = 0; i < selectedCourse.getTeachers().size(); i++) {
+                            Teacher teacher = selectedCourse.getTeachers().get(i);
+                            System.out.println("[" + (i + 1) + "] " + teacher.getFirstname() + " " + teacher.getLastname());
+                        }
+
+                        System.out.print("Enter the number of the teacher: ");
+                        input = reader.readLine();
+                        int teacherIndex = Integer.parseInt(input) - 1;
+
+                        if (teacherIndex < 0 || teacherIndex >= selectedCourse.getTeachers().size()) {
+                            System.out.println("Invalid choice. Try again.");
+                            continue;
+                        }
+
+                        selectedTeacher = selectedCourse.getTeachers().get(teacherIndex);
+                        System.out.println("You selected " + selectedTeacher.getFirstname() + " " + selectedTeacher.getLastname() + ".");
+                        System.out.print("Do you want to confirm the teacher choice? (y/n): ");
+                        String confirmation = reader.readLine();
+                        if ("y".equalsIgnoreCase(confirmation)) {
+                            break teacherLoop;
+                        } else if ("n".equalsIgnoreCase(confirmation)) {
+                            continue teacherLoop;
+                        } else {
+                            System.out.println("Invalid input. Please enter 'y' or 'n'.");
+                        }
+                    }
+
+                    selectedCourse.assignTeacher(selectedTeacher);
+
+                    registeredCourses.add(selectedCourse);
+                    totalCredits += selectedCourse.getCredits();
+                    remainingCredits = 25 - totalCredits;
+
+                    System.out.println("You have successfully registered for " + selectedCourse.getName() + " with " + selectedTeacher.getFirstname() + " " + selectedTeacher.getLastname());
+
+                    if (totalCredits == 25) {
+                        System.out.println("You have registered for 25 credits. Registration complete.");
+                        break;
+                    }
+
+                    System.out.print("Would you like to register for another course? (y/n): ");
+                    String response = reader.readLine();
+                    if ("n".equalsIgnoreCase(response)) {
+                        break;
+                    }
+                }
+
+                student.setRegisteredCourses(registeredCourses);
+
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Invalid input. Please try again.");
+            }
+        }
+
+
+
+        private boolean isCourseAlreadyAssigned(Course course, Vector<Course> registeredCourses) {
+            for (Course c : registeredCourses) {
+                if (c == course) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private Discipline checkCourse(Student student, Speciality speciality) {
+            if (student.getSpeciality().equals(speciality)) {
+                return Discipline.MAJOR;
+            } else {
+                return Discipline.MINOR;
+            }
+        }
+    }
+
+
+
+
+
+//
+//
+//    MANAGER MENU
+//
+//
 
     // AddCourseCommand
     public static class AddCourseCommand implements Command {
