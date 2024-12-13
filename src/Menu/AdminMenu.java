@@ -24,7 +24,7 @@ public class AdminMenu {
     private void initializeCommands() {
         commands.put(1, new Commands.AddUserCommand(admin, reader));
         commands.put(2, new Commands.DeleteUserCommand(admin, reader));
-        commands.put(3, new Commands.UpdateUserCommand(admin, reader));
+//        commands.put(3, new Commands.UpdateUserCommand(admin, reader));
         commands.put(4, new Commands.ViewLogsCommand(admin));
         commands.put(5, new Commands.ExitCommand());
     }

@@ -10,8 +10,8 @@ public class PhDStudent extends GradStudent {
 		super(id);
 	}
 
-	public PhDStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality) {
-		super(id, firstname, lastname, faculty, speciality);
+	public PhDStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality, Teacher teacher) {
+		super(id, firstname, lastname, faculty, speciality, teacher);
 	}
 
 	public String getDissertationTopic() {

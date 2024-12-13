@@ -5,8 +5,8 @@ import Enums.Faculty;
 public class MasterStudent extends GradStudent {
 	private String thesisTopic;
 
-	public MasterStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality, String researchTopic, String thesisTopic) {
-		super(id, firstname, lastname, faculty, speciality, researchTopic);
+	public MasterStudent(String id, String firstname, String lastname, Faculty faculty, Speciality speciality, String thesisTopic, Teacher teacher) {
+		super(id, firstname, lastname, faculty, speciality, teacher);
 		this.thesisTopic = thesisTopic;
 	}
 

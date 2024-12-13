@@ -107,7 +107,7 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 	@Override
 	public Vector<Student> viewStudentsInfo(Course course) {
 
-		return ;
+		return new Vector<Student>();
 	}
 
 	@Override

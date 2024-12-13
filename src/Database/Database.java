@@ -3,7 +3,7 @@ package Database ;
 
 import Academic.Journal;
 import Academic.SemesterPeriod;
-import Pakita.Transcript;
+import Academic.Transcript;
 import CustomExceptions.UserTypeException;
 import Enums.*;
 import Research.ResearchJournal;
