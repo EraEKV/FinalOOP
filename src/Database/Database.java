@@ -277,9 +277,12 @@ public class Database {
     }
 
 
+    public void updateUser(User user) {
+        String email = user.getEmail();
+        users.put(email, user);
+    }
 
-
-//    methods like orm
+    //    methods like orm
     public User findUserByEmail(String email) throws NoSuchElementException {
         return users.values().stream()
                 .filter(u -> u.getEmail().equals(email))
