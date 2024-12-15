@@ -38,7 +38,6 @@ public class Database {
 
 	private Vector<Course> courses;
 
-
     private Vector<Teacher> teachers;
 
     private Vector<Manager> managers;
@@ -165,6 +164,13 @@ public class Database {
         this.researchers = researchers;
     }
 
+    public Vector<Transcript> getTranscripts() {
+        return transcripts;
+    }
+
+    public void setTranscripts(Vector<Transcript> transcripts) {
+        this.transcripts = transcripts;
+    }
 
     public Vector<Organization> getStudentOrganizations() {
         return organizations;
@@ -220,11 +226,16 @@ public class Database {
         return logs;
     }
 
+    public Vector<Journal> getJournals() {
+        return journals;
+    }
+
+    public void setJournals(Vector<Journal> journals) {
+        this.journals = journals;
+    }
 
 
-
-
-//    public HashMap<String, HashMap<Language, String>> getLanguageData() {
+    //    public HashMap<String, HashMap<Language, String>> getLanguageData() {
 //        return languageData;
 //    }
 //

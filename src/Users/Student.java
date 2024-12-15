@@ -1,18 +1,19 @@
 package Users;
 
-import Academic.Attestation;
-import Academic.Course;
-import Academic.Journal;
+import Academic.*;
+import Database.Database;
 import Enums.Faculty;
+import Enums.Semester;
 import Enums.Speciality;
 import Research.CanBeResearcher;
 import Research.Researcher;
 import System.Complaint;
 import System.Organization;
 import System.Notification;
-
+import System.CustomPair;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 // CanViewTeachers interface
@@ -154,49 +155,64 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		return notifications;
 	}
 
-
-
 	public void viewMarks() {
 		// TODO implement me
-		return;
+		for(List<CustomPair<Course, AttestationMark>> l : attestation.getInfo().values()){
+			for(CustomPair<Course, AttestationMark> p : l){
+				System.out.println(p.getFirst() + " : " + p.getSecond());
+			}
+		}
 	}
 	
 	
 	public void viewTranscript() {
-		// TODO implement me
-		return;
+		Vector<Transcript> transcripts = Database.getInstance().getTranscripts();
+		for(Transcript t : transcripts){
+			if(t.getOwner().equals(this)){
+				System.out.println(t);
+			}
+		}
 	}
 	
 	
-	public void rateTeacher(Teacher t) {
+	public void rateTeacher(Teacher t, Integer rate) {
 		// TODO implement me
-		return;
+		Vector<Integer> curRating = t.getRatings();
+		curRating.add(rate);
+		t.setRatings(curRating);
 	}
 
 	
 	
-	public String viewTeacherInfo(Teacher t) {
+	public void viewTeacherInfo(Teacher t) {
 		// TODO implement me
-		return "";	
+		System.out.println(t);
 	}
 	
 	
-//	public void viewAbsenses() {
-//		// TODO implement me
-//		return;
-//	}
-	
-	
+	public void viewAbsenses() {
+		// TODO implement me
+		for(Journal journal : journals){
+			Vector<JournalLesson > jl = journal.getJournalData().get(this);
+			for(JournalLesson j : jl){
+				System.out.println(j.getAttendance());
+			}
+		}
+	}
+
+
 //	public void requestDocument(DocumentType parameter) {
 //		// TODO implement me
 //		return;
 //	}
 	
 	
-//	public void coursesRegistration(Course parameter, Teacher parameter2, Semester parameter3, pair<Integer, Integer> parameter4) {
-//		// TODO implement me
-//		return;
-//	}
+	public void coursesRegistration(Course course, Semester semester) {
+		// TODO implement me
+		if(!registered && Database.getInstance().getRegistrationOpened()){
+			registeredCourses.add(course);
+		}
+	}
 
 
 

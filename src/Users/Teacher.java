@@ -7,6 +7,7 @@ import Enums.TeacherType;
 import Research.CanBeResearcher;
 import Research.Researcher;
 
+import java.util.Date;
 import java.util.Vector;
 
 // CanViewStudents interface
@@ -44,10 +45,9 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 	}
 
 
-//	public void putMarks(Course course, Student student, Date date, double grade) {
-//		// TODO implement me
-//		return null;
-//	}
+	public void putMarks(Course course, Student student, Date date, double grade) {
+
+	}
 //
 //	public void putMarks(Course course, Student student, MarkType parameter3, double grade) {
 //		// TODO implement me
@@ -74,6 +74,35 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 
 	public void setTeacherType(TeacherType teacherType) {
 		this.teacherType = teacherType;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	@Override
+	public Researcher getIsResearcher() {
+		return isResearcher;
+	}
+
+	public void setIsResearcher(Researcher isResearcher) {
+		this.isResearcher = isResearcher;
+	}
+
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
+	}
+
+	public void setRatings(Vector<Integer> ratings) {
+		this.ratings = ratings;
 	}
 
 	public TeacherType getTeacherType() {
