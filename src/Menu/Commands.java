@@ -1285,4 +1285,111 @@ public class Commands {
     }
 
 
+    // GradStudentMenu
+
+    public static class ViewResearchTopicCommand implements Command {
+        private final GradStudent gradStudent;
+
+        public ViewResearchTopicCommand(GradStudent gradStudent) {
+            this.gradStudent = gradStudent;
+        }
+
+        @Override
+        public void execute() {
+            logging("ViewResearchTopic", gradStudent);
+            String topic = gradStudent.getResearchTopic();
+            if (topic == null || topic.isEmpty()) {
+                System.out.println("No research topic set.");
+            } else {
+                System.out.println("Research Topic: " + topic);
+            }
+        }
+    }
+
+
+    public static class SetResearchTopicCommand implements Command {
+        private final GradStudent gradStudent;
+        private final BufferedReader reader;
+
+        public SetResearchTopicCommand(GradStudent gradStudent, BufferedReader reader) {
+            this.gradStudent = gradStudent;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("SetResearchTopic", gradStudent);
+            try {
+                System.out.print("Enter a new research topic: ");
+                String topic = reader.readLine();
+                gradStudent.setResearchTopic(topic);
+                System.out.println("Research topic set successfully.");
+            } catch (IOException e) {
+                System.out.println("An error occurred while setting the research topic.");
+            }
+        }
+    }
+
+    public static class ViewPublicationsCommand implements Command {
+        private final GradStudent gradStudent;
+
+        public ViewPublicationsCommand(GradStudent gradStudent) {
+            this.gradStudent = gradStudent;
+        }
+
+        @Override
+        public void execute() {
+            logging("ViewPublications", gradStudent);
+            if (gradStudent.getPublications().isEmpty()) {
+                System.out.println("No publications found.");
+            } else {
+                System.out.println("Publications:");
+                for (String publication : gradStudent.getPublications()) {
+                    System.out.println("- " + publication);
+                }
+            }
+        }
+    }
+
+
+    public static class AddPublicationCommand implements Command {
+        private final GradStudent gradStudent;
+        private final BufferedReader reader;
+
+        public AddPublicationCommand(GradStudent gradStudent, BufferedReader reader) {
+            this.gradStudent = gradStudent;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("AddPublication", gradStudent);
+            try {
+                System.out.print("Enter the title of the publication: ");
+                String publication = reader.readLine();
+                gradStudent.addPublication(publication);
+                System.out.println("Publication added successfully.");
+            } catch (IOException e) {
+                System.out.println("An error occurred while adding the publication.");
+            }
+        }
+    }
+
+    public static class ConductResearchCommand implements Command {
+        private final GradStudent gradStudent;
+
+        public ConductResearchCommand(GradStudent gradStudent) {
+            this.gradStudent = gradStudent;
+        }
+
+        @Override
+        public void execute() {
+            logging("ConductResearch", gradStudent);
+            gradStudent.research();
+            System.out.println("Research in progress...");
+        }
+    }
+
+
+
 }
