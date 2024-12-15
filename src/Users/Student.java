@@ -149,6 +149,17 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		this.registeredCourses = registeredCourses;
 	}
 
+	public void setStartYear(int startYear) {
+		this.startYear = startYear;
+	}
+
+	public void setNotifications(Vector<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
+	public void setWarnings(Vector<Complaint> warnings) {
+		this.warnings = warnings;
+	}
 
 	@Override
 	public Vector<Notification> getNotifications() {

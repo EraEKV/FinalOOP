@@ -2,12 +2,17 @@ package Users ;
 
 
 import Academic.Course;
+import Academic.Journal;
+import Academic.JournalLesson;
+import Enums.Attendance;
 import Enums.Faculty;
+import Enums.LessonType;
 import Enums.TeacherType;
 import Research.CanBeResearcher;
 import Research.Researcher;
-
+import System.Complaint;
 import java.util.Date;
+import java.util.Dictionary;
 import java.util.Vector;
 
 // CanViewStudents interface
@@ -44,20 +49,15 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 		return ratings;
 	}
 
-
-	public void putMarks(Course course, Student student, Date date, double grade) {
-
-	}
-//
-//	public void putMarks(Course course, Student student, MarkType parameter3, double grade) {
-//		// TODO implement me
-//		return null;
+//	public void putMarks(LessonType lessonType, Attendance attendance, double mark, Student student, Course course, JournalLesson journalLesson) {
+//		journalLesson
 //	}
 	
-//	public void sendComplaint(Complaint parameter) {
-//		// TODO implement me
-//		return null;
-//	}
+	public void sendComplaint(Complaint complaint) {
+		Vector<Complaint> curr =  DisciplinaryCommittee.getInstance().getComplaints();
+		curr.add(complaint);
+		DisciplinaryCommittee.getInstance().setComplaints(curr);
+	}
 	
 //	public void markAttendance(JournalCourse parameter, Vector<Student> parameter2, Attendance parameter3) {
 //		// TODO implement me
