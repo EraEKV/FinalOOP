@@ -59,6 +59,9 @@ public class Manager extends Employee {
 		if (c != null) {
 			System.out.println("Course " + c.getName() + " has been added successfully.");
 			Vector<Course> courses = Database.getInstance().getCourses();
+			if(courses == null) {
+				courses = new Vector<>();
+			}
 			courses.add(c);
 			Database.getInstance().setCourses(courses);
 		} else {
@@ -87,6 +90,9 @@ public class Manager extends Employee {
 		double total = 0;
 		int count = 0;
 		Vector<Journal> journalData = Database.getInstance().getJournals();
+		if(journalData == null) {
+			return "No journal data available.";
+		}
 		for(Journal j : journalData) {
 			Collection<Vector<JournalLesson>> JournalLessons = j.getJournalData().values();
 			for(Vector<JournalLesson> jl : JournalLessons) {
@@ -103,6 +109,9 @@ public class Manager extends Employee {
 	public void addNews(News n) {
 		if (n != null) {
 			PriorityQueue<News> news = Database.getInstance().getNews();
+			if(news == null) {
+				news = new PriorityQueue<>();
+			}
 			news.add(n);
 			Database.getInstance().setNews(news);
 			System.out.println("News added: " + n);
@@ -132,18 +141,21 @@ public class Manager extends Employee {
 		}
 	}
 
-	public void approveStudentRegistration() {
-	}
+//	public void approveStudentRegistration() {
+//	}
 
-	public void assignCourseTeachers(Course c, Vector<Teacher> teachers) {
-		System.out.println("Teachers have been assigned to courses.");
-	}
+//	public void assignCourseTeachers(Course c, Vector<Teacher> teachers) {
+//		System.out.println("Teachers have been assigned to courses.");
+//	}
 	//must be stored in the system and checked by student
-	public void openRegistration(boolean p) {
-		if (p) {
+	public void toggleRegistration() {
+		boolean isRegOpen = Database.getInstance().getRegistrationOpened();
+		if (!isRegOpen) {
 			System.out.println("Registration is now open.");
+			isRegOpen = true;
 		} else {
 			System.out.println("Registration is now closed.");
+			isRegOpen = false;
 		}
 	}
 

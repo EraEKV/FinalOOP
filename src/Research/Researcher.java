@@ -2,10 +2,9 @@ package Research;
 
 import Database.Database;
 import Enums.Faculty;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Vector;
+
+import java.util.*;
+
 import Comparators.CitationComparator;
 
 public class Researcher implements CanResearch{
@@ -124,5 +123,24 @@ public class Researcher implements CanResearch{
         this.citations = citations;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Researcher that = (Researcher) o;
+        return citations == that.citations && Objects.equals(pceudoname, that.pceudoname) && Objects.equals(papers, that.papers);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(pceudoname, citations, papers);
+    }
+
+    @Override
+    public String toString() {
+        return "Researcher{" +
+                "pceudoname='" + pceudoname + '\'' +
+                ", citations=" + citations +
+                ", papers=" + papers +
+                '}';
+    }
 }
