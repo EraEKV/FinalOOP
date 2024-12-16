@@ -57,17 +57,24 @@ public class Manager extends Employee {
 
 	public void addCourse(Course c) {
 		if (c != null) {
-			System.out.println("Course " + c.getName() + " has been added successfully.");
 			Vector<Course> courses = Database.getInstance().getCourses();
-			if(courses == null) {
+			if (courses == null) {
 				courses = new Vector<>();
 			}
+
+			if (courses.stream().anyMatch(course -> course.getCode().equals(c.getCode()))) {
+				System.out.println("Course with this code already exists in the database.");
+				return;
+			}
+
 			courses.add(c);
 			Database.getInstance().setCourses(courses);
+			System.out.println("Course " + c.getName() + " has been added successfully.");
 		} else {
 			System.out.println("Invalid course. Cannot add.");
 		}
 	}
+
 
 	public void viewRequests() {
 		if (requests.isEmpty()) {
