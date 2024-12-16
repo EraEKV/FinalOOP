@@ -90,18 +90,16 @@ public class Credentials implements Serializable {
 //    logic of generating email if we have collisions with them
     public static String generateEmail(String firstname, String lastname, String userType) {
         String newEmail = "";
-        System.out.println("Type of user (FOR TEST) is: " + userType);
 
         firstname = firstname.toLowerCase();
         lastname = lastname.toLowerCase();
 
         String splitCharacter = userType.equals("Teacher") ? "." : "_";
-//        return firstname.charAt(0) + splitCharacter + lastname + "@kbtu.kz";
 
         Database db = Database.getInstance();
         for(int i = 0; i < firstname.length(); i++) {
-            newEmail = firstname.charAt(i) + splitCharacter + lastname + "@kbtu.kz";
-            if(db.findUserByEmail(newEmail) == null) break;
+            newEmail = firstname.substring(0, i + 1) + splitCharacter + lastname + "@kbtu.kz";
+            if(db.findUserByCredentials(new Credentials(newEmail)) == null) break;
         }
 
         return newEmail;
@@ -121,8 +119,7 @@ public class Credentials implements Serializable {
         if(o == null || getClass() != o.getClass()) return false;
         Credentials credentials = (Credentials) o;
 
-        return email.equals(credentials.email)
-                && password.equals(credentials.password);
+        return email.equals(credentials.email);
     }
 
     @Override

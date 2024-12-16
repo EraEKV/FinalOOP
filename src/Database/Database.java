@@ -83,13 +83,13 @@ public class Database implements Serializable {
 //    work with database
 
     public static Database read() throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream("data");
+        FileInputStream fis = new FileInputStream("database");
         ObjectInputStream oin = new ObjectInputStream(fis);
         return (Database) oin.readObject();
     }
 
     public static void write() throws IOException {
-        FileOutputStream fos = new FileOutputStream("data");
+        FileOutputStream fos = new FileOutputStream("database");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(DATABASE);
         oos.close();
