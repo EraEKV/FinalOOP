@@ -1,5 +1,6 @@
 package Users;
 
+import Database.Database;
 import Enums.UserType;
 import java.util.Objects;
 
@@ -21,16 +22,12 @@ public class Admin extends User {
         System.out.println("User deleted: " + user.getFirstname() + " " + user.getLastname());
     }
 
-    public void updateUser(User user) {
-        System.out.println("User updated: " + user.getFirstname() + " " + user.getLastname());
-    }
+//    public void updateUser(User user) {
+//        System.out.println("User updated: " + user.getFirstname() + " " + user.getLastname());
+//    }
 
-    public String viewLogs() {
-        return "Viewing system logs...";
-    }
-
-    public <T> T getUserType() {
-        return (T) UserType.ADM;
+    public void viewLogs() {
+        System.out.println(Database.getInstance().getLogs());
     }
 
     @Override
@@ -40,7 +37,7 @@ public class Admin extends User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFirstname(), getLastname(), getEmail(), getUserType());
+        return Objects.hash(getFirstname(), getLastname(), getEmail());
     }
 
     @Override
@@ -50,7 +47,6 @@ public class Admin extends User {
         Admin admin = (Admin) obj;
         return Objects.equals(getFirstname(), admin.getFirstname()) &&
                 Objects.equals(getLastname(), admin.getLastname()) &&
-                Objects.equals(getEmail(), admin.getEmail()) &&
-                Objects.equals(getUserType(), admin.getUserType());
+                Objects.equals(getEmail(), admin.getEmail());
     }
 }

@@ -19,8 +19,9 @@ public class UniversitySystemMediator {
 //	Auth
 	public User authenticateUser(String email, String password) throws InvalidAuthDataException {
 		Database db = Database.getInstance();
-		User user = db.findUserByEmail(email);
-		if (user != null && user.getCredentials().compareHash(password)) {
+		User user = db.findUserByCredentials(new Credentials(email, password));
+
+		if (user != null) {
 			System.out.println("Login successful\nWelcome back, " + user.getFirstname() + "!");
 			return user;
 		} else {

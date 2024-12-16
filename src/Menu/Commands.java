@@ -11,8 +11,10 @@ import System.Message;
 import System.Notification;
 import System.Request;
 import Users.Rector;
+import System.Credentials;
 import System.UniversitySystemMediator;
 
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.*;
 import java.util.*;
@@ -1163,7 +1165,15 @@ public class Commands {
         }
     }
 
-//ADMIN MENU
+
+
+
+
+//
+//
+//  ADMIN MENU
+//
+//
     public static class AddUserCommand implements Command {
         private final Admin admin;
         private final BufferedReader reader;
@@ -1183,16 +1193,130 @@ public class Commands {
                 System.out.print("Enter last name: ");
                 String lastname = reader.readLine();
 
-                System.out.print("Enter email: ");
-                String email = reader.readLine();
+                System.out.println("Select the type of user to add:");
+                System.out.println("[1] Student");
+                System.out.println("[2] MasterStudent");
+                System.out.println("[3] GradStudent");
+                System.out.println("[4] Teacher");
+                System.out.println("[5] Manager");
+//                System.out.println("[6] Researcher");
 
-                RegularUser newUser = new RegularUser(firstname, lastname, email);  // use concrete subclass
-                admin.addUser(newUser);
-            } catch (IOException e) {
+                String input = reader.readLine();
+                int choice = Integer.parseInt(input);
+
+                UserFactory factory = UserFactory.getInstance();
+                User newUser = null;
+
+                switch (choice) {
+                    case 1:  // Student
+                        Faculty studentFaculty = selectFaculty();
+                        Speciality studentSpeciality = selectSpeciality();
+                        newUser = factory.createUser(firstname, lastname, studentFaculty, studentSpeciality);
+                        break;
+                    case 2:  // MasterStudent
+                        Faculty masterFaculty = selectFaculty();
+                        Speciality masterSpeciality = selectSpeciality();
+                        newUser = factory.createUser(firstname, lastname, masterFaculty, masterSpeciality);
+                        break;
+                    case 3:  // GradStudent
+                        Faculty gradFaculty = selectFaculty();
+                        Speciality gradSpeciality = selectSpeciality();
+                        newUser = factory.createUser(firstname, lastname, gradFaculty, gradSpeciality);
+                        break;
+                    case 4:  // Teacher
+                        TeacherType teacherType = selectTeacherType();
+                        Faculty teacherFaculty = selectFaculty();
+                        newUser = factory.createUser(firstname, lastname, teacherType, teacherFaculty);
+                        break;
+                    case 5:  // Manager
+                        newUser = factory.createUser(firstname, lastname);
+                        break;
+//                    case 6:  // Researcher
+//                        Faculty researcherFaculty = selectFaculty();
+//                        newUser = factory.createUser(firstname, lastname, researcherFaculty);
+//                        break;
+                    default:
+                        System.out.println("Invalid choice. User creation cancelled.");
+                        return;
+                }
+
+                if (newUser != null) {
+                    String email = Credentials.generateEmail(firstname, lastname, newUser.getClass().getName());
+                    String pass = Credentials.generatePassword();
+                    Credentials credentials = new Credentials(email, pass);
+
+                    admin.addUser(newUser);
+
+                    System.out.println("User created successfully!");
+                    System.out.println("Generated Email: " + credentials.getEmail());
+                    newUser.getNotifications().add(new Message(admin, "Generated Password (DON'T SHARE): " + pass));
+                }
+
+            } catch (IOException | NumberFormatException e) {
                 System.out.println("An error occurred while adding the user.");
             }
         }
+
+    private Faculty selectFaculty() throws IOException {
+        while (true) {
+            System.out.println("Select a faculty:");
+            for (Faculty faculty : Faculty.values()) {
+                System.out.println("[" + (faculty.ordinal() + 1) + "] " + faculty);
+            }
+            try {
+                int facultyChoice = Integer.parseInt(reader.readLine()) - 1;
+                if (facultyChoice >= 0 && facultyChoice < Faculty.values().length) {
+                    return Faculty.values()[facultyChoice];
+                } else {
+                    System.out.println("Invalid choice. Please select a valid faculty.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
     }
+
+    private Speciality selectSpeciality() throws IOException {
+        while (true) {
+            System.out.println("Select a speciality:");
+            for (Speciality speciality : Speciality.values()) {
+                System.out.println("[" + (speciality.ordinal() + 1) + "] " + speciality);
+            }
+            try {
+                int specialityChoice = Integer.parseInt(reader.readLine()) - 1;
+                if (specialityChoice >= 0 && specialityChoice < Speciality.values().length) {
+                    return Speciality.values()[specialityChoice];
+                } else {
+                    System.out.println("Invalid choice. Please select a valid speciality.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+    private TeacherType selectTeacherType() throws IOException {
+        while (true) {
+            System.out.println("Select a teacher type:");
+            for (TeacherType teacherType : TeacherType.values()) {
+                System.out.println("[" + (teacherType.ordinal() + 1) + "] " + teacherType);
+            }
+            try {
+                int teacherTypeChoice = Integer.parseInt(reader.readLine()) - 1;
+                if (teacherTypeChoice >= 0 && teacherTypeChoice < TeacherType.values().length) {
+                    return TeacherType.values()[teacherTypeChoice];
+                } else {
+                    System.out.println("Invalid choice. Please select a valid teacher type.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+
+}
+
 
 
     public static class DeleteUserCommand implements Command {
@@ -1224,11 +1348,11 @@ public class Commands {
     }
 
     public static class UpdateUserCommand implements Command {
-        private final Database database;
+        private final Admin admin;
         private final BufferedReader reader;
 
-        public UpdateUserCommand(Database database, BufferedReader reader) {
-            this.database = database;
+        public UpdateUserCommand(Admin admin, BufferedReader reader) {
+            this.admin = admin;
             this.reader = reader;
         }
 
@@ -1239,6 +1363,7 @@ public class Commands {
                 System.out.print("Enter user email to update: ");
                 String email = reader.readLine();
 
+                Database database = Database.getInstance();
                 User userToUpdate = database.findUserByEmail(email);
                 if (userToUpdate != null) {
                     System.out.println("Updating user: " + userToUpdate);
@@ -1251,7 +1376,8 @@ public class Commands {
                     if (!firstname.isEmpty()) userToUpdate.setFirstname(firstname);
                     if (!lastname.isEmpty()) userToUpdate.setLastname(lastname);
 
-                    database.updateUser(userToUpdate); // Use Database to manage user update
+                    String newPass = database.updateUser(userToUpdate);
+                    userToUpdate.getNotifications().add(new Message(admin, "Generated Password (DON'T SHARE): " + newPass));
                 } else {
                     System.out.println("User not found.");
                 }
@@ -1272,7 +1398,7 @@ public class Commands {
         @Override
         public void execute() {
             logging("ViewLogs", admin);
-            System.out.println(admin.viewLogs());
+            admin.viewLogs();
         }
     }
 

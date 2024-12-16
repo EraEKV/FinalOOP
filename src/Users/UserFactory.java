@@ -8,10 +8,17 @@ import Research.Researcher;
 import java.time.Year;
 
 public class UserFactory {
+	private static UserFactory factory;
 
+	private UserFactory() {
 
-	public UserFactory() {
+	}
 
+	public static synchronized UserFactory getInstance() {
+		if (factory == null) {
+			factory = new UserFactory();
+		}
+		return factory;
 	}
 
 
