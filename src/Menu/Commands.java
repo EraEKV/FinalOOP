@@ -13,6 +13,7 @@ import System.Request;
 import Users.Rector;
 import System.Credentials;
 import System.UniversitySystemMediator;
+import Research.*;
 
 import javax.xml.crypto.Data;
 import java.io.BufferedReader;
@@ -397,35 +398,78 @@ public class Commands {
             logging("AddCourse", manager);
             try {
                 System.out.println("Enter course code:");
-                String code = reader.readLine();
+                String code = reader.readLine().trim();
+                if (code.isEmpty()) {
+                    System.out.println("Course code cannot be empty.");
+                    return;
+                }
+
+                if (Database.getInstance().getCourses().stream().anyMatch(course -> course.getCode().equals(code))) {
+                    System.out.println("A course with this code already exists.");
+                    return;
+                }
 
                 System.out.println("Enter course name:");
-                String name = reader.readLine();
+                String name = reader.readLine().trim();
+                if (name.isEmpty()) {
+                    System.out.println("Course name cannot be empty.");
+                    return;
+                }
 
                 System.out.println("Enter faculty (e.g., 'Engineering', 'Science'):");
-                String facultyInput = reader.readLine();
-                Faculty faculty = Faculty.valueOf(facultyInput.toUpperCase());
+                String facultyInput = reader.readLine().trim();
+                Faculty faculty;
+                try {
+                    faculty = Faculty.valueOf(facultyInput.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid faculty. Please try again.");
+                    return;
+                }
 
                 System.out.println("Enter speciality (e.g., 'Computer Science', 'Electrical Engineering'):");
-                String specialityInput = reader.readLine();
-                Speciality speciality = Speciality.valueOf(specialityInput.toUpperCase());
+                String specialityInput = reader.readLine().trim();
+                Speciality speciality;
+                try {
+                    speciality = Speciality.valueOf(specialityInput.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid speciality. Please try again.");
+                    return;
+                }
 
-                System.out.println("Enter number of credits:");
-                int credits = Integer.parseInt(reader.readLine());
+                System.out.println("Enter number of credits (1-10):");
+                int credits;
+                try {
+                    credits = Integer.parseInt(reader.readLine().trim());
+                    if (credits < 1 || credits > 10) {
+                        System.out.println("Credits must be between 1 and 10.");
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid number for credits. Please try again.");
+                    return;
+                }
 
                 System.out.println("Enter semester (e.g., 'FALL', 'SPRING'):");
-                String semesterInput = reader.readLine();
-                Semester semester = Semester.valueOf(semesterInput.toUpperCase());
+                String semesterInput = reader.readLine().trim();
+                Semester semester;
+                try {
+                    semester = Semester.valueOf(semesterInput.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid semester. Please try again.");
+                    return;
+                }
 
+                // Additional attributes like description or maximum students can be added here.
                 Course course = new Course(code, name, faculty, speciality, credits, semester);
                 manager.addCourse(course);
 
-                System.out.println("Course added successfully: " + course);
-            } catch (IOException | IllegalArgumentException e) {
-                System.out.println("An error occurred while adding the course.");
+                System.out.println("Course added successfully:\n" + course);
+            } catch (IOException e) {
+                System.out.println("An error occurred while reading input. Please try again.");
             }
         }
     }
+
 
     // ViewRequestsCommand
     public static class ViewRequestsCommand implements Command {
@@ -1514,6 +1558,53 @@ public class Commands {
             logging("ConductResearch", gradStudent);
             gradStudent.research();
             System.out.println("Research in progress...");
+        }
+    }
+
+    public static class SubscribeResearchJournalCommand implements Command {
+        private final Subscriber user;
+        private final List<ResearchJournal> journals;
+        private final BufferedReader reader;
+
+        public SubscribeResearchJournalCommand(Subscriber user, List<ResearchJournal> journals, BufferedReader reader) {
+            this.user = user;
+            this.journals = journals;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("SubscribeResearchJournal", (User) user);
+            try {
+                System.out.println("\nAvailable Research Journals:");
+                for (int i = 0; i < journals.size(); i++) {
+                    System.out.println((i + 1) + ". " + journals.get(i).getName());
+                }
+                System.out.print("Enter the number of the journal you want to subscribe to: ");
+
+                String input = reader.readLine();
+                int choice;
+
+                try {
+                    choice = Integer.parseInt(input) - 1;
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    return;
+                }
+
+                if (choice < 0 || choice >= journals.size()) {
+                    System.out.println("Invalid choice. Please try again.");
+                    return;
+                }
+
+                ResearchJournal selectedJournal = journals.get(choice);
+                selectedJournal.subscribe(user);
+                System.out.println("Successfully subscribed to " + selectedJournal.getName() + ".");
+            } catch (IOException e) {
+                System.out.println("An error occurred while reading input. Please try again.");
+            } catch (Exception e) {
+                System.out.println("An unexpected error occurred: " + e.getMessage());
+            }
         }
     }
 
