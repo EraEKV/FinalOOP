@@ -32,8 +32,6 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 
 	private HashMap<Course, Integer> countRetakes;
 
-	private Vector<Notification> notifications;
-
 	private boolean registered;
 
 
@@ -52,6 +50,10 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		this.id = id;
 		this.faculty = faculty;
 		this.speciality = speciality;
+
+		this.warnings = new Vector<Complaint>();
+		this.registeredCourses = new HashMap<Course, Teacher>();
+		this.countRetakes = new HashMap<Course, Integer>();
 	}
 
 
@@ -151,18 +153,10 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		return new Vector<>(registeredCourses.values());
 	}
 
-	public void setNotifications(Vector<Notification> notifications) {
-		this.notifications = notifications;
-	}
-
 	public void setWarnings(Vector<Complaint> warnings) {
 		this.warnings = warnings;
 	}
 
-	@Override
-	public Vector<Notification> getNotifications() {
-		return notifications;
-	}
 
 	public void viewMarks() {
 		// TODO implement me

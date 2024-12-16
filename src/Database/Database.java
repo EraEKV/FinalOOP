@@ -286,11 +286,7 @@ public class Database implements Serializable {
     }
 
     public User findUserByCredentials(Credentials credentials) {
-        return users.values().stream()
-                .filter(user -> user.getCredentials().equals(credentials))
-                .findFirst()
-                .orElse(null);
-//                .orElseThrow(() -> new NoSuchElementException("User not found with provided credentials"));
+        return users.getOrDefault(credentials, null);
     }
 
 

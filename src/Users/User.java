@@ -1,16 +1,11 @@
 package Users ;
 
-import Academic.Journal;
 import CustomExceptions.NotAResearcherException;
-import Enums.Faculty;
 import Research.*;
 import System.News;
-import System.Credentials;
 import System.Notification;
 
 import java.io.Serializable;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Vector;
 
 // NewsSubscriber interface
@@ -19,7 +14,6 @@ public abstract class User implements Subscriber, CanBeResearcher, Serializable 
 	private String firstname;
 	private String lastname;
 	private String email;
-	private Credentials credentials;
 	private Researcher isResearcher;
 	private Vector<Notification> notifications;
 	
@@ -29,6 +23,7 @@ public abstract class User implements Subscriber, CanBeResearcher, Serializable 
 	public User(String firstname, String lastname) {
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.notifications = new Vector<Notification>();
 	}
 
 	public User(String firstname, String lastname, String email) {
@@ -77,14 +72,6 @@ public abstract class User implements Subscriber, CanBeResearcher, Serializable 
 
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
-	}
-
-
-	public Credentials getCredentials() {
-		return credentials;
-	}
-	public void setCredentials(Credentials credentials) {
-		this.credentials = credentials;
 	}
 
 	public Vector<Notification> getNotifications() {

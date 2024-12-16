@@ -1246,7 +1246,10 @@ public class Commands {
 
                     System.out.println("User created successfully!");
                     System.out.println("Generated Email: " + credentials.getEmail());
+                    System.out.println("Generated Password (DON'T SHARE): " + pass);
                     newUser.getNotifications().add(new Message(admin, "Generated Password (DON'T SHARE): " + pass));
+
+                    Database.getInstance().getUsers().put(credentials, newUser);
                 }
 
             } catch (IOException | NumberFormatException e) {
@@ -1374,6 +1377,7 @@ public class Commands {
                     if (!lastname.isEmpty()) userToUpdate.setLastname(lastname);
 
                     String newPass = database.updateUser(userToUpdate);
+                    System.out.println("Generated Password (DON'T SHARE): " + newPass);
                     userToUpdate.getNotifications().add(new Message(admin, "Generated Password (DON'T SHARE): " + newPass));
                 } else {
                     System.out.println("User not found.");

@@ -15,7 +15,7 @@ public class AdminMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public AdminMenu(Admin admin, Database database) {
+    public AdminMenu(Admin admin) {
         commands.put(1, new Commands.AddUserCommand(admin, reader));
         commands.put(2, new Commands.DeleteUserCommand(admin, reader));
         commands.put(3, new Commands.UpdateUserCommand(admin, reader));
