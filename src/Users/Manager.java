@@ -31,7 +31,7 @@ public class Manager extends Employee {
 		super(firstname, lastname, email);
 	}
 
-	public Manager(String firstname, String lastname, String email, String id) {
+	public Manager(String id, String firstname, String lastname, String email) {
 		super(firstname, lastname, email);
 		this.id = id;
 	}

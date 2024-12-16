@@ -1238,7 +1238,7 @@ public class Commands {
                 }
 
                 if (newUser != null) {
-                    String email = Credentials.generateEmail(firstname, lastname, newUser.getClass().getName());
+                    String email = Credentials.generateEmail(firstname, lastname, newUser.getClass().getSimpleName());
                     String pass = Credentials.generatePassword();
                     Credentials credentials = new Credentials(email, pass);
 

@@ -27,11 +27,11 @@ public class AdminMenu {
         while (true) {
             try {
                 System.out.println("\n=== Admin Menu ===");
-                System.out.println("1. Add User");
-                System.out.println("2. Delete User");
-                System.out.println("3. Update User");
-                System.out.println("4. View Logs");
-                System.out.println("5. Exit");
+                System.out.println("[1] Add User");
+                System.out.println("[2] Delete User");
+                System.out.println("[3] Update User");
+                System.out.println("[4] View Logs");
+                System.out.println("[5] Exit");
                 System.out.print("Enter your choice: ");
 
                 String input = reader.readLine();

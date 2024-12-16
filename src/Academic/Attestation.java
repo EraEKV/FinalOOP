@@ -8,9 +8,12 @@ public class Attestation {
 	private Student student;
 	SemesterPeriod semesterPeriod;
 	private Map<Course, AttestationMark> info;
+
+
 	{
 		this.info = new HashMap<>();
 	}
+
 	public Attestation() {
 	}
 
@@ -27,6 +30,10 @@ public class Attestation {
 		this(student, info);
 		this.info = info;
 	}
+
+
+
+
 
 	public Student getStudent() {
 		return student;
@@ -54,10 +61,10 @@ public class Attestation {
 //		attestationList.add(new CustomPair<>(course, mark));
 //	}
 
-//	public void calculateAverageMark() {
-//		double totalMarks = 0;
-//		int count = 0;
-//
+	public void calculateAverageMark() {
+		double totalMarks = 0;
+		int count = info.size();
+
 //		for (Map.Entry<SemesterPeriod, List<CustomPair<Course, AttestationMark>>> entry : info.entrySet()) {
 //			for (CustomPair<Course, AttestationMark> pair : entry.getValue()) {
 //				AttestationMark mark = pair.getSecond();
@@ -65,15 +72,19 @@ public class Attestation {
 //				count++;
 //			}
 //		}
-//
-//		if (count == 0) {
-//			System.out.println("No marks available to calculate average.");
-//			return;
-//		}
-//
-//		double average = totalMarks / count;
-//		System.out.println("Average Mark for " + student.getId() + " is  : " + average);
-//	}
+
+		for(AttestationMark m : info.values()) {
+			totalMarks += m.getTotal();
+		}
+
+		if (count == 0) {
+			System.out.println("No marks available to calculate average.");
+			return;
+		}
+
+		double average = totalMarks / count;
+		System.out.println("Average Mark for " + student.getId() + " is  : " + average);
+	}
 
 
 	@Override

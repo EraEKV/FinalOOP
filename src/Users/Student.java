@@ -160,11 +160,11 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 
 	public void viewMarks() {
 		// TODO implement me
-		for(List<CustomPair<Course, AttestationMark>> l : attestation.getInfo().values()){
-			for(CustomPair<Course, AttestationMark> p : l){
-				System.out.println(p.getFirst() + " : " + p.getSecond());
-			}
-		}
+//		for(List<CustomPair<Course, AttestationMark>> l : attestation.getInfo().values()){
+//			for(CustomPair<Course, AttestationMark> p : l){
+//				System.out.println(p.getFirst() + " : " + p.getSecond());
+//			}
+//		}
 	}
 	
 	

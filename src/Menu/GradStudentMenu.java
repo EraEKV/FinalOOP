@@ -23,13 +23,13 @@ public class GradStudentMenu {
         while (true) {
             try {
                 System.out.println("\n=== Grad Student Menu ===");
-                System.out.println("1. View Research Topic");
-                System.out.println("2. Set Research Topic");
-                System.out.println("3. View Publications");
-                System.out.println("4. Add Publication");
-                System.out.println("5. View Teacher Info");
-                System.out.println("6. Conduct Research");
-                System.out.println("0. Exit");
+                System.out.println("[1] View Research Topic");
+                System.out.println("[2] Set Research Topic");
+                System.out.println("[3] View Publications");
+                System.out.println("[4] Add Publication");
+                System.out.println("[5] View Teacher Info");
+                System.out.println("[6] Conduct Research");
+                System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
                 String input = reader.readLine();

@@ -23,13 +23,13 @@ public class UserFactory {
 
 
 	//	new Manager
-	public User createUser(String firstname, String lastname) {
+	public Manager createUser(String firstname, String lastname) {
 		String id = generateId(Manager.class);
 		return new Manager(id, firstname, lastname);
 	}
 
 	//	new Student (Bachelor)
-	public User createUser(String firstname, String lastname, Faculty faculty, Speciality speciality) {
+	public Student createUser(String firstname, String lastname, Faculty faculty, Speciality speciality) {
 		String id = generateId(Student.class);
 		return new Student(id, firstname, lastname, faculty, speciality);
 	}
@@ -47,7 +47,7 @@ public class UserFactory {
 //	}
 
 	// new Teacher
-	public User createUser(String firstname, String lastname, TeacherType teacherType, Faculty faculty) {
+	public Teacher createUser(String firstname, String lastname, TeacherType teacherType, Faculty faculty) {
 		String id = generateId(Teacher.class);
 		return new Teacher(id, firstname, lastname, teacherType, faculty);
 	}

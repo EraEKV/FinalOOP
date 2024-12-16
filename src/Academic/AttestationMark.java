@@ -43,6 +43,11 @@ public class AttestationMark {
 		calculateFullAtt();
 	}
 
+	public double getTotal() {
+		return firstAtt + secondAtt + finalExam;
+	}
+
+
 	public Mark getFullAtt() {
 		return fullAtt;
 	}
@@ -60,8 +65,18 @@ public class AttestationMark {
 	}
 
 	private void calculateFullAtt() {
-		double total = firstAtt + secondAtt + finalExam;
-		this.numericValue = (int) Math.ceil(total);
+
+		String marks[] = {"F", "D", "D+", "C-", "C", "C+", "B-", "B", "B+", "A-", "A"};
+
+		int total = (int) getTotal();
+
+		if(total < 40) fullAtt = Mark.F;
+		else {
+			total -= 40;
+			total = 100;
+			total /= 5;
+		}
+
 
 		if (total >= 90) {
 			fullAtt = Mark.A_PLUS;

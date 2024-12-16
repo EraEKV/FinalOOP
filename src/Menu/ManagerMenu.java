@@ -27,13 +27,13 @@ public class ManagerMenu {
         while (true) {
             try {
                 System.out.println("\n=== Manager Menu ===");
-                System.out.println("1. Add Course");
-                System.out.println("2. View Requests");
-                System.out.println("3. Add News");
-                System.out.println("4. Redirect Request to Rector");
-                System.out.println("5. Open/Close Registration");
-                System.out.println("6. Send Message");
-                System.out.println("0. Exit");
+                System.out.println("[1] Add Course");
+                System.out.println("[2] View Requests");
+                System.out.println("[3] Add News");
+                System.out.println("[4] Redirect Request to Rector");
+                System.out.println("[5] Open/Close Registration");
+                System.out.println("[6] Send Message");
+                System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
                 String input = reader.readLine();

@@ -27,13 +27,13 @@ public class TeacherMenu {
         while (true) {
             try {
                 System.out.println("\n=== Teacher Menu ===");
-                System.out.println("1. View Courses");
-                System.out.println("2. Manage Course");
-                System.out.println("3. View Students Information");
-                System.out.println("4. Put Marks");
-                System.out.println("5. Put Attendance");
-                System.out.println("6. Send Message");
-                System.out.println("0. Exit");
+                System.out.println("[1] View Courses");
+                System.out.println("[2] Manage Course");
+                System.out.println("[3] View Students Information");
+                System.out.println("[4] Put Marks");
+                System.out.println("[5] Put Attendance");
+                System.out.println("[6] Send Message");
+                System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
                 String input = reader.readLine();
