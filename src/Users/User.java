@@ -8,12 +8,13 @@ import System.News;
 import System.Credentials;
 import System.Notification;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
 // NewsSubscriber interface
-public abstract class User implements Subscriber, CanBeResearcher {
+public abstract class User implements Subscriber, CanBeResearcher, Serializable {
 
 	private String firstname;
 	private String lastname;

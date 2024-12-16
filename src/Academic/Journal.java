@@ -6,11 +6,13 @@ import Enums.LessonType;
 import Enums.Semester;
 import Users.Student;
 import Enums.Years;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
-public class Journal {
+public class Journal implements Serializable {
 
 	private Course course;
 	private Semester semester;

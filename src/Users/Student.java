@@ -3,7 +3,6 @@ package Users;
 import Academic.*;
 import Database.Database;
 import Enums.Faculty;
-import Enums.Semester;
 import Enums.Speciality;
 import Research.CanBeResearcher;
 import Research.Researcher;
@@ -16,9 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-// CanViewTeachers interface
 
-public class Student extends User implements ManageOrganization, CanViewTeachers {
+public class Student extends User implements ManageOrganization, CanViewTeachers, CanBeResearcher {
 
 	private String id;
 	private Faculty faculty;
@@ -27,7 +25,7 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 	private Vector<Complaint> warnings;
 	private Researcher researchSupervisor;
 	private Vector<Journal> journals;
-	private Vector<Course> registeredCourses;
+	private HashMap<Course, Teacher> registeredCourses;
 
 	private Attestation attestation;
 
@@ -141,16 +139,16 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		this.countRetakes = countRetakes;
 	}
 
-	public Vector<Course> getRegisteredCourses() {
+	public HashMap<Course, Teacher> getRegisteredCourses() {
 		return registeredCourses;
 	}
 
-	public void setRegisteredCourses(Vector<Course> registeredCourses) {
+	public void setRegisteredCourses(HashMap<Course, Teacher> registeredCourses) {
 		this.registeredCourses = registeredCourses;
 	}
 
-	public void setStartYear(int startYear) {
-		this.startYear = startYear;
+	public Vector<Teacher> getTeachers() {
+		return new Vector<>(registeredCourses.values());
 	}
 
 	public void setNotifications(Vector<Notification> notifications) {
@@ -216,14 +214,6 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 //		// TODO implement me
 //		return;
 //	}
-	
-	
-	public void coursesRegistration(Course course, Semester semester) {
-		// TODO implement me
-		if(!registered && Database.getInstance().getRegistrationOpened()){
-			registeredCourses.add(course);
-		}
-	}
 
 
 

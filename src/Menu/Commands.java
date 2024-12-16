@@ -63,10 +63,7 @@ public class Commands {
         public RateTeacherCommand(Student student, BufferedReader reader) {
             this.student = student;
             this.reader = reader;
-            teachers = student.getRegisteredCourses().stream()
-                    .map(Course::getTeachers)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toCollection(Vector::new));
+            teachers = student.getTeachers();
 
         }
 
@@ -244,7 +241,7 @@ public class Commands {
             try {
                 Database db = Database.getInstance();
                 Vector<Course> availableCourses = db.getCourses();
-                Map<Course, Teacher> registeredCoursesMap = new HashMap<>();
+                HashMap<Course, Teacher> registeredCoursesMap = new HashMap<>();
                 int totalCredits = 0;
                 int remainingCredits = 25;
 
@@ -343,7 +340,7 @@ public class Commands {
                     }
                 }
 
-                student.setRegisteredCourses(new Vector<>(registeredCoursesMap.keySet()));
+                student.setRegisteredCourses(registeredCoursesMap);
 
                 for (Map.Entry<Course, Teacher> entry : registeredCoursesMap.entrySet()) {
                     Course course = entry.getKey();

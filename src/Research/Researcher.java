@@ -3,11 +3,12 @@ package Research;
 import Database.Database;
 import Enums.Faculty;
 
+import java.io.Serializable;
 import java.util.*;
 
 import Comparators.CitationComparator;
 
-public class Researcher implements CanResearch{
+public class Researcher implements CanResearch, Serializable {
     private String pceudoname;
     private int citations;
     List<ResearchPaper> papers;

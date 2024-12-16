@@ -4,12 +4,13 @@ package System;
 import Database.Database;
 import Enums.UserType;
 
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
-public class Credentials {
+public class Credentials implements Serializable {
     private String email;
     private String password;
 

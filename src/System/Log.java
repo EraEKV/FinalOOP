@@ -2,9 +2,10 @@ package System;
 
 import Users.User;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Log {
+public class Log implements Serializable {
     private String method;
     private Date date;
     private User user;

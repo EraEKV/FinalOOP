@@ -106,24 +106,19 @@ public class Manager extends Employee {
 		return "Report : "  + average;
 	}
 
-	public void addNews(News n) {
-		if (n != null) {
-			PriorityQueue<News> news = Database.getInstance().getNews();
-			if(news == null) {
-				news = new PriorityQueue<>();
-			}
-			news.add(n);
-			Database.getInstance().setNews(news);
-			System.out.println("News added: " + n);
-		} else {
-			System.out.println("Invalid news item.");
-		}
-	}
-
-	public void setRegistration() {
-		Database db = Database.getInstance();
-		db.setRegistrationOpened(!db.getRegistrationOpened());
-	}
+//	public void addNews(News n) {
+//		if (n != null) {
+//			PriorityQueue<News> news = Database.getInstance().getNews();
+//			if(news == null) {
+//				news = new PriorityQueue<>();
+//			}
+//			news.add(n);
+//			Database.getInstance().setNews(news);
+//			System.out.println("News added: " + n);
+//		} else {
+//			System.out.println("Invalid news item.");
+//		}
+//	}
 
 	public void setRegistration(Student s) {
 		if (s != null) {
@@ -141,23 +136,17 @@ public class Manager extends Employee {
 		}
 	}
 
+	public void openRegistration(Boolean b) {
+		Database.getInstance().setRegistrationOpened(b);
+	}
+
 //	public void approveStudentRegistration() {
 //	}
 
 //	public void assignCourseTeachers(Course c, Vector<Teacher> teachers) {
 //		System.out.println("Teachers have been assigned to courses.");
 //	}
-	//must be stored in the system and checked by student
-	public void toggleRegistration() {
-		boolean isRegOpen = Database.getInstance().getRegistrationOpened();
-		if (!isRegOpen) {
-			System.out.println("Registration is now open.");
-			isRegOpen = true;
-		} else {
-			System.out.println("Registration is now closed.");
-			isRegOpen = false;
-		}
-	}
+
 
 	@Override
 	public boolean equals(Object o) {

@@ -2,6 +2,8 @@ package Academic;
 
 import Enums.Mark;
 import Users.Student;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
@@ -10,7 +12,7 @@ import System.CustomPair;
 
 
 
-public class Transcript {
+public class Transcript implements Serializable {
 	private Student owner;
 	private double totalGpa;
 	private double currentSemesterGpa;

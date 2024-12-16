@@ -1,5 +1,6 @@
 package Academic;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import Users.Student;
 import Users.Teacher;
 import Enums.Semester;
 
-public class Course {
+public class Course implements Serializable {
     private String code;
     private String name;
     private Faculty faculty;

@@ -2,9 +2,10 @@ package Academic;
 
 import Enums.Semester;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class SemesterPeriod {
+public class SemesterPeriod implements Serializable {
     private String years;
     private Semester semester;
 

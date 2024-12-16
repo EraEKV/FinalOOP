@@ -7,14 +7,13 @@ import Academic.Transcript;
 import CustomExceptions.UserTypeException;
 import Enums.*;
 import Research.ResearchJournal;
-import Research.ResearchPaper;
-import Research.ResearchProject;
 import Research.Researcher;
 import Users.*;
 import System.Organization;
 import System.Log;
 import Academic.Course;
 import System.News;
+import System.Credentials;
 
 import java.io.*;
 import java.util.HashMap;
@@ -23,40 +22,32 @@ import java.util.PriorityQueue;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-public class Database {
+public class Database implements Serializable {
 	private static Database DATABASE;
 	
 	private boolean isRegistrationOpened;
 
 
-	private HashMap<String, User> users; // email, class User
+	private HashMap<Credentials, User> users = new HashMap<Credentials, User>(); // email, class User
 
     private Rector rector; // must be singleton
 
     private DisciplinaryCommittee disciplinaryCommittee; // must be singleton
 
 
-	private Vector<Course> courses;
+	private Vector<Course> courses = new Vector<Course>();
 
-    private Vector<Teacher> teachers;
+	private Vector<ResearchJournal> researchJournals = new Vector<ResearchJournal>();
 
-    private Vector<Manager> managers;
-
-	private Vector<ResearchJournal> researchJournals;
-	
-	private Vector<ResearchProject> researchProjects;
-	
-	private Vector<ResearchPaper> researchPapers;
-	
-	private Vector<Researcher> researchers;
+	private Vector<Researcher> researchers = new Vector<Researcher>();
 	
 	private Vector<Student> students;
-	
-	private Vector<Log> logs;
-	
-	private PriorityQueue<News> news;
 
-	private Vector<Journal> journals;
+    private PriorityQueue<Log> logs = new PriorityQueue<>((log1, log2) -> log2.getDate().compareTo(log1.getDate()));
+	
+	private PriorityQueue<News> news = new PriorityQueue<>((news1, news2) -> news2.getDate().compareTo(news1.getDate()));
+
+	private Vector<Journal> journals = new Vector<Journal>();
 
 //	private Years years;
 	
@@ -66,20 +57,11 @@ public class Database {
 	
 	private SemesterPeriod semesterPeriod;
 	
-	private Vector<User> newsSubscribers;
+//	private Vector<User> newsSubscribers;
 	
-	private Vector<Organization> organizations;
+	private Vector<Organization> organizations = new Vector<Organization>();
 	
-	private Vector<Transcript> transcripts;
-
-	private int usersCount;
-
-	private int bachelorStudentsCount;
-	private int masterStudentsCount;
-	private int phdStudentsCount;
-	private int teachersCount;
-	private int managersCount;
-
+	private Vector<Transcript> transcripts = new Vector<Transcript>();
 
 //	initialization block
 	static {
@@ -124,11 +106,11 @@ public class Database {
 
 //    accessors
 
-    public HashMap<String, User> getUsers() {
+    public HashMap<Credentials, User> getUsers() {
     return users;
 }
 
-    public void setUsers(HashMap<String, User> users) {
+    public void setUsers(HashMap<Credentials, User> users) {
         this.users = users;
     }
 
@@ -190,28 +172,12 @@ public class Database {
     }
 
 
-    public Vector<ResearchProject> getResearchProjects() {
-        return researchProjects;
-    }
-
-    public void setResearchProjects(Vector<ResearchProject> researchProjects) {
-        this.researchProjects = researchProjects;
-    }
-
     public Vector<ResearchJournal> getResearchJournals() {
         return researchJournals;
     }
 
     public void setResearchJournals(Vector<ResearchJournal> researchJournals) {
         this.researchJournals = researchJournals;
-    }
-
-    public Vector<ResearchPaper> getResearchPapers() {
-        return researchPapers;
-    }
-
-    public void setResearchPapers(Vector<ResearchPaper> researchPapers) {
-        this.researchPapers = researchPapers;
     }
 
     public PriorityQueue<News> getNews() {
@@ -222,7 +188,7 @@ public class Database {
         this.news = news;
     }
 
-    public Vector<Log> getLogs() {
+    public PriorityQueue<Log> getLogs() {
         return logs;
     }
 
@@ -302,9 +268,12 @@ public class Database {
     }
 
 
-    public void updateUser(User user) {
+    public String updateUser(User user) {
         String email = user.getEmail();
-        users.put(email, user);
+        String newPass = Credentials.generatePassword();
+        users.put(new Credentials(email, newPass), user);
+
+        return newPass;
     }
 
     //    methods like orm
@@ -312,8 +281,20 @@ public class Database {
         return users.values().stream()
                 .filter(u -> u.getEmail().equals(email))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
+                .orElse(null);
+//                .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
     }
+
+    public User findUserByCredentials(Credentials credentials) {
+        return users.values().stream()
+                .filter(user -> user.getCredentials().equals(credentials))
+                .findFirst()
+                .orElse(null);
+//                .orElseThrow(() -> new NoSuchElementException("User not found with provided credentials"));
+    }
+
+
+
 
 
 //	public void newUserAdded(User user) {
