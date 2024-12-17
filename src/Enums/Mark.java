@@ -11,6 +11,5 @@ public enum Mark {
     B,
     B_PLUS,
     A_MINUS,
-    A,
-    A_PLUS
+    A
 }
