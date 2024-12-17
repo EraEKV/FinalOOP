@@ -20,7 +20,7 @@ public class Transcript implements Serializable {
 	private int totalNumberOfCredits;
 	private Date receivedDate;
 	private Vector<CustomPair<Course, Mark>> transcriptData;
-	private Map<SemesterPeriod, Vector<CustomPair<Course, Mark>>> semesterInfo;
+	private Map<SemesterPeriod, Vector<CustomPair<Course, Mark> > > semesterInfo;
 
 	public Transcript() {
 		transcriptData = new Vector<>();

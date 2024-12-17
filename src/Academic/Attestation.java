@@ -31,9 +31,6 @@ public class Attestation {
 	}
 
 
-
-
-
 	public Student getStudent() {
 		return student;
 	}
