@@ -1,7 +1,6 @@
 package Academic;
 
 import java.util.*;
-import System.CustomPair;
 import Users.Student;
 
 public class Attestation {
@@ -28,7 +27,7 @@ public class Attestation {
 
 	public Attestation(Student student, SemesterPeriod semesterPeriod, Map<Course, AttestationMark> info) {
 		this(student, info);
-		this.info = info;
+		this.semesterPeriod = semesterPeriod;
 	}
 
 
@@ -47,31 +46,25 @@ public class Attestation {
 		this.info = info;
 	}
 
-//	public void updateAttestation(SemesterPeriod period, Course course, AttestationMark mark) {
-//		info.putIfAbsent(period, new ArrayList<>());
-//
-//		List<CustomPair<Course, AttestationMark>> attestationList = info.get(period);
-//
-//		for (CustomPair<Course, AttestationMark> entry : attestationList) {
-//			if (entry.getFirst().equals(course)) {
-//				entry.setSecond(mark);
-//				return;
-//			}
-//		}
-//		attestationList.add(new CustomPair<>(course, mark));
-//	}
+	public void setStudent(Student student) {
+		this.student = student;
+	}
+
+
+	public SemesterPeriod getSemesterPeriod() {
+		return semesterPeriod;
+	}
+
+	public void updateAttestation(Course course, AttestationMark mark) {
+		if (course == null || mark == null) {
+			throw new IllegalArgumentException("Course and mark cannot be null");
+		}
+		info.put(course, mark);
+	}
 
 	public void calculateAverageMark() {
 		double totalMarks = 0;
 		int count = info.size();
-
-//		for (Map.Entry<SemesterPeriod, List<CustomPair<Course, AttestationMark>>> entry : info.entrySet()) {
-//			for (CustomPair<Course, AttestationMark> pair : entry.getValue()) {
-//				AttestationMark mark = pair.getSecond();
-//				totalMarks += mark.getNumericValue();
-//				count++;
-//			}
-//		}
 
 		for(AttestationMark m : info.values()) {
 			totalMarks += m.getTotal();
