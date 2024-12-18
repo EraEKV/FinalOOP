@@ -89,8 +89,8 @@ public abstract class User implements Subscriber, CanBeResearcher, Serializable 
 
 	//researcher realization
 	@Override
-	public void beReseacrher() {
-		this.isResearcher = new Researcher();
+	public void beReseacrher(Researcher researcher) {
+		this.isResearcher = researcher;
 	}
 
 	public Researcher getIsResearcher() {
@@ -123,8 +123,8 @@ public abstract class User implements Subscriber, CanBeResearcher, Serializable 
 
 	@Override
 	public String toString() {
-			return getClass().getName()
-					+ "  firstname=" + firstname
+			return getClass().getSimpleName()
+					+ " firstname=" + firstname
 					+ ", lastname=" + lastname
 					+ ", email=" + email;
 	}

@@ -20,7 +20,7 @@ public class AdminMenu {
         commands.put(2, new Commands.DeleteUserCommand(admin, reader));
         commands.put(3, new Commands.UpdateUserCommand(admin, reader));
         commands.put(4, new Commands.ViewLogsCommand(admin));
-        commands.put(5, new Commands.ExitCommand());
+        commands.put(0, new Commands.ExitCommand());
     }
 
     public void displayMenu() {
@@ -31,7 +31,7 @@ public class AdminMenu {
                 System.out.println("[2] Delete User");
                 System.out.println("[3] Update User");
                 System.out.println("[4] View Logs");
-                System.out.println("[5] Exit");
+                System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
                 String input = reader.readLine();
@@ -44,7 +44,7 @@ public class AdminMenu {
                     continue;
                 }
 
-                if (choice == 5) {
+                if (choice == 0) {
                     System.out.println("Exiting...");
                     return;
                 }

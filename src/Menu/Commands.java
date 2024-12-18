@@ -1228,73 +1228,110 @@ public class Commands {
         public void execute() {
             logging("AddUser", admin);
             try {
-                System.out.print("Enter first name: ");
-                String firstname = reader.readLine();
+                main: while (true) {
+                    System.out.println("Select the type of user to add:");
+                    System.out.println("[1] Student");
+                    System.out.println("[2] MasterStudent");
+                    System.out.println("[3] GradStudent");
+                    System.out.println("[4] Teacher");
+                    System.out.println("[5] Manager");
+                    System.out.println("[6] Researcher");
+                    System.out.println("[0] Exit");
 
-                System.out.print("Enter last name: ");
-                String lastname = reader.readLine();
+                    String input = reader.readLine();
+                    int choice = Integer.parseInt(input);
 
-                System.out.println("Select the type of user to add:");
-                System.out.println("[1] Student");
-                System.out.println("[2] MasterStudent");
-                System.out.println("[3] GradStudent");
-                System.out.println("[4] Teacher");
-                System.out.println("[5] Manager");
-//                System.out.println("[6] Researcher");
+                    if(choice == 0) break main;
 
-                String input = reader.readLine();
-                int choice = Integer.parseInt(input);
+                    user: while(true) {
+                        System.out.print("Enter first name: ");
+                        String firstname = reader.readLine();
 
-                UserFactory factory = UserFactory.getInstance();
-                User newUser = null;
+                        System.out.print("Enter last name: ");
+                        String lastname = reader.readLine();
 
-                switch (choice) {
-                    case 1:  // Student
-                        Faculty studentFaculty = selectFaculty();
-                        Speciality studentSpeciality = selectSpeciality();
-                        newUser = factory.createUser(firstname, lastname, studentFaculty, studentSpeciality);
-                        break;
-                    case 2:  // MasterStudent
-                        Faculty masterFaculty = selectFaculty();
-                        Speciality masterSpeciality = selectSpeciality();
-                        newUser = factory.createUser(firstname, lastname, masterFaculty, masterSpeciality);
-                        break;
-                    case 3:  // GradStudent
-                        Faculty gradFaculty = selectFaculty();
-                        Speciality gradSpeciality = selectSpeciality();
-                        newUser = factory.createUser(firstname, lastname, gradFaculty, gradSpeciality);
-                        break;
-                    case 4:  // Teacher
-                        TeacherType teacherType = selectTeacherType();
-                        Faculty teacherFaculty = selectFaculty();
-                        newUser = factory.createUser(firstname, lastname, teacherType, teacherFaculty);
-                        break;
-                    case 5:  // Manager
-                        newUser = factory.createUser(firstname, lastname);
-                        break;
-//                    case 6:  // Researcher
-//                        Faculty researcherFaculty = selectFaculty();
-//                        newUser = factory.createUser(firstname, lastname, researcherFaculty);
-//                        break;
-                    default:
-                        System.out.println("Invalid choice. User creation cancelled.");
-                        return;
+
+
+                        UserFactory factory = UserFactory.getInstance();
+                        User newUser = null;
+                        Researcher newResarcher = null;
+
+                        String email = null;
+
+                        switch (choice) {
+                            case 1:  // Student
+                                Faculty studentFaculty = selectFaculty();
+                                Speciality studentSpeciality = selectSpeciality();
+                                newUser = factory.createUser(firstname, lastname, studentFaculty, studentSpeciality);
+                                break;
+                            case 2:  // MasterStudent
+                                Faculty masterFaculty = selectFaculty();
+                                Speciality masterSpeciality = selectSpeciality();
+                                newUser = factory.createUser(firstname, lastname, masterFaculty, masterSpeciality);
+                                break;
+                            case 3:  // GradStudent
+                                Faculty gradFaculty = selectFaculty();
+                                Speciality gradSpeciality = selectSpeciality();
+                                newUser = factory.createUser(firstname, lastname, gradFaculty, gradSpeciality);
+                                break;
+                            case 4:  // Teacher
+                                TeacherType teacherType = selectTeacherType();
+                                Faculty teacherFaculty = selectFaculty();
+                                newUser = factory.createUser(firstname, lastname, teacherType, teacherFaculty);
+                                break;
+                            case 5:  // Manager
+                                newUser = factory.createUser(firstname, lastname);
+                                break;
+                            case 6:  // Researcher
+                                newResarcher = factory.createUser(firstname + lastname);
+                                System.out.println("Please enter the email for add Researcher to existing User. You can enter without domain (@kbtu.kz): ");
+                                email = reader.readLine();
+                                break;
+                            default:
+                                System.out.println("Invalid choice. User creation cancelled.");
+                                return;
+                        }
+
+                        if (newUser != null) {
+                            email = Credentials.generateEmail(firstname, lastname, newUser.getClass().getSimpleName());
+                            String pass = Credentials.generatePassword();
+                            Credentials credentials = new Credentials(email, pass);
+
+                            newUser.setEmail(email);
+                            admin.addUser(newUser);
+
+                            System.out.println("User created successfully!");
+                            System.out.println("Generated Email: " + credentials.getEmail());
+                            System.out.println("Generated Password (DON'T SHARE): " + pass);
+                            newUser.getNotifications().add(new Message(admin, "Generated Password (DON'T SHARE): " + pass));
+
+                            Database.getInstance().getUsers().put(credentials, newUser);
+                            break user;
+                        } else if(newResarcher != null) {
+                            Database db = Database.getInstance();
+
+                            if(email == null) continue user;
+                            if(!email.contains("@kbtu.kz")) email += "@kbtu.kz";
+
+                            User user = db.findUserByEmail(email);
+
+                            if(user == null) {
+                                System.out.println("User with email " + email + " not found. This needed to add new Researcher to existed User.");
+                                continue user;
+                            } else {
+                                if(user instanceof Student) {
+                                    user.beReseacrher(newResarcher);
+                                }
+
+                                db.getResearchers().add(newResarcher);
+
+                                break user;
+                            }
+                        }
+                    }
                 }
 
-                if (newUser != null) {
-                    String email = Credentials.generateEmail(firstname, lastname, newUser.getClass().getSimpleName());
-                    String pass = Credentials.generatePassword();
-                    Credentials credentials = new Credentials(email, pass);
 
-                    admin.addUser(newUser);
-
-                    System.out.println("User created successfully!");
-                    System.out.println("Generated Email: " + credentials.getEmail());
-                    System.out.println("Generated Password (DON'T SHARE): " + pass);
-                    newUser.getNotifications().add(new Message(admin, "Generated Password (DON'T SHARE): " + pass));
-
-                    Database.getInstance().getUsers().put(credentials, newUser);
-                }
 
             } catch (IOException | NumberFormatException e) {
                 System.out.println("An error occurred while adding the user.");
@@ -1382,6 +1419,7 @@ public class Commands {
                 User userToDelete = Database.getInstance().findUserByEmail(email);
                 if (userToDelete != null) {
                     admin.deleteUser(userToDelete);
+                    System.out.println("User deleted successfully!");
                 } else {
                     System.out.println("User not found.");
                 }

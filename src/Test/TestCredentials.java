@@ -19,6 +19,7 @@ import System.UniversitySystemMediator;
 import System.CustomPair;
 import Users.Teacher;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +34,7 @@ public class TestCredentials {
 //        System.out.println(res);
 
 
-        System.out.println(Credentials.generateHash("Am9OCTI"));
+//        System.out.println(Credentials.generateHash("Am9OCTI"));
 
 
         System.out.println(Database.getInstance().getUsers());
@@ -48,9 +49,9 @@ public class TestCredentials {
             e.printStackTrace();
         }
 
-        Teacher t = new Teacher("fwefref", "e", "kokenov", TeacherType.PROFESSOR, Faculty.SITE);
-        String email = Credentials.generateEmail("e", "kokenov", t.getClass().getSimpleName());
-        System.out.println(email);
+//        Teacher t = new Teacher("fwefref", "e", "kokenov", TeacherType.PROFESSOR, Faculty.SITE);
+//        String email = Credentials.generateEmail("e", "kokenov", t.getClass().getSimpleName());
+//        System.out.println(email);
 //        Manager manager = new Manager("er", "rgiore", "fijreio", "ekrfkref");
 //
 //        ManagerMenu menu = new ManagerMenu(manager, new UniversitySystemMediator());

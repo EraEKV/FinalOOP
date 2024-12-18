@@ -127,9 +127,9 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 	}
 
 	@Override
-	public void beReseacrher() {
+	public void beReseacrher(Researcher researcher) {
 		if(!teacherType.equals(TeacherType.PROFESSOR)) {
-			isResearcher = new Researcher();
+			isResearcher = researcher;
 		}
 	}
 

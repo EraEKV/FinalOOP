@@ -35,16 +35,18 @@ public class UserFactory {
 	}
 
 	//	new GradStudent
-//	public User createUser(String firstname, String lastname, Faculty faculty, Speciality speciality) {
-//		String id;
-//		if(userType.equals(UserType.MAS)) {
-//			id = generateId(MasterStudent.class);
-//			return new MasterStudent(id, firstname, lastname, faculty, speciality);
-//		} else if(userType.equals(UserType.PHD)) {
-//			id = generateId(PhDStudent.class);
-//			return new PhDStudent(id, firstname, lastname, faculty, speciality);
-//		}
-//	}
+	public User createUser(String firstname, String lastname, Faculty faculty, Speciality speciality, String userType) {
+		String id;
+		if(userType.equals("MasterStudent")) {
+			id = generateId(MasterStudent.class);
+			Teacher newTeacher = createUser(firstname, lastname, TeacherType.TUTOR, faculty);
+			return new MasterStudent(id, firstname, lastname, faculty, speciality, newTeacher);
+		} else if (userType.equals("PhDStudent")) {
+			id = generateId(PhDStudent.class);
+			Teacher newTeacher = createUser(firstname, lastname, TeacherType.LECTOR, faculty);
+			return new PhDStudent(id, firstname, lastname, faculty, speciality, newTeacher);
+		} else return null;
+	}
 
 	// new Teacher
 	public Teacher createUser(String firstname, String lastname, TeacherType teacherType, Faculty faculty) {
@@ -53,15 +55,13 @@ public class UserFactory {
 	}
 
 
-	public Researcher createUser() {
-		return new Researcher();
+	public Researcher createUser(User user) {
+		return new Researcher(user.getFirstname() + user.getLastname());
 	}
-//
-//	public Researcher createUser(Student s) {
-//		// TODO implement me
-//		return null;
-//	}
 
+	public Researcher createUser(String pseudoname) {
+		return new Researcher(pseudoname);
+	}
 
 
 	// generating ID for new User
@@ -84,8 +84,8 @@ public class UserFactory {
 			throw new UserTypeException();
 		}
 
-
-		idSuffix += String.format("%05d", db.getUsersCount(userClass));
+		int count = db.getUsersCount(userClass);
+		idSuffix += String.format("%05d", ++count);
 
 		return String.valueOf(Year.now().getValue()).substring(2) + idSuffix;
 	}

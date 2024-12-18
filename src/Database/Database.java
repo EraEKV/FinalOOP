@@ -2,10 +2,10 @@ package Database ;
 
 
 import Academic.Journal;
-import Academic.SemesterPeriod;
 import Academic.Transcript;
+import Comparators.LogComparator;
+import Comparators.NewsComparator;
 import CustomExceptions.UserTypeException;
-import Enums.*;
 import Research.ResearchJournal;
 import Research.Researcher;
 import Users.*;
@@ -30,9 +30,9 @@ public class Database implements Serializable {
 
 	private HashMap<Credentials, User> users = new HashMap<Credentials, User>(); // email, class User
 
-    private Rector rector; // must be singleton
+    private Rector rector; // singleton
 
-    private DisciplinaryCommittee disciplinaryCommittee; // must be singleton
+    private DisciplinaryCommittee disciplinaryCommittee; // singleton
 
 
 	private Vector<Course> courses = new Vector<Course>();
@@ -40,22 +40,20 @@ public class Database implements Serializable {
 	private Vector<ResearchJournal> researchJournals = new Vector<ResearchJournal>();
 
 	private Vector<Researcher> researchers = new Vector<Researcher>();
-	
-	private Vector<Student> students;
 
-    private PriorityQueue<Log> logs = new PriorityQueue<>((log1, log2) -> log2.getDate().compareTo(log1.getDate()));
-	
-	private PriorityQueue<News> news = new PriorityQueue<>((news1, news2) -> news2.getDate().compareTo(news1.getDate()));
+
+//  priority queue with comparators
+    private PriorityQueue<Log> logs = new PriorityQueue<>(new LogComparator());
+
+    private PriorityQueue<News> news = new PriorityQueue<>(new NewsComparator());
+
+
 
 	private Vector<Journal> journals = new Vector<Journal>();
 
-//	private Years years;
+//	private Semester semester;
 	
-	private Semester semester;
-	
-	public boolean IsRegOpened = false;
-	
-	private SemesterPeriod semesterPeriod;
+//	private SemesterPeriod semesterPeriod;
 	
 //	private Vector<User> newsSubscribers;
 	
@@ -142,10 +140,6 @@ public class Database implements Serializable {
         return researchers;
     }
 
-    public void setResearchers(Vector<Researcher> researchers) {
-        this.researchers = researchers;
-    }
-
     public Vector<Transcript> getTranscripts() {
         return transcripts;
     }
@@ -157,11 +151,6 @@ public class Database implements Serializable {
     public Vector<Organization> getStudentOrganizations() {
         return organizations;
     }
-
-    public void setStudentOrganizations(Vector<Organization> organizations) {
-        this.organizations = organizations;
-    }
-
 
     public Vector<Course> getCourses() {
         return courses;
@@ -176,16 +165,8 @@ public class Database implements Serializable {
         return researchJournals;
     }
 
-    public void setResearchJournals(Vector<ResearchJournal> researchJournals) {
-        this.researchJournals = researchJournals;
-    }
-
     public PriorityQueue<News> getNews() {
         return news;
-    }
-
-    public void setNews(PriorityQueue<News> news) {
-        this.news = news;
     }
 
     public PriorityQueue<Log> getLogs() {
@@ -195,11 +176,6 @@ public class Database implements Serializable {
     public Vector<Journal> getJournals() {
         return journals;
     }
-
-    public void setJournals(Vector<Journal> journals) {
-        this.journals = journals;
-    }
-
 
     //    public HashMap<String, HashMap<Language, String>> getLanguageData() {
 //        return languageData;
@@ -230,19 +206,6 @@ public class Database implements Serializable {
                 .filter(userClass::isInstance)
                 .count();
     }
-
-
-
-//
-//    public <T> int getStudentsCount(Student type) throws UserTypeException {
-//        try {
-//            return (int) users.values().stream()
-//                    .filter(u -> u instanceof type)
-//                    .count();
-//        } catch (UserTypeException e) {
-//            throw new UserTypeException(type);
-//        }
-//    }
 
 
     public Vector<Student> getStudents() {
@@ -287,6 +250,10 @@ public class Database implements Serializable {
 
     public User findUserByCredentials(Credentials credentials) {
         return users.getOrDefault(credentials, null);
+    }
+
+    public void deleteUser(Credentials credentials) {
+        users.remove(credentials);
     }
 
 

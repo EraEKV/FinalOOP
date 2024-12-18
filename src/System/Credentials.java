@@ -2,7 +2,6 @@ package System;
 
 
 import Database.Database;
-import Enums.UserType;
 
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
@@ -112,6 +111,10 @@ public class Credentials implements Serializable {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Credentials ";
+    }
 
     @Override
     public boolean equals(Object o) {

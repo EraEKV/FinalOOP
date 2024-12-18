@@ -1,7 +1,7 @@
 package Users;
 
 import Database.Database;
-import Enums.UserType;
+import System.Credentials;
 import java.util.Objects;
 
 public class Admin extends User {
@@ -18,8 +18,14 @@ public class Admin extends User {
         System.out.println("User added: " + user.getFirstname() + " " + user.getLastname());
     }
 
+    public void deleteUser(String email) {
+        Credentials credentials = new Credentials(email);
+        Database.getInstance().deleteUser(credentials);
+    }
+
     public void deleteUser(User user) {
-        System.out.println("User deleted: " + user.getFirstname() + " " + user.getLastname());
+        Credentials credentials = new Credentials(user.getEmail());
+        Database.getInstance().deleteUser(credentials);
     }
 
 //    public void updateUser(User user) {

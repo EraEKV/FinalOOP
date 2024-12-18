@@ -7,14 +7,19 @@ import java.io.Serializable;
 import java.util.*;
 
 import Comparators.CitationComparator;
+import Users.Employee;
 
 public class Researcher implements CanResearch, Serializable {
+
     private String pceudoname;
     private int citations;
     List<ResearchPaper> papers;
+
+
     {
         papers = new ArrayList<>();
     }
+
     public Researcher() {
     }
 
@@ -112,17 +117,10 @@ public class Researcher implements CanResearch, Serializable {
         return papers;
     }
 
-    public void setPapers(List<ResearchPaper> papers) {
-        this.papers = papers;
-    }
-
     public int getCitations() {
         return citations;
     }
 
-    public void setCitations(int citations) {
-        this.citations = citations;
-    }
 
     @Override
     public boolean equals(Object o) {
