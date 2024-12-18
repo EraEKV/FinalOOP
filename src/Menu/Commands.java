@@ -1429,6 +1429,7 @@ public class Commands {
         }
     }
 
+
     public static class UpdateUserCommand implements Command {
         private final Admin admin;
         private final BufferedReader reader;
