@@ -1,10 +1,11 @@
 package Research;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Vector;
 
 
-public class ResearchJournal {
+public class ResearchJournal implements Serializable {
     private String name;
     private Vector<Subscriber> subscribers;
     private Vector<ResearchPaper> researchPapers;

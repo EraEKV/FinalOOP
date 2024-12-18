@@ -1,8 +1,7 @@
 package Users;
 
-import Academic.Attestation;
-import Academic.Course;
-import Academic.Journal;
+import Academic.*;
+import Database.Database;
 import Enums.Faculty;
 import Enums.Speciality;
 import Research.CanBeResearcher;
@@ -10,14 +9,15 @@ import Research.Researcher;
 import System.Complaint;
 import System.Organization;
 import System.Notification;
-
+import System.CustomPair;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
-// CanViewTeachers interface
 
-public class Student extends User implements ManageOrganization {
+public class Student extends User implements ManageOrganization, CanViewTeachers, CanBeResearcher {
 
 	private String id;
 	private Faculty faculty;
@@ -26,19 +26,19 @@ public class Student extends User implements ManageOrganization {
 	private Vector<Complaint> warnings;
 	private Researcher researchSupervisor;
 	private Vector<Journal> journals;
-
-
+	private HashMap<Course, Teacher> registeredCourses;
 
 	private Attestation attestation;
 
 
 	private HashMap<Course, Integer> countRetakes;
 
-	private Vector<Notification> notifications;
-
 	private boolean registered;
 
+
+//	constructors
 	public Student() {
+
 	}
 
 	public Student(String id) {
@@ -51,7 +51,15 @@ public class Student extends User implements ManageOrganization {
 		this.id = id;
 		this.faculty = faculty;
 		this.speciality = speciality;
+
+		this.warnings = new Vector<Complaint>();
+		this.registeredCourses = new HashMap<Course, Teacher>();
+		this.countRetakes = new HashMap<Course, Integer>();
 	}
+
+
+
+	//	accessors
 
 	public String getId() {
 		return id;
@@ -69,6 +77,7 @@ public class Student extends User implements ManageOrganization {
 		this.faculty = faculty;
 	}
 
+
 	public Vector<Journal> getJournals() {
 		return journals;
 	}
@@ -79,6 +88,7 @@ public class Student extends User implements ManageOrganization {
 				.findFirst()
 				.orElse(null);
 	}
+
 
 	public Speciality getSpeciality() {
 		return speciality;
@@ -100,16 +110,8 @@ public class Student extends User implements ManageOrganization {
 		return startYear;
 	}
 
-	public void setStartYear(int startYear) {
-		this.startYear = startYear;
-	}
-
 	public Vector<Complaint> getWarnings() {
 		return warnings;
-	}
-
-	public void setWarnings(Vector<Complaint> warnings) {
-		this.warnings = warnings;
 	}
 
 	public Researcher getResearchSupervisor() {
@@ -140,53 +142,69 @@ public class Student extends User implements ManageOrganization {
 		this.countRetakes = countRetakes;
 	}
 
-	@Override
-	public Vector<Notification> getNotifications() {
-		return notifications;
+	public HashMap<Course, Teacher> getRegisteredCourses() {
+		return registeredCourses;
 	}
 
-	public void setNotifications(Vector<Notification> notifications) {
-		this.notifications = notifications;
+	public void setRegisteredCourses(HashMap<Course, Teacher> registeredCourses) {
+		this.registeredCourses = registeredCourses;
 	}
+
+	public Vector<Teacher> getTeachers() {
+		return new Vector<>(registeredCourses.values());
+	}
+
+	public void setWarnings(Vector<Complaint> warnings) {
+		this.warnings = warnings;
+	}
+
 
 	public void viewMarks() {
-		// TODO implement me
-		return;
+		for (Map.Entry<Course, AttestationMark> entry : attestation.getInfo().entrySet()) {
+			Course course = entry.getKey();
+			AttestationMark mark = entry.getValue();
+			System.out.println("Course: " + course.getName() + ", Mark: " + mark);
+		}
 	}
 	
 	
 	public void viewTranscript() {
-		// TODO implement me
-		return;
+		Vector<Transcript> transcripts = Database.getInstance().getTranscripts();
+		for(Transcript t : transcripts){
+			if(t.getOwner().equals(this)){
+				System.out.println(t);
+			}
+		}
 	}
 	
 	
-	public void rateTeacher(Teacher t) {
+	public void rateTeacher(Teacher t, Integer rate) {
 		// TODO implement me
-		return;
+		Vector<Integer> curRating = t.getRatings();
+		curRating.add(rate);
+		t.setRatings(curRating);
 	}
 
 	
 	
-	public String viewTeacherInfo(Teacher t) {
+	public void viewTeacherInfo(Teacher t) {
 		// TODO implement me
-		return "";	
+		System.out.println(t);
 	}
 	
 	
-//	public void viewAbsenses() {
-//		// TODO implement me
-//		return;
-//	}
-	
-	
+	public void viewAbsenses() {
+		// TODO implement me
+		for(Journal journal : journals){
+			Vector<JournalLesson > jl = journal.getJournalData().get(this);
+			for(JournalLesson j : jl){
+				System.out.println(j.getAttendance());
+			}
+		}
+	}
+
+
 //	public void requestDocument(DocumentType parameter) {
-//		// TODO implement me
-//		return;
-//	}
-	
-	
-//	public void coursesRegistration(Course parameter, Teacher parameter2, Semester parameter3, pair<Integer, Integer> parameter4) {
 //		// TODO implement me
 //		return;
 //	}
@@ -200,6 +218,10 @@ public class Student extends User implements ManageOrganization {
 
 	}
 
+	@Override
+	public Vector<Teacher> viewCourseTeachersInfo(Course course) {
+		return course.getTeachers();
+	}
 
 	@Override
 	public void createOrganization(String name) {

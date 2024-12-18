@@ -2,19 +2,24 @@ package Research;
 
 import Database.Database;
 import Enums.Faculty;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Vector;
-import Comparators.CitationComparator;
 
-public class Researcher implements CanResearch{
+import java.io.Serializable;
+import java.util.*;
+
+import Comparators.CitationComparator;
+import Users.Employee;
+
+public class Researcher implements CanResearch, Serializable {
+
     private String pceudoname;
     private int citations;
     List<ResearchPaper> papers;
+
+
     {
         papers = new ArrayList<>();
     }
+
     public Researcher() {
     }
 
@@ -112,17 +117,29 @@ public class Researcher implements CanResearch{
         return papers;
     }
 
-    public void setPapers(List<ResearchPaper> papers) {
-        this.papers = papers;
-    }
-
     public int getCitations() {
         return citations;
     }
 
-    public void setCitations(int citations) {
-        this.citations = citations;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Researcher that = (Researcher) o;
+        return citations == that.citations && Objects.equals(pceudoname, that.pceudoname) && Objects.equals(papers, that.papers);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(pceudoname, citations, papers);
+    }
 
+    @Override
+    public String toString() {
+        return "Researcher{" +
+                "pceudoname='" + pceudoname + '\'' +
+                ", citations=" + citations +
+                ", papers=" + papers +
+                '}';
+    }
 }

@@ -2,19 +2,18 @@ package Database ;
 
 
 import Academic.Journal;
-import Academic.SemesterPeriod;
 import Academic.Transcript;
+import Comparators.LogComparator;
+import Comparators.NewsComparator;
 import CustomExceptions.UserTypeException;
-import Enums.*;
 import Research.ResearchJournal;
-import Research.ResearchPaper;
-import Research.ResearchProject;
 import Research.Researcher;
 import Users.*;
 import System.Organization;
 import System.Log;
 import Academic.Course;
 import System.News;
+import System.Credentials;
 
 import java.io.*;
 import java.util.HashMap;
@@ -23,64 +22,44 @@ import java.util.PriorityQueue;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
-public class Database {
+public class Database implements Serializable {
 	private static Database DATABASE;
 	
 	private boolean isRegistrationOpened;
 
 
-	private HashMap<String, User> users; // email, class User
+	private HashMap<Credentials, User> users = new HashMap<Credentials, User>(); // email, class User
 
-    private Rector rector; // must be singleton
+    private Rector rector; // singleton
 
-    private DisciplinaryCommittee disciplinaryCommittee; // must be singleton
-
-
-	private Vector<Course> courses;
+    private DisciplinaryCommittee disciplinaryCommittee; // singleton
 
 
-    private Vector<Teacher> teachers;
+	private Vector<Course> courses = new Vector<Course>();
 
-    private Vector<Manager> managers;
+	private Vector<ResearchJournal> researchJournals = new Vector<ResearchJournal>();
 
-	private Vector<ResearchJournal> researchJournals;
+	private Vector<Researcher> researchers = new Vector<Researcher>();
+
+
+//  priority queue with comparators
+    private PriorityQueue<Log> logs = new PriorityQueue<>(new LogComparator());
+
+    private PriorityQueue<News> news = new PriorityQueue<>(new NewsComparator());
+
+
+
+	private Vector<Journal> journals = new Vector<Journal>();
+
+//	private Semester semester;
 	
-	private Vector<ResearchProject> researchProjects;
+//	private SemesterPeriod semesterPeriod;
 	
-	private Vector<ResearchPaper> researchPapers;
+//	private Vector<User> newsSubscribers;
 	
-	private Vector<Researcher> researchers;
+	private Vector<Organization> organizations = new Vector<Organization>();
 	
-	private Vector<Student> students;
-	
-	private Vector<Log> logs;
-	
-	private PriorityQueue<News> news;
-
-	private Vector<Journal> journals;
-
-//	private Years years;
-	
-	private Semester semester;
-	
-	public boolean IsRegOpened = false;
-	
-	private SemesterPeriod semesterPeriod;
-	
-	private Vector<User> newsSubscribers;
-	
-	private Vector<Organization> organizations;
-	
-	private Vector<Transcript> transcripts;
-
-	private int usersCount;
-
-	private int bachelorStudentsCount;
-	private int masterStudentsCount;
-	private int phdStudentsCount;
-	private int teachersCount;
-	private int managersCount;
-
+	private Vector<Transcript> transcripts = new Vector<Transcript>();
 
 //	initialization block
 	static {
@@ -102,13 +81,13 @@ public class Database {
 //    work with database
 
     public static Database read() throws IOException, ClassNotFoundException {
-        FileInputStream fis = new FileInputStream("data");
+        FileInputStream fis = new FileInputStream("database");
         ObjectInputStream oin = new ObjectInputStream(fis);
         return (Database) oin.readObject();
     }
 
     public static void write() throws IOException {
-        FileOutputStream fos = new FileOutputStream("data");
+        FileOutputStream fos = new FileOutputStream("database");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
         oos.writeObject(DATABASE);
         oos.close();
@@ -125,11 +104,11 @@ public class Database {
 
 //    accessors
 
-    public HashMap<String, User> getUsers() {
+    public HashMap<Credentials, User> getUsers() {
     return users;
 }
 
-    public void setUsers(HashMap<String, User> users) {
+    public void setUsers(HashMap<Credentials, User> users) {
         this.users = users;
     }
 
@@ -161,19 +140,17 @@ public class Database {
         return researchers;
     }
 
-    public void setResearchers(Vector<Researcher> researchers) {
-        this.researchers = researchers;
+    public Vector<Transcript> getTranscripts() {
+        return transcripts;
     }
 
+    public void setTranscripts(Vector<Transcript> transcripts) {
+        this.transcripts = transcripts;
+    }
 
     public Vector<Organization> getStudentOrganizations() {
         return organizations;
     }
-
-    public void setStudentOrganizations(Vector<Organization> organizations) {
-        this.organizations = organizations;
-    }
-
 
     public Vector<Course> getCourses() {
         return courses;
@@ -184,47 +161,23 @@ public class Database {
     }
 
 
-    public Vector<ResearchProject> getResearchProjects() {
-        return researchProjects;
-    }
-
-    public void setResearchProjects(Vector<ResearchProject> researchProjects) {
-        this.researchProjects = researchProjects;
-    }
-
     public Vector<ResearchJournal> getResearchJournals() {
         return researchJournals;
-    }
-
-    public void setResearchJournals(Vector<ResearchJournal> researchJournals) {
-        this.researchJournals = researchJournals;
-    }
-
-    public Vector<ResearchPaper> getResearchPapers() {
-        return researchPapers;
-    }
-
-    public void setResearchPapers(Vector<ResearchPaper> researchPapers) {
-        this.researchPapers = researchPapers;
     }
 
     public PriorityQueue<News> getNews() {
         return news;
     }
 
-    public void setNews(PriorityQueue<News> news) {
-        this.news = news;
-    }
-
-    public Vector<Log> getLogs() {
+    public PriorityQueue<Log> getLogs() {
         return logs;
     }
 
+    public Vector<Journal> getJournals() {
+        return journals;
+    }
 
-
-
-
-//    public HashMap<String, HashMap<Language, String>> getLanguageData() {
+    //    public HashMap<String, HashMap<Language, String>> getLanguageData() {
 //        return languageData;
 //    }
 //
@@ -255,19 +208,6 @@ public class Database {
     }
 
 
-
-//
-//    public <T> int getStudentsCount(Student type) throws UserTypeException {
-//        try {
-//            return (int) users.values().stream()
-//                    .filter(u -> u instanceof type)
-//                    .count();
-//        } catch (UserTypeException e) {
-//            throw new UserTypeException(type);
-//        }
-//    }
-
-
     public Vector<Student> getStudents() {
         return users.values().stream().
                 filter(n -> n instanceof Student)
@@ -291,9 +231,12 @@ public class Database {
     }
 
 
-    public void updateUser(User user) {
+    public String updateUser(User user) {
         String email = user.getEmail();
-        users.put(email, user);
+        String newPass = Credentials.generatePassword();
+        users.put(new Credentials(email, newPass), user);
+
+        return newPass;
     }
 
     //    methods like orm
@@ -301,8 +244,20 @@ public class Database {
         return users.values().stream()
                 .filter(u -> u.getEmail().equals(email))
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
+                .orElse(null);
+//                .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
     }
+
+    public User findUserByCredentials(Credentials credentials) {
+        return users.getOrDefault(credentials, null);
+    }
+
+    public void deleteUser(Credentials credentials) {
+        users.remove(credentials);
+    }
+
+
+
 
 
 //	public void newUserAdded(User user) {

@@ -1,24 +1,19 @@
 package Users ;
 
-import Academic.Journal;
 import CustomExceptions.NotAResearcherException;
-import Enums.Faculty;
 import Research.*;
 import System.News;
-import System.Credentials;
 import System.Notification;
 
-import java.util.Comparator;
-import java.util.List;
+import java.io.Serializable;
 import java.util.Vector;
 
 // NewsSubscriber interface
-public abstract class User implements Subscriber, CanBeResearcher {
+public abstract class User implements Subscriber, CanBeResearcher, Serializable {
 
 	private String firstname;
 	private String lastname;
 	private String email;
-	private Credentials credentials;
 	private Researcher isResearcher;
 	private Vector<Notification> notifications;
 	
@@ -28,6 +23,7 @@ public abstract class User implements Subscriber, CanBeResearcher {
 	public User(String firstname, String lastname) {
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.notifications = new Vector<Notification>();
 	}
 
 	public User(String firstname, String lastname, String email) {
@@ -78,14 +74,6 @@ public abstract class User implements Subscriber, CanBeResearcher {
 		this.lastname = lastname;
 	}
 
-
-	public Credentials getCredentials() {
-		return credentials;
-	}
-	public void setCredentials(Credentials credentials) {
-		this.credentials = credentials;
-	}
-
 	public Vector<Notification> getNotifications() {
 		return notifications;
 	}
@@ -101,8 +89,8 @@ public abstract class User implements Subscriber, CanBeResearcher {
 
 	//researcher realization
 	@Override
-	public void beReseacrher() {
-		this.isResearcher = new Researcher();
+	public void beReseacrher(Researcher researcher) {
+		this.isResearcher = researcher;
 	}
 
 	public Researcher getIsResearcher() {
@@ -135,8 +123,8 @@ public abstract class User implements Subscriber, CanBeResearcher {
 
 	@Override
 	public String toString() {
-			return getClass().getName()
-					+ "  firstname=" + firstname
+			return getClass().getSimpleName()
+					+ " firstname=" + firstname
 					+ ", lastname=" + lastname
 					+ ", email=" + email;
 	}

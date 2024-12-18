@@ -5,6 +5,7 @@ import Research.ResearchJournal;
 import Research.ResearchPaper;
 import Enums.Faculty;
 import Enums.Speciality;
+import Research.Researcher;
 
 import java.util.List;
 import java.util.Vector;
@@ -14,7 +15,6 @@ public class GradStudent extends Student  {
 	private Vector<String> publications;
 	private Teacher teacher;
 
-	private int citations;
 	List<ResearchPaper> papers;
 
 	public GradStudent() {
@@ -29,6 +29,7 @@ public class GradStudent extends Student  {
 		super(id, firstname, lastname, faculty, speciality);
 		this.publications = new Vector<>();
 		this.teacher = teacher;
+		beReseacrher(new Researcher(firstname + lastname));
 	}
 
 	public Teacher getTeacher() {

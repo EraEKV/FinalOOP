@@ -2,11 +2,17 @@ package Users ;
 
 
 import Academic.Course;
+import Academic.Journal;
+import Academic.JournalLesson;
+import Enums.Attendance;
 import Enums.Faculty;
+import Enums.LessonType;
 import Enums.TeacherType;
 import Research.CanBeResearcher;
 import Research.Researcher;
-
+import System.Complaint;
+import java.util.Date;
+import java.util.Dictionary;
 import java.util.Vector;
 
 // CanViewStudents interface
@@ -43,21 +49,15 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 		return ratings;
 	}
 
-
-//	public void putMarks(Course course, Student student, Date date, double grade) {
-//		// TODO implement me
-//		return null;
-//	}
-//
-//	public void putMarks(Course course, Student student, MarkType parameter3, double grade) {
-//		// TODO implement me
-//		return null;
+//	public void putMarks(LessonType lessonType, Attendance attendance, double mark, Student student, Course course, JournalLesson journalLesson) {
+//		journalLesson
 //	}
 	
-//	public void sendComplaint(Complaint parameter) {
-//		// TODO implement me
-//		return null;
-//	}
+	public void sendComplaint(Complaint complaint) {
+		Vector<Complaint> curr =  DisciplinaryCommittee.getInstance().getComplaints();
+		curr.add(complaint);
+		DisciplinaryCommittee.getInstance().setComplaints(curr);
+	}
 	
 //	public void markAttendance(JournalCourse parameter, Vector<Student> parameter2, Attendance parameter3) {
 //		// TODO implement me
@@ -74,6 +74,35 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 
 	public void setTeacherType(TeacherType teacherType) {
 		this.teacherType = teacherType;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+
+	@Override
+	public Researcher getIsResearcher() {
+		return isResearcher;
+	}
+
+	public void setIsResearcher(Researcher isResearcher) {
+		this.isResearcher = isResearcher;
+	}
+
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
+	}
+
+	public void setRatings(Vector<Integer> ratings) {
+		this.ratings = ratings;
 	}
 
 	public TeacherType getTeacherType() {
@@ -98,9 +127,9 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 	}
 
 	@Override
-	public void beReseacrher() {
+	public void beReseacrher(Researcher researcher) {
 		if(!teacherType.equals(TeacherType.PROFESSOR)) {
-			isResearcher = new Researcher();
+			isResearcher = researcher;
 		}
 	}
 

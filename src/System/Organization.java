@@ -2,11 +2,12 @@ package System;
 
 import Users.Student;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Vector;
 
 
-public class Organization {
+public class Organization implements Serializable {
 
 	private String name;
 	private Student head;

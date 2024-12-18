@@ -1,12 +1,16 @@
 package System ;
 
+import Academic.Course;
 import CustomExceptions.InvalidAuthDataException;
+import CustomExceptions.RegistrationCreditsException;
 import Enums.NewsTopic;
 import Enums.Urgency;
 import Users.Student;
 import Users.User;
 
 import Database.Database;
+
+import java.util.Vector;
 
 public class UniversitySystemMediator {
 	public UniversitySystemMediator() {	}
@@ -15,13 +19,23 @@ public class UniversitySystemMediator {
 //	Auth
 	public User authenticateUser(String email, String password) throws InvalidAuthDataException {
 		Database db = Database.getInstance();
-		User user = db.findUserByEmail(email);
-		if (user != null && user.getCredentials().compareHash(password)) {
+		User user = db.findUserByCredentials(new Credentials(email, password));
+
+		if (user != null) {
 			System.out.println("Login successful\nWelcome back, " + user.getFirstname() + "!");
 			return user;
 		} else {
 			throw new InvalidAuthDataException();
 		}
+	}
+
+
+//	Registration for course
+	public void courseRegistration(Student student) throws RegistrationCreditsException {
+		Vector<Course> courses = new Vector<>();
+		Database db = Database.getInstance();
+
+
 	}
 
 

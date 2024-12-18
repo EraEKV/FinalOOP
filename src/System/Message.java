@@ -2,9 +2,11 @@ package System;
 
 import Users.Employee;
 import Users.User;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Message extends Notification {
+public class Message extends Notification implements Serializable {
     private boolean isWatched = false;
 
 

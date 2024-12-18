@@ -1,6 +1,7 @@
 package Users;
 
-import Enums.UserType;
+import Database.Database;
+import System.Credentials;
 import java.util.Objects;
 
 public class Admin extends User {
@@ -17,20 +18,22 @@ public class Admin extends User {
         System.out.println("User added: " + user.getFirstname() + " " + user.getLastname());
     }
 
+    public void deleteUser(String email) {
+        Credentials credentials = new Credentials(email);
+        Database.getInstance().deleteUser(credentials);
+    }
+
     public void deleteUser(User user) {
-        System.out.println("User deleted: " + user.getFirstname() + " " + user.getLastname());
+        Credentials credentials = new Credentials(user.getEmail());
+        Database.getInstance().deleteUser(credentials);
     }
 
-    public void updateUser(User user) {
-        System.out.println("User updated: " + user.getFirstname() + " " + user.getLastname());
-    }
+//    public void updateUser(User user) {
+//        System.out.println("User updated: " + user.getFirstname() + " " + user.getLastname());
+//    }
 
-    public String viewLogs() {
-        return "Viewing system logs...";
-    }
-
-    public <T> T getUserType() {
-        return (T) UserType.ADM;
+    public void viewLogs() {
+        System.out.println(Database.getInstance().getLogs());
     }
 
     @Override
@@ -40,7 +43,7 @@ public class Admin extends User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFirstname(), getLastname(), getEmail(), getUserType());
+        return Objects.hash(getFirstname(), getLastname(), getEmail());
     }
 
     @Override
@@ -50,7 +53,6 @@ public class Admin extends User {
         Admin admin = (Admin) obj;
         return Objects.equals(getFirstname(), admin.getFirstname()) &&
                 Objects.equals(getLastname(), admin.getLastname()) &&
-                Objects.equals(getEmail(), admin.getEmail()) &&
-                Objects.equals(getUserType(), admin.getUserType());
+                Objects.equals(getEmail(), admin.getEmail());
     }
 }

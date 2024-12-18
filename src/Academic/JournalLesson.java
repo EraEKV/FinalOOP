@@ -9,14 +9,11 @@ public class JournalLesson {
 	
 	private Date date;
 
-	
 	private LessonType lessonType;
 
-	
 	private Attendance attendance;
 
 	private double mark;
-
 	
 	private String comment;
 

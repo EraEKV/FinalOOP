@@ -1,39 +1,42 @@
 package Menu;
 
-import Users.Manager;
+import Research.ResearchJournal;
 import Users.Teacher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TeacherMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-    public TeacherMenu(Teacher teacher) {
+    public TeacherMenu(Teacher teacher, List<ResearchJournal> journals) {
         // adding commands to the map
         commands.put(1, new Commands.ViewCoursesCommand(teacher));
         commands.put(2, new Commands.ManageCourseCommand(teacher, reader));
         commands.put(3, new Commands.ViewStudentsInfoCommand(teacher, reader));
-//        commands.put(4, new Commands.PutMarksCommand(teacher, reader));
+        //commands.put(4, new Commands.PutMarksCommand(teacher, reader));
         commands.put(5, new Commands.PutAttendanceCommand(teacher, reader));
         commands.put(6, new Commands.SendMessageCommand(teacher, reader));
+        commands.put(7, new Commands.SubscribeResearchJournalCommand(teacher, journals, reader));
     }
 
     public void displayMenu() {
         while (true) {
             try {
                 System.out.println("\n=== Teacher Menu ===");
-                System.out.println("1. View Courses");
-                System.out.println("2. Manage Course");
-                System.out.println("3. View Students Information");
-                System.out.println("4. Put Marks");
-                System.out.println("5. Put Attendance");
-                System.out.println("6. Send Message");
-                System.out.println("0. Exit");
+                System.out.println("[1] View Courses");
+                System.out.println("[2] Manage Course");
+                System.out.println("[3] View Students Information");
+                System.out.println("[4] Put Marks");
+                System.out.println("[5] Put Attendance");
+                System.out.println("[6] Send Message");
+                System.out.println("[7] Subscribe to Research Journal"); // Новый пункт
+                System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
                 String input = reader.readLine();
@@ -47,7 +50,7 @@ public class TeacherMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5 -> {
+                    case 1, 2, 3, 4, 5, 6, 7 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();
@@ -67,3 +70,4 @@ public class TeacherMenu {
         }
     }
 }
+

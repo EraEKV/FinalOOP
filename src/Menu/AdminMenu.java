@@ -14,30 +14,24 @@ import java.util.Map;
 public class AdminMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-    private final Admin admin;
 
     public AdminMenu(Admin admin) {
-        this.admin = admin;
-        initializeCommands();
-    }
-
-    private void initializeCommands() {
         commands.put(1, new Commands.AddUserCommand(admin, reader));
         commands.put(2, new Commands.DeleteUserCommand(admin, reader));
-//        commands.put(3, new Commands.UpdateUserCommand(admin, reader));
+        commands.put(3, new Commands.UpdateUserCommand(admin, reader));
         commands.put(4, new Commands.ViewLogsCommand(admin));
-        commands.put(5, new Commands.ExitCommand());
+        commands.put(0, new Commands.ExitCommand());
     }
 
     public void displayMenu() {
         while (true) {
             try {
                 System.out.println("\n=== Admin Menu ===");
-                System.out.println("1. Add User");
-                System.out.println("2. Delete User");
-                System.out.println("3. Update User");
-                System.out.println("4. View Logs");
-                System.out.println("5. Exit");
+                System.out.println("[1] Add User");
+                System.out.println("[2] Delete User");
+                System.out.println("[3] Update User");
+                System.out.println("[4] View Logs");
+                System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
                 String input = reader.readLine();
@@ -50,7 +44,7 @@ public class AdminMenu {
                     continue;
                 }
 
-                if (choice == 5) {
+                if (choice == 0) {
                     System.out.println("Exiting...");
                     return;
                 }

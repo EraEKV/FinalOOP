@@ -1,5 +1,8 @@
 package Academic;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Vector;
 import Enums.Faculty;
@@ -8,21 +11,21 @@ import Users.Student;
 import Users.Teacher;
 import Enums.Semester;
 
-public class Course {
+public class Course implements Serializable {
     private String code;
     private String name;
     private Faculty faculty;
     private Speciality speciality;
     private Vector<Teacher> instructors;
-    private Vector<Teacher> teachers;
-    private Vector<Student> students;
+    private Map<Teacher, Vector<Student>> members;
     private int credits;
     private Semester semester;
 
+
+
     public Course() {
         this.instructors = new Vector<>();
-        this.teachers = new Vector<>();
-        this.students = new Vector<>();
+        this.members = new HashMap<>();
     }
 
     public Course(String code, String name, Faculty faculty, Speciality speciality, int credits, Semester semester) {
@@ -31,11 +34,12 @@ public class Course {
         this.faculty = faculty;
         this.speciality = speciality;
         this.instructors = new Vector<>();
-        this.teachers = new Vector<>();
-        this.students = new Vector<>();
+        this.members = new HashMap<>();
         this.credits = credits;
         this.semester = semester;
     }
+
+
 
     public String getCode() {
         return code;
@@ -78,11 +82,13 @@ public class Course {
     }
 
     public Vector<Teacher> getTeachers() {
-        return teachers;
+        Vector<Teacher> allTeachers = new Vector<>();
+        allTeachers.addAll(members.keySet());
+        return allTeachers;
     }
 
-    public void addTeacher(Teacher teacher) {
-        this.teachers.add(teacher);
+    public void assignTeacher(Teacher teacher) {
+        this.members.put(teacher, new Vector<>());
     }
 
     public int getCredits() {
@@ -101,9 +107,28 @@ public class Course {
         this.semester = semester;
     }
 
-    public Vector<Student> getStudents() {
-        return students;
+
+    public void addStudentToTeacher(Teacher teacher, Student student) {
+        this.members.get(teacher).add(student);
     }
+
+    public Vector<Student> getStudents() {
+        Vector<Student> allStudents = new Vector<>();
+        for (Vector<Student> students : members.values()) {
+            allStudents.addAll(students);
+        }
+        return allStudents;
+    }
+
+    public Vector<Student> getStudents(Teacher teacher) {
+        return members.get(teacher);
+    }
+
+    public Map<Teacher, Vector<Student>> getMembers() {
+        return members;
+    }
+
+
 
     @Override
     public String toString() {
@@ -114,7 +139,7 @@ public class Course {
 
     @Override
     public int hashCode() {
-        return Objects.hash(code, name, faculty, speciality, instructors, teachers, students, credits, semester);
+        return Objects.hash(code, name, faculty, speciality, instructors, members, credits, semester);
     }
 
     @Override
@@ -128,8 +153,7 @@ public class Course {
                 faculty == course.faculty &&
                 speciality == course.speciality &&
                 Objects.equals(instructors, course.instructors) &&
-                Objects.equals(teachers, course.teachers) &&
-                Objects.equals(students, course.students) &&
+                Objects.equals(members, course.members) &&
                 semester == course.semester;
     }
 }

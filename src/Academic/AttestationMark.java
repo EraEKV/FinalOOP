@@ -43,6 +43,11 @@ public class AttestationMark {
 		calculateFullAtt();
 	}
 
+	public double getTotal() {
+		return firstAtt + secondAtt + finalExam;
+	}
+
+
 	public Mark getFullAtt() {
 		return fullAtt;
 	}
@@ -60,28 +65,40 @@ public class AttestationMark {
 	}
 
 	private void calculateFullAtt() {
-		double total = firstAtt + secondAtt + finalExam;
-		this.numericValue = (int) Math.ceil(total);
+		int total = (int) getTotal();
+//		Mark marks[] = {Mark.F, Mark.D, Mark.D_PLUS, Mark.C_MINUS, Mark.C, Mark.C_PLUS, Mark.B_MINUS, Mark.B, Mark.B_PLUS, Mark.A_MINUS, Mark.A};
+//
 
-		if (total >= 90) {
-			fullAtt = Mark.A_PLUS;
-		} else if (total >= 85) {
+//		if (total < 40) {
+//			fullAtt =  marks[0];
+//			return;
+//		}
+//
+//		int index = Math.min((int) ((total - 40) / 5) + 1, marks.length - 1);
+//
+//		fullAtt =  marks[index];
+
+		if (total >= 95) {
 			fullAtt = Mark.A;
-		} else if (total >= 80) {
+		} else if (total >= 90) {
 			fullAtt = Mark.A_MINUS;
-		} else if (total >= 75) {
+		} else if (total >= 85) {
 			fullAtt = Mark.B_PLUS;
-		} else if (total >= 70) {
+		} else if (total >= 80) {
 			fullAtt = Mark.B;
-		} else if (total >= 65) {
+		} else if (total >= 75) {
 			fullAtt = Mark.B_MINUS;
-		} else if (total >= 60) {
+		} else if (total >= 70) {
 			fullAtt = Mark.C_PLUS;
-		} else if (total >= 55) {
+		} else if (total >= 65) {
 			fullAtt = Mark.C;
-		} else if (total >= 50) {
+		} else if (total >= 60) {
 			fullAtt = Mark.C_MINUS;
-		} else {
+		} else if (total >= 55) {
+			fullAtt = Mark.D_PLUS;
+		} else if(total >= 50){
+			fullAtt = Mark.D;
+		}else {
 			fullAtt = Mark.F;
 		}
 	}
