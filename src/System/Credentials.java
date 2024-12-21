@@ -120,13 +120,15 @@ public class Credentials implements Serializable {
         if(o == null || getClass() != o.getClass()) return false;
         Credentials credentials = (Credentials) o;
 
-        return email.equals(credentials.email);
+        return email.equals(credentials.email)
+                && password.equals(credentials.password);
     }
 
     @Override
     public int hashCode() {
         int res = 31;
         res = res * 31 + (email != null ? email.hashCode() : 0);
+        res = res * 31 + (password != null ? password.hashCode() : 0);
 
         return res;
     }

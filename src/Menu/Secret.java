@@ -7,7 +7,7 @@ import java.net.http.HttpResponse;
 
 public class Secret {
 
-    public static Command fetchAsciiArtChunked() {
+    public static Command fetchArt() {
         String urlString = "http://ascii.live/can-you-hear-me";
 
         try {

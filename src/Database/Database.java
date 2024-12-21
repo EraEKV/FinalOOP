@@ -16,10 +16,7 @@ import System.News;
 import System.Credentials;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.NoSuchElementException;
-import java.util.PriorityQueue;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Database implements Serializable {
@@ -250,6 +247,15 @@ public class Database implements Serializable {
 
     public User findUserByCredentials(Credentials credentials) {
         return users.getOrDefault(credentials, null);
+    }
+
+    public Credentials findCredentials(Credentials credentials) {
+        for (Credentials storedCredentials : users.keySet()) {
+            if (storedCredentials.equals(credentials)) {
+                return storedCredentials;
+            }
+        }
+        return null; // Если ничего не найдено
     }
 
     public void deleteUser(Credentials credentials) {

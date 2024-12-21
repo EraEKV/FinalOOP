@@ -21,6 +21,7 @@ class StudentMenu {
         commands.put(6, new Commands.SendMessageCommand(student, reader));
         commands.put(7, new Commands.RegisterToCourses(student, reader));
         commands.put(8, new Commands.SubscribeResearchJournalCommand(student, reader));
+        commands.put(9, new Commands.ChangePasswordCommand(student, reader));
     }
 
     public void displayMenu() {
@@ -35,6 +36,7 @@ class StudentMenu {
                 System.out.println("[6] Send Message");
                 System.out.println("[7] Register to Courses");
                 System.out.println("[8] Subscribe to Research Journal");
+                System.out.println("[9] Change Password");
                 System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
@@ -49,7 +51,7 @@ class StudentMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5, 6, 7, 8 -> {
+                    case 1, 2, 3, 4, 5, 6, 7, 8, 9 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();

@@ -11,8 +11,8 @@ public class TestMenu {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         MainMenu mainMenu = new MainMenu();
         mainMenu.displayMenu();
-//        AdminMenu adminMenu = new AdminMenu(new Admin(), br);
-//        adminMenu.displayMenu();
+        AdminMenu adminMenu = new AdminMenu(new Admin(), br);
+        adminMenu.displayMenu();
 
     }
 }

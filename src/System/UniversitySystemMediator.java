@@ -25,27 +25,26 @@ public class UniversitySystemMediator {
 
 		auth: while(true) {
 			System.out.print("Enter your email(if wanna exit type 0): ");
-			email = reader.readLine();
+			email = reader.readLine().trim();
 
-			if(email == "0") break auth;
-
-			Credentials credentials = new Credentials(email);
-			User user = Database.getInstance().findUserByCredentials(credentials);
-			if (user == null) {
-				System.out.print("User not registered in the system!");
-				continue auth;
+			if(email.equals("0")) {
+				break auth;
+			} else if(!email.contains("@kbtu.kz")) {
+				email += "@kbtu.kz";
 			}
 
 			System.out.print("Enter the password: ");
-			password = reader.readLine();
+			password = reader.readLine().trim();
 
-			if(!credentials.comparePassword(password)) {
-				System.out.print("Wrong password!");
-			} else {
-				return user;
+			User user = Database.getInstance().findUserByCredentials(new Credentials(email, password));
+
+			if (user == null) {
+				System.out.println("User not registered in the system!");
+				continue auth;
 			}
-		}
 
+			return user;
+		}
 		return null;
 	}
 

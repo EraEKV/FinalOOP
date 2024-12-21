@@ -18,6 +18,7 @@ public class GradStudentMenu {
         commands.put(3, new Commands.ViewPublicationsCommand(gradStudent));
         commands.put(4, new Commands.AddPublicationCommand(gradStudent, reader));
         commands.put(5, new Commands.ConductResearchCommand(gradStudent));
+        commands.put(9, new Commands.ChangePasswordCommand(gradStudent, reader));
     }
 
     public void displayMenu() {
@@ -30,6 +31,7 @@ public class GradStudentMenu {
                 System.out.println("[4] Add Publication");
                 System.out.println("[5] View Teacher Info");
                 System.out.println("[6] Conduct Research");
+                System.out.println("[9] Change Password");
                 System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
@@ -44,7 +46,7 @@ public class GradStudentMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5 -> {
+                    case 1, 2, 3, 4, 5, 9 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();

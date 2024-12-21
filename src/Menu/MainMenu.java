@@ -1,6 +1,7 @@
 package Menu;
 
 
+import Database.Database;
 import System.UniversitySystemMediator;
 
 import java.io.BufferedReader;
@@ -15,18 +16,18 @@ class MainMenu {
     private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 //    private final UniversitySystemMediator mediator = new UniversitySystemMediator();
 
-    {
+    MainMenu() {
         commands.put(1, new Commands.Authenticate(reader));
-        commands.put(3, Secret.fetchAsciiArtChunked());
+        commands.put(2, new Commands.SecretCommand());
     }
+
 
     public void displayMenu() {
         while (true) {
             try {
-                System.out.println("\n=== Welcome to system ===");
+                System.out.println("=== Welcome to our system! ===");
                 System.out.println("[1] Login ");
-                System.out.println("[2] View Transcript");
-                System.out.println("[3] Secret command");
+                System.out.println("[2] Secret command");
                 System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
@@ -50,7 +51,13 @@ class MainMenu {
                         }
                     }
                     case 0 -> {
-                        System.out.println("Exiting the menu. Goodbye!");
+                        try {
+                            Database.write();
+                            System.out.println("Exiting the menu. Goodbye!");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                         return;
                     }
                     default -> System.out.println("Invalid choice. Try again.");
