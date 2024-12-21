@@ -76,9 +76,10 @@ public class Notification {
 	@Override
 	public String toString() {
 		return getClass().getName() +
-				"  date=" + date +
+				"  author=" + author +
 				", text=" + text +
-				", author=" + author;
+				", date=" + date;
+
 	}
 }
 

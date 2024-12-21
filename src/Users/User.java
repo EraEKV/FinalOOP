@@ -78,9 +78,6 @@ public abstract class User implements Subscriber, CanBeResearcher, Serializable 
 		return notifications;
 	}
 
-	public void setNotifications(Vector<Notification> notifications) {
-		this.notifications = notifications;
-	}
 	//Observer pattern
 	public void update(){
 		notifications.add(new Notification("New post in research journal!!!"));
