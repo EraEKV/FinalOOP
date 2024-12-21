@@ -12,17 +12,17 @@ import java.util.Map;
 
 public class TeacherMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
-    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private final BufferedReader reader;
 
-    public TeacherMenu(Teacher teacher, List<ResearchJournal> journals) {
-        // adding commands to the map
+    public TeacherMenu(Teacher teacher, BufferedReader reader) {
+        this.reader = reader;
         commands.put(1, new Commands.ViewCoursesCommand(teacher));
         commands.put(2, new Commands.ManageCourseCommand(teacher, reader));
         commands.put(3, new Commands.ViewStudentsInfoCommand(teacher, reader));
         //commands.put(4, new Commands.PutMarksCommand(teacher, reader));
         commands.put(5, new Commands.PutAttendanceCommand(teacher, reader));
         commands.put(6, new Commands.SendMessageCommand(teacher, reader));
-        commands.put(7, new Commands.SubscribeResearchJournalCommand(teacher, journals, reader));
+        commands.put(7, new Commands.SubscribeResearchJournalCommand(teacher, reader));
     }
 
     public void displayMenu() {
@@ -35,7 +35,7 @@ public class TeacherMenu {
                 System.out.println("[4] Put Marks");
                 System.out.println("[5] Put Attendance");
                 System.out.println("[6] Send Message");
-                System.out.println("[7] Subscribe to Research Journal"); // Новый пункт
+                System.out.println("[7] Subscribe to Research Journal");
                 System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 

@@ -1,27 +1,98 @@
 package Menu;
 
 import Academic.JournalLesson;
+import CustomExceptions.InvalidAuthDataException;
 import Enums.*;
 import Users.*;
 import System.Organization;
 import Database.Database;
 import Academic.Course;
-import System.News;
 import System.Message;
-import System.Notification;
 import System.Request;
 import Users.Rector;
 import System.Credentials;
 import System.UniversitySystemMediator;
 import Research.*;
 
-import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Commands {
+    //
+    //
+    //    MAIN MENU
+    //
+    //
+
+
+    public static class Authenticate implements Command {
+        private BufferedReader reader;
+
+        public Authenticate(BufferedReader reader) {
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                User user = UniversitySystemMediator.authenticateUser(reader);
+
+                switch (user.getClass().getSimpleName()) {
+                    case "Student":
+                        Student student = (Student) user;
+                        StudentMenu studentMenu = new StudentMenu(student, reader);
+                        studentMenu.displayMenu();
+                        break;
+
+                    case "Teacher":
+                        Teacher teacher = (Teacher) user;
+                        TeacherMenu teacherMenu = new TeacherMenu(teacher, reader);
+                        teacherMenu.displayMenu();
+                        break;
+
+                    case "Manager":
+                        Manager manager = (Manager) user;
+                        ManagerMenu managerMenu = new ManagerMenu(manager, reader);
+                        managerMenu.displayMenu();
+                        break;
+
+//                    case "Researcher":
+//                        Researcher researcher = (Researcher) user;
+//                        ResearcherMenu researcherMenu = new ResearcherMenu(researcher, reader);
+//                        researcherMenu.showMenu();
+//                        break;
+
+                    case "Admin":
+                        Admin admin = (Admin) user;
+                        AdminMenu adminMenu = new AdminMenu(admin, reader);
+                        adminMenu.displayMenu();
+                        break;
+
+                    default:
+                        System.out.println("Unknown user type. Cannot proceed.");
+                        break;
+                }
+            } catch (InvalidAuthDataException e) {
+                System.out.println("Authentication failed: " + e.getMessage());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+
+
+
+
+
+    //
+    //
+    //  STUDENT MENU
+    //
+    //
+
     public static class ViewMarksCommand implements Command {
         private final Student student;
 
@@ -31,8 +102,8 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("ViewMarks", student);
             student.viewMarks();
+            logging("ViewMarks", student);
         }
     }
     // ViewTranscriptCommand
@@ -45,8 +116,8 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("ViewTranscript", student);
             student.viewTranscript();
+            logging("ViewTranscript", student);
         }
     }
 
@@ -71,7 +142,6 @@ public class Commands {
         @Override
         public void execute() {
             try {
-                logging("RateTeacher", student);
                 System.out.println("Select a teacher to rate:");
 
 
@@ -119,22 +189,23 @@ public class Commands {
             } catch (Exception e) {
                 System.out.println("An unexpected error occurred: " + e.getMessage());
             }
+            logging("RateTeacher", student);
         }
     }
 
     // ViewTeacherInfoCommand
     public static class ViewTeacherInfoCommand implements Command {
-        private final List<Teacher> teachers;
+        private final Student student;
         private final BufferedReader reader;
 
-        public ViewTeacherInfoCommand(List<Teacher> teachers, BufferedReader reader) {
-            this.teachers = teachers;
+        public ViewTeacherInfoCommand(Student student, BufferedReader reader) {
+            this.student = student;
             this.reader = reader;
         }
 
         @Override
         public void execute() {
-            logging("ViewTeacherInfo", (User) teachers);
+            Vector<Teacher> teachers = student.getTeachers();
             try {
                 System.out.println("Select a teacher to view their information:");
                 for (int i = 0; i < teachers.size(); i++) {
@@ -153,31 +224,31 @@ public class Commands {
             } catch (IOException | NumberFormatException e) {
                 System.out.println("Invalid input. Please try again.");
             }
+            logging("ViewTeacherInfo", student);
         }
     }
 
     // ManageOrganizationsCommand
     public static class ManageOrganizationsCommand implements Command {
         private final Student student;
-        private final List<Organization> organizations;
         private final BufferedReader reader;
 
-        public ManageOrganizationsCommand(Student student, List<Organization> organizations, BufferedReader reader) {
+        public ManageOrganizationsCommand(Student student, BufferedReader reader) {
             this.student = student;
-            this.organizations = organizations;
             this.reader = reader;
         }
 
         @Override
         public void execute() {
-            logging("ManageOrganization", student);
             while (true) {
+                List<Organization> organizations = Database.getInstance().getStudentOrganizations();
                 try {
                     System.out.println("\n=== Manage Organizations ===");
-                    System.out.println("1. Create Organization");
-                    System.out.println("2. Join Organization");
-                    System.out.println("3. Leave Organization");
-                    System.out.println("0. Back to Main Menu");
+                    System.out.println("[1] Create Organization");
+                    System.out.println("[2] Join Organization");
+                    System.out.println("[3] Leave Organization");
+                    System.out.println("[4] Delete Organization");
+                    System.out.println("[0] Back to Main Menu");
                     System.out.print("Enter your choice: ");
                     int choice = Integer.parseInt(reader.readLine());
 
@@ -222,6 +293,7 @@ public class Commands {
                 } catch (IOException | NumberFormatException e) {
                     System.out.println("Invalid input. Please try again.");
                 }
+                logging("ManageOrganization", student);
             }
         }
     }
@@ -354,6 +426,7 @@ public class Commands {
             } catch (IOException | NumberFormatException e) {
                 System.out.println("Invalid input. Please try again.");
             }
+            logging("RegisterToCourses", student);
         }
 
 
@@ -395,7 +468,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("AddCourse", manager);
             try {
                 System.out.println("Enter course code:");
                 String code = reader.readLine().trim();
@@ -467,6 +539,7 @@ public class Commands {
             } catch (IOException e) {
                 System.out.println("An error occurred while reading input. Please try again.");
             }
+            logging("AddCourse", manager);
         }
     }
 
@@ -496,17 +569,14 @@ public class Commands {
     public static class AddNewsCommand implements Command {
         private final Manager manager;
         private final BufferedReader reader;
-        private final UniversitySystemMediator mediator;
 
-        public AddNewsCommand(Manager manager, BufferedReader reader, UniversitySystemMediator mediator) {
+        public AddNewsCommand(Manager manager, BufferedReader reader) {
             this.manager = manager;
             this.reader = reader;
-            this.mediator = mediator;
         }
 
         @Override
         public void execute() {
-            logging("AddNews", manager);
             try {
                 System.out.println("Enter author's name:");
                 String author = reader.readLine();
@@ -517,10 +587,11 @@ public class Commands {
                 System.out.println("Enter news topic:");
                 String topicInput = reader.readLine();
                 NewsTopic newsTopic = NewsTopic.valueOf(topicInput.toUpperCase());
-                mediator.publishNews(author, newsTopic, title, content);
+                UniversitySystemMediator.publishNews(author, newsTopic, title, content);
             } catch (IOException | IllegalArgumentException e) {
                 System.out.println("Error occurred while adding news.");
             }
+            logging("AddNews", manager);
         }
     }
 
@@ -536,7 +607,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("RedirectRequest", manager);
             try {
                 System.out.println("Enter request ID to redirect:");
                 String requestId = reader.readLine();
@@ -572,6 +642,7 @@ public class Commands {
             } catch (IOException e) {
                 System.out.println("Error occurred while redirecting the request.");
             }
+            logging("RedirectRequest", manager);
         }
     }
 
@@ -588,7 +659,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("OpenCloseRegistration", manager);
             try {
                 System.out.println("Enter 'open' to open registration, 'close' to close it:");
                 String status = reader.readLine();
@@ -604,6 +674,7 @@ public class Commands {
             } catch (IOException e) {
                 System.out.println("Error occurred while handling registration.");
             }
+            logging("OpenCloseRegistration", manager);
         }
     }
 
@@ -617,7 +688,7 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("GetCourseReport", manager);
+
             try {
                 System.out.println("=== Course Report ===");
                 Vector<Course> courses = Database.getInstance().getCourses();
@@ -638,6 +709,7 @@ public class Commands {
             } catch (Exception e) {
                 System.out.println("Error occurred while fetching the course report.");
             }
+            logging("GetCourseReport", manager);
         }
     }
 
@@ -651,7 +723,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("GetStudentReport", manager);
             try {
                 System.out.println("=== Student Report ===");
                 Vector<Student> students = Database.getInstance().getStudents();
@@ -671,6 +742,7 @@ public class Commands {
             } catch (Exception e) {
                 System.out.println("Error occurred while fetching the student report.");
             }
+            logging("GetStudentReport", manager);
         }
     }
 
@@ -686,7 +758,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("SetStudentRegistration", manager);
             try {
                 System.out.println("=== Set Student Registration Status ===");
                 Vector<Student> students = Database.getInstance().getStudents();
@@ -717,6 +788,7 @@ public class Commands {
             } catch (IOException | NumberFormatException e) {
                 System.out.println("Invalid input. Please try again.");
             }
+            logging("SetStudentRegistration", manager);
         }
     }
 
@@ -737,7 +809,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("ViewCourses", teacher);
             try {
                 System.out.println("=== View Courses ===");
                 Vector<Course> courses = teacher.getCurrentCourses();
@@ -757,6 +828,7 @@ public class Commands {
                 System.out.println("Error occurred while fetching the courses.");
                 e.printStackTrace();
             }
+            logging("ViewCourses", teacher);
         }
     }
 
@@ -772,7 +844,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("ManageCourse", teacher);
             Database db = Database.getInstance();
             try {
                 System.out.println("=== Manage Course ===");
@@ -786,6 +857,7 @@ public class Commands {
             } catch (Exception e) {
                 System.out.println("Error occurred while fetching the courses.");
             }
+            logging("ManageCourse", teacher);
         }
     }
 
@@ -801,7 +873,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("ViewStudentsInfo", teacher);
             try {
                 System.out.println("=== View Students Info ===");
                 Vector<Course> courses = teacher.getCurrentCourses();
@@ -858,6 +929,7 @@ public class Commands {
                 System.out.println("Error occurred while fetching the courses.");
                 e.printStackTrace();
             }
+            logging("ViewStudentsInfo", teacher);
         }
     }
 
@@ -876,7 +948,7 @@ public class Commands {
 //
 //        @Override
 //        public void execute() {
-//            logging("SendMessage", teacher);
+//            logging("PutMarks", teacher);
 //            try {
 //                System.out.println("=== Put Marks ===");
 //
@@ -1032,9 +1104,8 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("PutAttendance", teacher);
             try {
-                System.out.println("=== Put Marks ===");
+                System.out.println("=== Put Attendance ===");
 
                 Vector<Course> courses = teacher.getCurrentCourses();
                 course: while (true) {
@@ -1138,6 +1209,8 @@ public class Commands {
                 System.out.println("Error occurred while fetching the courses.");
                 e.printStackTrace();
             }
+
+            logging("PutAttendance", teacher);
         }
     }
 
@@ -1154,7 +1227,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("SendMessage", sender);
             try {
                 System.out.println("=== Send Message ===");
                 Database db = Database.getInstance();
@@ -1203,8 +1275,10 @@ public class Commands {
                 System.out.println("Error occurred while sending the message.");
                 e.printStackTrace();
             }
+            logging("PutAttendance", sender);
         }
     }
+
 
 
 
@@ -1226,7 +1300,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("AddUser", admin);
             try {
                 main: while (true) {
                     System.out.println("Select the type of user to add:");
@@ -1245,10 +1318,10 @@ public class Commands {
 
                     user: while(true) {
                         System.out.print("Enter first name: ");
-                        String firstname = reader.readLine();
+                        String firstname = reader.readLine().trim();
 
                         System.out.print("Enter last name: ");
-                        String lastname = reader.readLine();
+                        String lastname = reader.readLine().trim();
 
 
 
@@ -1336,6 +1409,7 @@ public class Commands {
             } catch (IOException | NumberFormatException e) {
                 System.out.println("An error occurred while adding the user.");
             }
+            logging("AddUser", admin);
         }
 
     private Faculty selectFaculty() throws IOException {
@@ -1411,7 +1485,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("DeleteUser", admin);
             try {
                 System.out.print("Enter user email to delete: ");
                 String email = reader.readLine();
@@ -1426,6 +1499,7 @@ public class Commands {
             } catch (IOException e) {
                 System.out.println("An error occurred while deleting the user.");
             }
+            logging("DeleteUser", admin);
         }
     }
 
@@ -1441,7 +1515,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("UpdateUser", null); // No direct reference to Admin here
             try {
                 System.out.print("Enter user email to update: ");
                 String email = reader.readLine();
@@ -1468,6 +1541,7 @@ public class Commands {
             } catch (IOException e) {
                 System.out.println("An error occurred while updating the user.");
             }
+            logging("UpdateUser", null);
         }
     }
 
@@ -1495,7 +1569,14 @@ public class Commands {
     }
 
 
+
+
+
+    //
+    //
     // GradStudentMenu
+    //
+    //
 
     public static class ViewResearchTopicCommand implements Command {
         private final GradStudent gradStudent;
@@ -1506,13 +1587,13 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("ViewResearchTopic", gradStudent);
             String topic = gradStudent.getResearchTopic();
             if (topic == null || topic.isEmpty()) {
                 System.out.println("No research topic set.");
             } else {
                 System.out.println("Research Topic: " + topic);
             }
+            logging("ViewResearchTopic", gradStudent);
         }
     }
 
@@ -1528,7 +1609,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("SetResearchTopic", gradStudent);
             try {
                 System.out.print("Enter a new research topic: ");
                 String topic = reader.readLine();
@@ -1537,6 +1617,7 @@ public class Commands {
             } catch (IOException e) {
                 System.out.println("An error occurred while setting the research topic.");
             }
+            logging("SetResearchTopic", gradStudent);
         }
     }
 
@@ -1549,7 +1630,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("ViewPublications", gradStudent);
             if (gradStudent.getPublications().isEmpty()) {
                 System.out.println("No publications found.");
             } else {
@@ -1558,6 +1638,7 @@ public class Commands {
                     System.out.println("- " + publication);
                 }
             }
+            logging("ViewPublications", gradStudent);
         }
     }
 
@@ -1573,7 +1654,6 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("AddPublication", gradStudent);
             try {
                 System.out.print("Enter the title of the publication: ");
                 String publication = reader.readLine();
@@ -1582,6 +1662,7 @@ public class Commands {
             } catch (IOException e) {
                 System.out.println("An error occurred while adding the publication.");
             }
+            logging("AddPublication", gradStudent);
         }
     }
 
@@ -1594,26 +1675,24 @@ public class Commands {
 
         @Override
         public void execute() {
-            logging("ConductResearch", gradStudent);
             gradStudent.research();
             System.out.println("Research in progress...");
+            logging("ConductResearch", gradStudent);
         }
     }
 
     public static class SubscribeResearchJournalCommand implements Command {
         private final Subscriber user;
-        private final List<ResearchJournal> journals;
         private final BufferedReader reader;
 
-        public SubscribeResearchJournalCommand(Subscriber user, List<ResearchJournal> journals, BufferedReader reader) {
+        public SubscribeResearchJournalCommand(Subscriber user, BufferedReader reader) {
             this.user = user;
-            this.journals = journals;
             this.reader = reader;
         }
 
         @Override
         public void execute() {
-            logging("SubscribeResearchJournal", (User) user);
+            List<ResearchJournal> journals = Database.getInstance().getResearchJournals();
             try {
                 System.out.println("\nAvailable Research Journals:");
                 for (int i = 0; i < journals.size(); i++) {
@@ -1644,6 +1723,7 @@ public class Commands {
             } catch (Exception e) {
                 System.out.println("An unexpected error occurred: " + e.getMessage());
             }
+            logging("SubscribeResearchJournal", (User) user);
         }
     }
 

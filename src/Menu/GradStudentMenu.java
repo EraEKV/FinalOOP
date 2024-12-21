@@ -9,9 +9,10 @@ import java.util.Map;
 
 public class GradStudentMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
-    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private final BufferedReader reader;
 
-    public GradStudentMenu(GradStudent gradStudent) {
+    public GradStudentMenu(GradStudent gradStudent, BufferedReader reader) {
+        this.reader = reader;
         commands.put(1, new Commands.ViewResearchTopicCommand(gradStudent));
         commands.put(2, new Commands.SetResearchTopicCommand(gradStudent, reader));
         commands.put(3, new Commands.ViewPublicationsCommand(gradStudent));

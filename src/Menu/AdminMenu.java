@@ -13,9 +13,10 @@ import java.util.Map;
 
 public class AdminMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
-    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private final BufferedReader reader;
 
-    public AdminMenu(Admin admin) {
+    public AdminMenu(Admin admin, BufferedReader reader) {
+        this.reader = reader;
         commands.put(1, new Commands.AddUserCommand(admin, reader));
         commands.put(2, new Commands.DeleteUserCommand(admin, reader));
         commands.put(3, new Commands.UpdateUserCommand(admin, reader));

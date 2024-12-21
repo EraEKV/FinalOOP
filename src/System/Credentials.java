@@ -79,10 +79,8 @@ public class Credentials implements Serializable {
     }
 
 
-    public boolean compareHash(String pw) {
-//        return this.password.equals(generateHash(pw));
-        System.out.println(this.password);
-        return this.password.equals(pw);
+    public boolean comparePassword(String pw) {
+        return this.password.equals(generateHash(pw));
     }
 
 

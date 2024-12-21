@@ -9,22 +9,18 @@ import java.util.*;
 
 class StudentMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
-    private final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private final BufferedReader reader;
 
-    public void addCommand(int option, Command command) {
-        commands.put(option, command);
-    }
-
-    public StudentMenu(Student student, List<Organization> organizations, List<Teacher> teachers, List<ResearchJournal> journals) {
-        // Adding commands to the map
+    public StudentMenu(Student student, BufferedReader reader) {
+        this.reader = reader;
         commands.put(1, new Commands.ViewMarksCommand(student));
         commands.put(2, new Commands.ViewTranscriptCommand(student));
         commands.put(3, new Commands.RateTeacherCommand(student, reader));
-        commands.put(4, new Commands.ViewTeacherInfoCommand(teachers, reader));
-        commands.put(5, new Commands.ManageOrganizationsCommand(student, organizations, reader));
+        commands.put(4, new Commands.ViewTeacherInfoCommand(student, reader));
+        commands.put(5, new Commands.ManageOrganizationsCommand(student, reader));
         commands.put(6, new Commands.SendMessageCommand(student, reader));
         commands.put(7, new Commands.RegisterToCourses(student, reader));
-        commands.put(8, new Commands.SubscribeResearchJournalCommand(student, journals, reader));
+        commands.put(8, new Commands.SubscribeResearchJournalCommand(student, reader));
     }
 
     public void displayMenu() {

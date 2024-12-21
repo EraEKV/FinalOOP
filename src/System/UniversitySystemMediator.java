@@ -10,6 +10,8 @@ import Users.User;
 
 import Database.Database;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Vector;
 
 public class UniversitySystemMediator {
@@ -17,16 +19,34 @@ public class UniversitySystemMediator {
 
 
 //	Auth
-	public User authenticateUser(String email, String password) throws InvalidAuthDataException {
-		Database db = Database.getInstance();
-		User user = db.findUserByCredentials(new Credentials(email, password));
+	public static User authenticateUser(BufferedReader reader) throws InvalidAuthDataException, IOException {
+		String email;
+		String password;
 
-		if (user != null) {
-			System.out.println("Login successful\nWelcome back, " + user.getFirstname() + "!");
-			return user;
-		} else {
-			throw new InvalidAuthDataException();
+		auth: while(true) {
+			System.out.print("Enter your email(if wanna exit type 0): ");
+			email = reader.readLine();
+
+			if(email == "0") break auth;
+
+			Credentials credentials = new Credentials(email);
+			User user = Database.getInstance().findUserByCredentials(credentials);
+			if (user == null) {
+				System.out.print("User not registered in the system!");
+				continue auth;
+			}
+
+			System.out.print("Enter the password: ");
+			password = reader.readLine();
+
+			if(!credentials.comparePassword(password)) {
+				System.out.print("Wrong password!");
+			} else {
+				return user;
+			}
 		}
+
+		return null;
 	}
 
 
@@ -57,7 +77,7 @@ public class UniversitySystemMediator {
 
 
 //	News logic
-	public void publishNews(String author, NewsTopic topic, String title, String content) {
+	public static void publishNews(String author, NewsTopic topic, String title, String content) {
 		Database db = Database.getInstance();
 		try {
 			db.getNews().add(new News(author, title, content, topic));
