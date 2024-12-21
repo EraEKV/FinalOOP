@@ -2070,7 +2070,177 @@ public class Commands {
         }
     }
 
+    public static class AddRequestCommand implements Command {
+        private final Rector rector;
+        private final BufferedReader reader;
 
+        public AddRequestCommand(Rector rector, BufferedReader reader) {
+            this.rector = rector;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("AddRequest", rector);
+            try {
+                System.out.println("Enter request details:");
+
+                System.out.print("Topic: ");
+                String topic = reader.readLine();
+
+                System.out.print("Signed (true/false): ");
+                Boolean isSigned = Boolean.parseBoolean(reader.readLine());
+
+                System.out.print("Status (PENDING/APPROVED/REJECTED): ");
+                String statusInput = reader.readLine();
+                Status status = Status.valueOf(statusInput.toUpperCase());
+
+                Request newRequest = new Request(topic, isSigned, status);
+                rector.addRequest(newRequest);
+
+                System.out.println("Request added successfully.");
+            } catch (IOException e) {
+                System.out.println("An error occurred while adding the request.");
+            }
+        }
+    }
+
+    public static class ManageRequestCommand implements Command {
+        private final Rector rector;
+        private final BufferedReader reader;
+
+        public ManageRequestCommand(Rector rector, BufferedReader reader) {
+            this.rector = rector;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("ManageRequest", rector);
+            try {
+                System.out.println("Enter the Request ID:");
+                String requestId = reader.readLine().trim();
+
+                Optional<Request> requestOptional = rector.getRequests().stream()
+                        .filter(request -> request.getId().equals(requestId))
+                        .findFirst();
+
+                if (requestOptional.isPresent()) {
+                    Request request = requestOptional.get();
+                    System.out.println("Handling request: " + request.getTopic());
+
+                    System.out.println("Choose an action:");
+                    System.out.println("[1] Sign Request");
+                    System.out.println("[2] Reject Request");
+                    System.out.println("[0] Back to Menu");
+
+                    String action = reader.readLine().trim();
+
+                    switch (action) {
+                        case "1" -> {
+                            rector.signRequest(request);
+                            System.out.println("Request signed successfully.");
+                        }
+                        case "2" -> {
+                            rector.rejectRequest(request);
+                            System.out.println("Request rejected successfully.");
+                        }
+                        case "0" -> {
+                            System.out.println("Going back to menu.");
+                            return;
+                        }
+                        default -> System.out.println("Invalid choice. Try again.");
+                    }
+                } else {
+                    System.out.println("Request with the given ID not found.");
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred while reading input.");
+            }
+        }
+    }
+
+
+    public static class RectorViewRequestsCommand implements Command {
+        private final Rector rector;
+
+        public RectorViewRequestsCommand(Rector rector) {
+            this.rector = rector;
+        }
+
+        @Override
+        public void execute() {
+            logging("RectorViewRequests", rector);
+            System.out.println("=== List of Requests ===");
+            for (Request request : rector.getRequests()) {
+                System.out.println(request);
+            }
+        }
+    }
+
+    public static class EditRequestCommand implements Command {
+        private final Rector rector;
+        private final BufferedReader reader;
+
+        public EditRequestCommand(Rector rector, BufferedReader reader) {
+            this.rector = rector;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("EditRequest", rector);
+            try {
+                System.out.println("Enter the Request ID to edit:");
+                String requestId = reader.readLine().trim();
+
+                Optional<Request> requestOptional = rector.getRequests().stream()
+                        .filter(request -> request.getId().equals(requestId))
+                        .findFirst();
+
+                if (requestOptional.isPresent()) {
+                    Request request = requestOptional.get();
+                    System.out.println("Editing request: " + request.getTopic());
+
+                    System.out.println("Choose what you want to edit:");
+                    System.out.println("[1] Topic");
+                    System.out.println("[2] Status");
+                    System.out.println("[3] Signed");
+                    System.out.println("[0] Back to Menu");
+
+                    String choice = reader.readLine().trim();
+
+                    switch (choice) {
+                        case "1" -> {
+                            System.out.print("Enter new topic: ");
+                            String newTopic = reader.readLine().trim();
+                            request.setTopic(newTopic);
+                            System.out.println("Topic updated.");
+                        }
+                        case "2" -> {
+                            System.out.print("Enter new status (PENDING/APPROVED/REJECTED): ");
+                            String statusInput = reader.readLine().trim();
+                            Status newStatus = Status.valueOf(statusInput.toUpperCase());
+                            request.setStatus(newStatus);
+                            System.out.println("Status updated.");
+                        }
+                        case "3" -> {
+                            System.out.print("Enter new signed value (true/false): ");
+                            boolean newSigned = Boolean.parseBoolean(reader.readLine().trim());
+                            request.setSigned(newSigned);
+                            System.out.println("Signed status updated.");
+                        }
+                        case "0" -> System.out.println("Going back to menu.");
+                        default -> System.out.println("Invalid choice. Try again.");
+                    }
+                } else {
+                    System.out.println("Request with the given ID not found.");
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred while reading input.");
+            }
+        }
+    }
 
 
 }
