@@ -11,7 +11,9 @@ public class Employee extends User {
 	private int salary;
 	private Date dateHired;
 	private boolean onVacation;
+	private Date vacationStartDate;
 	private Date vacationEndDate;
+	private int vacationCoolDown;
 	private Vector<Message> messages;
 
 	public Employee() {
@@ -21,6 +23,8 @@ public class Employee extends User {
 		super(firstname, lastname);
 		this.onVacation = false;
 		this.vacationEndDate = null;
+		this.vacationStartDate = null;
+		this.vacationCoolDown = 0;
 		this.messages = new Vector<>();
 		this.salary = 0;
 	}
@@ -29,6 +33,8 @@ public class Employee extends User {
 		super(firstname, lastname, email);
 		this.onVacation = false;
 		this.vacationEndDate = null;
+		this.vacationStartDate = null;
+		this.vacationCoolDown = 0;
 		this.messages = new Vector<>();
 		this.salary = 0;
 		this.dateHired = new Date();
@@ -75,6 +81,21 @@ public class Employee extends User {
 	public void setVacationEndDate(Date vacationEndDate) {
 		this.vacationEndDate = vacationEndDate;
 	}
+	public Date getVacationStartDate() {
+		return vacationStartDate;
+	}
+
+	public void setVacationStartDate(Date vacationStartDate) {
+		this.vacationStartDate = vacationStartDate;
+	}
+
+	public int getVacationCoolDown() {
+		return vacationCoolDown;
+	}
+
+	public void setVacationCoolDown(int vacationCoolDown) {
+		this.vacationCoolDown = vacationCoolDown;
+	}
 
 	public Vector<Message> getMessages() {
 		return messages;
@@ -85,10 +106,10 @@ public class Employee extends User {
 			System.out.println("Vacation is available.");
 			return true;
 		} else if (date.after(vacationEndDate)) {
-			System.out.println("Vacation is available after " + vacationEndDate);
+			System.out.println("Vacation is available after " + vacationCoolDown + " days.");
 			return true;
 		}
-		System.out.println("Currently on vacation until " + vacationEndDate);
+		System.out.println("Currently on vacation until " + vacationEndDate + "starting from "+ vacationStartDate);
 		return false;
 	}
 
@@ -98,7 +119,7 @@ public class Employee extends User {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(salary, dateHired, onVacation, vacationEndDate, messages);
+		return Objects.hash(salary, dateHired, onVacation, vacationEndDate, messages, vacationCoolDown, vacationStartDate);
 	}
 
 	@Override
@@ -110,6 +131,8 @@ public class Employee extends User {
 				onVacation == employee.onVacation &&
 				Objects.equals(dateHired, employee.dateHired) &&
 				Objects.equals(vacationEndDate, employee.vacationEndDate) &&
-				Objects.equals(messages, employee.messages);
+				Objects.equals(messages, employee.messages)
+				&& Objects.equals(vacationCoolDown, employee.vacationCoolDown)
+				&& Objects.equals(vacationStartDate, employee.vacationStartDate);
 	}
 }
