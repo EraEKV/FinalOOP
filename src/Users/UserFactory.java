@@ -79,7 +79,7 @@ public class UserFactory {
 		} else if (Teacher.class.isAssignableFrom(userClass)) {
 			idSuffix = "T";
 		} else if (Manager.class.isAssignableFrom(userClass)) {
-			idSuffix = "O";
+			idSuffix = "MNG";
 		} else {
 			throw new UserTypeException();
 		}

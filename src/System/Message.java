@@ -50,8 +50,7 @@ public class Message extends Notification implements Serializable {
 
     @Override
     public String toString() {
-        return "Message{" +
-                "isWatched=" + isWatched +
-                '}';
+        return super.toString()
+                + ", isWatched=" + isWatched;
     }
 }

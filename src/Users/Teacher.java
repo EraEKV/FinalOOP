@@ -164,7 +164,7 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 
 	@Override
 	public String toString() {
-		return ", id='" + id + '\'' +
+		return  super.toString() + ", id='" + id + '\'' +
 				", teacher=" + teacherType +
 				", faculty=" + faculty +
 				", isResearcher=" + isResearcher;

@@ -13,6 +13,7 @@ import Users.Rector;
 import System.Credentials;
 import System.UniversitySystemMediator;
 import Research.*;
+import System.Notification;
 
 import java.io.BufferedReader;
 import java.io.*;
@@ -42,33 +43,49 @@ public class Commands {
             try {
                 User user = UniversitySystemMediator.authenticateUser(reader);
                 if(user == null) return;
+
+                Database.getInstance().viewNews(1);
+
                 switch (user.getClass().getSimpleName()) {
                     case "Student":
                         Student student = (Student) user;
+                        System.out.println(student);
                         StudentMenu studentMenu = new StudentMenu(student, reader);
                         studentMenu.displayMenu();
                         break;
 
                     case "Teacher":
                         Teacher teacher = (Teacher) user;
+                        System.out.println(teacher);
                         TeacherMenu teacherMenu = new TeacherMenu(teacher, reader);
                         teacherMenu.displayMenu();
                         break;
 
                     case "Manager":
                         Manager manager = (Manager) user;
+                        System.out.println(manager);
                         ManagerMenu managerMenu = new ManagerMenu(manager, reader);
                         managerMenu.displayMenu();
                         break;
 
 //                    case "Researcher":
 //                        Researcher researcher = (Researcher) user;
+//                        researcher.toString();
 //                        ResearcherMenu researcherMenu = new ResearcherMenu(researcher, reader);
 //                        researcherMenu.showMenu();
 //                        break;
 
+//                    case "Rector":
+//                        Rector rector = (Rector) user;
+//                        new ShowRector().execute();
+//                        System.out.println("\n\n\n");
+//                        System.out.println(rector);
+//                        RectorMenu rectorMenu = new RectorMenu(rector, reader);
+//                        rectorMenu.displayMenu();
+
                     case "Admin":
                         Admin admin = (Admin) user;
+                        System.out.println(admin);
                         AdminMenu adminMenu = new AdminMenu(admin, reader);
                         adminMenu.displayMenu();
                         break;
@@ -168,7 +185,6 @@ public class Commands {
                         }
 
                     }
-//                    RkXiDHb
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -177,6 +193,155 @@ public class Commands {
         }
 
     }
+
+
+
+    public static class ViewNotificationsCommand implements Command {
+        private final BufferedReader reader;
+        private final User user;
+        private final int PAGE_SIZE = 5;
+
+        public ViewNotificationsCommand(User user, BufferedReader reader) {
+            this.reader = reader;
+            this.user = user;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                while (true) {
+                    System.out.println("Choose what you want to view:");
+                    System.out.println("[1] Messages");
+                    System.out.println("[2] Complaints");
+                    System.out.println("[3] Invites");
+                    System.out.println("[4] News");
+                    System.out.println("[0] Exit");
+
+                    int choice = Integer.parseInt(reader.readLine());
+
+                    switch (choice) {
+                        case 1 -> viewNotifications("Message");
+                        case 2 -> viewNotifications("Complaint");
+                        case 3 -> viewNotifications("Invite");
+                        case 4 -> viewNews();
+                        case 0 -> {
+                            return;
+                        }
+                        default -> System.out.println("Invalid choice. Please try again.");
+                    }
+                }
+            } catch (IOException | NumberFormatException e) {
+                System.out.println("Error occurred: " + e.getMessage());
+            }
+        }
+
+        private void viewNotifications(String notificationType) throws IOException {
+            Vector<Notification> notifications = user.getNotifications();
+            int total = (int) notifications.stream()
+                    .filter(notification -> notification.getClass().getSimpleName().equals(notificationType))
+                    .count();
+            if (total == 0) {
+                System.out.println("No " + notificationType.toLowerCase() + " notifications available.");
+                return;
+            }
+
+            int currentPage = 0;
+
+            while (true) {
+                System.out.println("\n" + notificationType + " Notifications (Page " + (currentPage + 1) + "):");
+
+                notifications.stream()
+                        .filter(notification -> notification.getClass().getSimpleName().equals(notificationType))
+                        .skip(currentPage * PAGE_SIZE)
+                        .limit(PAGE_SIZE)
+                        .forEach(notification -> System.out.println(notification));
+
+                System.out.println("\n[1] Next Page [2] Previous Page [0] Back");
+                System.out.print("Your choice: ");
+                int action = Integer.parseInt(reader.readLine());
+
+                if (action == 1 && (currentPage + 1) * PAGE_SIZE < total) {
+                    currentPage++;
+                } else if (action == 2 && currentPage > 0) {
+                    currentPage--;
+                } else if (action == 0) {
+                    break;
+                } else {
+                    System.out.println("Invalid choice or no more pages.");
+                }
+            }
+        }
+
+        private void viewNews() {
+            System.out.println("News viewing feature is not yet implemented.");
+        }
+    }
+
+
+
+    public static class SendMessageCommand implements Command {
+        private final User sender;
+        private final BufferedReader reader;
+
+        public SendMessageCommand(User sender, BufferedReader reader) {
+            this.sender = sender;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                System.out.println("=== Send Message ===");
+                Database db = Database.getInstance();
+
+                recipient: while (true) {
+                    System.out.println("Enter a recipient email without domain(like: e_kokenov):");
+
+                    String input = reader.readLine();
+                    String recipientChoice;
+
+                    try {
+                        recipientChoice = input;
+                        User selectedRecipient = db.findUserByEmail(recipientChoice + "@kbtu.kz");
+                        if (selectedRecipient == null) {
+                            System.out.println("Invalid recipient choice. Try again.");
+                            continue;
+                        }
+
+                        System.out.println("Enter your message:");
+                        String messageContent = reader.readLine();
+
+                        if (messageContent.trim().isEmpty()) {
+                            System.out.println("Message cannot be empty. Try again.");
+                            continue;
+                        }
+
+                        selectedRecipient.getNotifications().add(new Message(sender, messageContent));
+
+                        System.out.println("Message sent to " + selectedRecipient.getFirstname() + " " + selectedRecipient.getLastname());
+
+                        System.out.println("Would you like to send another message? (y/n):");
+                        String response = reader.readLine();
+                        if ("n".equalsIgnoreCase(response)) {
+                            break recipient;
+                        } else if (!"y".equalsIgnoreCase(response)) {
+                            System.out.println("Invalid response. Please enter 'y' or 'n'.");
+                        }
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid number for recipient selection.");
+                        continue;
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error occurred while sending the message.");
+                e.printStackTrace();
+            }
+            logging("PutAttendance", sender);
+        }
+    }
+
 
 
 
@@ -303,7 +468,7 @@ public class Commands {
             try {
                 System.out.println("Select a teacher to view their information:");
                 for (int i = 0; i < teachers.size(); i++) {
-                    System.out.println((i + 1) + ". " + teachers.get(i).getFirstname() + " " + teachers.get(i).getLastname());
+                    System.out.println("[" + (i + 1) + "] " + teachers.get(i).getFirstname() + " " + teachers.get(i).getLastname());
                 }
                 System.out.print("Enter your choice: ");
                 String input = reader.readLine();
@@ -971,7 +1136,7 @@ public class Commands {
                 System.out.println("=== View Students Info ===");
                 Vector<Course> courses = teacher.getCurrentCourses();
 
-                if (courses.isEmpty()) {
+                if (courses == null) {
                     System.out.println("No courses available.");
                     return;
                 }
@@ -1202,6 +1367,12 @@ public class Commands {
                 System.out.println("=== Put Attendance ===");
 
                 Vector<Course> courses = teacher.getCurrentCourses();
+
+                if(courses == null) {
+                    System.out.println("No courses available.");
+                    return;
+                }
+
                 course: while (true) {
                     System.out.println("Choose a Course:");
                     for (int i = 0; i < courses.size(); i++) {
@@ -1305,71 +1476,6 @@ public class Commands {
             }
 
             logging("PutAttendance", teacher);
-        }
-    }
-
-
-
-    public static class SendMessageCommand implements Command {
-        private final User sender;
-        private final BufferedReader reader;
-
-        public SendMessageCommand(User sender, BufferedReader reader) {
-            this.sender = sender;
-            this.reader = reader;
-        }
-
-        @Override
-        public void execute() {
-            try {
-                System.out.println("=== Send Message ===");
-                Database db = Database.getInstance();
-
-                recipient: while (true) {
-                    System.out.println("Enter a recipient email without domain(like: e_kokenov):\n");
-
-                    String input = reader.readLine();
-                    String recipientChoice;
-
-                    try {
-                        recipientChoice = input;
-                        User selectedRecipient = db.findUserByEmail(recipientChoice + "@kbtu.kz");
-                        if (selectedRecipient == null) {
-                            System.out.println("Invalid recipient choice. Try again.");
-                            continue;
-                        }
-
-                        System.out.println("Enter your message:");
-                        String messageContent = reader.readLine();
-
-                        if (messageContent.trim().isEmpty()) {
-                            System.out.println("Message cannot be empty. Try again.");
-                            continue;
-                        }
-
-                        selectedRecipient.getNotifications().add(new Message(sender, messageContent));
-
-                        System.out.println("Message sent to " + selectedRecipient.getFirstname() + " " + selectedRecipient.getLastname() + ".");
-
-                        System.out.println("Would you like to send another message? (y/n):");
-                        String response = reader.readLine();
-                        if ("n".equalsIgnoreCase(response)) {
-                            break recipient;
-                        } else if (!"y".equalsIgnoreCase(response)) {
-                            System.out.println("Invalid response. Please enter 'y' or 'n'.");
-                        }
-
-                    } catch (NumberFormatException e) {
-                        System.out.println("Invalid input. Please enter a valid number for recipient selection.");
-                        continue;
-                    }
-                }
-
-            } catch (Exception e) {
-                System.out.println("Error occurred while sending the message.");
-                e.printStackTrace();
-            }
-            logging("PutAttendance", sender);
         }
     }
 
@@ -1790,7 +1896,7 @@ public class Commands {
             try {
                 System.out.println("\nAvailable Research Journals:");
                 for (int i = 0; i < journals.size(); i++) {
-                    System.out.println((i + 1) + ". " + journals.get(i).getName());
+                    System.out.println("[" + (i + 1) + "] " + journals.get(i).getName());
                 }
                 System.out.print("Enter the number of the journal you want to subscribe to: ");
 
@@ -1839,127 +1945,119 @@ public class Commands {
         public void execute() {
 
             System.out.println("""
-                    **************,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*,,******,,,,,*************
-                    *******************,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,************
-                    **********************,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*********
-                    *****************,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,*****
-                    ************,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-                    *********,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.................,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-                    ******,,,,,,,,,,,,,,,,,,,,,,,,,,,.........................,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-                    **,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,...#%%&&%%%%%%%%&&&&&%/.,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-                    ,,,,,,,,,,,,,,,,,,,,*****,,,,,,,,,%&&&@&&&@&@&&@@&&&@@%%%%%@@&..,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-                    ,,,,,,,,,,,,,,,,,,*******,,,,,%&@&&&&@&&@&&&@&@&&@@&&@@@%%%&&@%%,,,,..,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-                    ,,,,,,,,,,,,,,,,********,,,,&&&@@@@@@@@@@&@@@&&%%%##%&%&&&@&@%&&&&%.........,,,,,,,,,,,,,,.,,.,,,,,,
-                    ,,,,,,,,,,,,,,,********,,,,&@@@@@@@@@@&%#((///*******#/**(%&#%#@%%#&,.............,,,,,,,,,,,,,,,,,,
-                    ,,,,,,,,,,,,,,********,,,,@@@@@&@@@%#//*******,,,*,,,,,*,**#%%&&@&&&%....................,,*********
-                    ,,,,,,,,,,,,,******,,,,,.%&@&(*******,,,,,,,,,,,,,,,,,,,,,,*%%%&&%&&%..................,*******,*.,,
-                    ,,,,,.,,,,,,,***,,,,,,...&&&/*********,,**,**,,***,,,,,,,,,,/&%%@&&&%%.............. .,********,....
-                    ,,,,..,,,,,,,*,,,,,,.....&@&/*/&@@@@&%#///*/(#%&&@@%#%#*,,,,,((%%&%%&(...............,,,********..**
-                    ,,,,,,,,,,,,,,,,,,.......&&//#%#////##%#((**/((((%/(/******,,,/#%%#%%...............,,,,,,*****..***
-                    ,,,,,,..,,,,,,,,,........&&*((#%@&@@#@%#*,,,*/#&(%@@/#%/*,,,,,/#(##**...,,..........,,,.**,,*,..,,..
-                    .,,,,...,,,,,,,,.........#/**//((#(((///,.,,,,**///**,,,,,,.,,,//**,*/ ,,,,.........,,,,**,,..,..,..
-                    .......,,,,,,,,..........*/*************,,,,,,,,,*****,,,,.,,,,,,%(,*,.,,,...........,,*,.**,,..*,,,
-                    ......,,,,,,..............((////***//#***,,,,,///*,,,,*,,,,*,*****(*,..,,,....... ....,***,*****,,,,
-                    ,,...,,,,,,.............../((#***//(%(&@##/&@#*##/***,,,,,,*,****,,, ..,,.....     ....,************
-                    ,,,,,,,,,,................ ((//(/(#(//((((((*****((/*,,,*,,*,,*,,., ...,.  ..      ....,,,,.,*******
-                    ,,,,,,,,,..................((/(((((//((//******//*////,****,,,**.  .....           ......,,,........
-                    ,,,,,,,,,.....,..,,,,.......(((((#%%&@#///***/((&&#(/*(****,****   ...............  .....,..........
-                    ,,,.,,,,.....,,,.,,,,........#/#((#(/(%%&&&%#(****/(//*//*****/.   .................................
-                    .,,.,,,,....,,,..,,,,.,... ...%(##////*////***/***//////(/////.   ........    ......,....... ......\s
-                     ,,,,,,,...,,,,..,,,,,,,.......%%%#((/((((((//***/(/(((((//*/,.   .......      ....,, ... .. .......
-                    ,,,,.,.,....,.,..,,,,,,,.........%%%%%%%%%%####(((((((/////*,.%#* .....         ...,,...............
-                    ,,,,.,,,,...,.,,..,,,,,,........%@#%%%%%%%%%%%##(((%((///*** ,%%###@@@@@@%%(    ....,,..... .......\s
-                    ,,,,,,,,,,,,,,,,..,,.#%&@@@%%%%%&@,#####%%%%###((((///(/*/  ,%%%####%%&&@@&%%##(...,,.....  ........
-                    ,,,,,,,,,,,,,,(##%%%&@@@@@&&%%%&&@,,*#######(((//((////.   %%%%%%%%%%%&&&&&&&%%%%####(((............
-                    ,**,,,/#######%%%%%%&&&&&&%%%%&&&@*,,,,#####(////((//.. . &%&%%%%%%%%%&&&&&&&%%%%%%#%#%%###((#......
-                    ,**##%%###%%%%%%%%%%&&&&&&%%%&&&&&&,,,,..(((#(((/(,......&&%%%%%%%%%%%&&&&&&%%%%%%%%%%%%#%%#%%%%%%#.
-                    ,*#%%%%%%%%%%%%%%%%%&&&&&&@@&&&&&&&,,,/&&&(.####*......*&&%%%%%%%%&@@@@@&&&&%%%%%&%%%%%%&%%%%%##%%%%
-                    ,#%%%%%%%%%%%%%%%%%%&&&&&%&&&&&&&&&&&%%##(////**,*//%&&&%&%%%%%%%%%%&@&&&&%%%%%%%%%%%%&%%%%%%%%%%%#%
-                    %%%%%%%%%%%%%%%%%%%%%&&&%%%&&&&&&&&&/(((%((//****/(//%&%%%%%&#%%%%%%&@&%%%%%&%%%%%%%&&&%%%%%%%###%%%
-                    &%%%%%%%%%%%%%%%%%%%%&@%&%%&&&&&&&&&##/*/%((/,,/((/*&%%%%%%%%%%%%%%@&&%%%%%%%&%%%%%%&&%%%%%&@&@&####
-                    &&&%%&%%%%%%%%%%%%%%%%&&%%%%&&&&&&&&&///((//*,,(,.,&%%%%%%%%%%%%%&%%%%%%&%%%&%%%&&&&&&&&&&&&&%%#####
-                    %%%%%&&%%%%%%%%%%%%%%%&&%%%%%%&&&&&&&/*****//***((%%%%%%%%%%%%%@&&%%&&&&&%%&&&%%&%&&&%%%%%%%%%###%%&
+                                                                                                                                                                                                                                                 \s
+                                                                                                                                                                                                                                                 \s
+                                                                                                                                                                                                                                                 \s
+                                                                                                                                                                                                                                                 \s
+                                                                                                                                                                                                                                                 \s                                                                                                                                                                             \s
+                                                                                                                                                                                                                                                 \s
+                                                                                                                     %%%%%@@%%%@@                                                                                                                \s
+                                                                                                              %%%@%%%%%%%%%%%%%%@@@@@@@                                                                                                          \s
+                                                                                                          %%%%%@@@@@@@%@@@@@@%@@@@%%%%%%%@                                                                                                       \s
+                                                                                                      ##%%%%%%@@@@@@@@@@@@@@@@@@%@@@%@@@@@@%                                                                                                     \s
+                                                                                                    %%%%%%%%@@@@@%@@@@@@@@@@@@@@@@%%@@@@@@@@@                                                                                                    \s
+                                                                                                  ##%%%%%%%@@@@@@%%@@@@@@@@@@@@@@@@@%%@@@@@@@@@                                                                                                  \s
+                                                                                                 ##%%%%%%%%%%%%%#%@@@@@@@@@@@@@@@@@@@%%@@@@%@@@@%                                                                                                \s
+                                                                                                #%%%%%%#%%%%%%%#%@@@@@%%%#####%%%%@%@@%%%@@@%@@@@@                                                                                               \s
+                                                                                               ##%%%%%####*#%##%@@%%##**+++++**##%%@@@@@@@@%@@@@@@@                                                                                              \s
+                                                                                              #%%%%%####***#%###*+++++===+++++***#####%%@@@@@@@@@@@@                                                                                             \s
+                                                                                             %%%%%%##+++=*##*+============+++++*******##%%%@@@@@@@@@                                                                                             \s
+                                                                                             ##%%%*+=+=+++=------=========++++++++******#%%%@@@@@@@@                                                                                             \s
+                                                                                             ##%%*+======--=--============++++++++++****##%%@@@@@@@@                                                                                             \s
+                                                                                            %%#%#+=========================+++++++++*****#%%%%%%@@@@                                                                                             \s
+                                                                                            %%%#*+=========================++++++++******###%%%%%%@@                                                                                             \s
+                                                                                            %%%#*+========-----===---=====++++************###%%%%%@@                                                                                             \s
+                                                                                            %%%#+++=+******++=========++*#%%%%%%%%#********####%##%@                                                                                             \s
+                                                                                            %##*++++*#######**+++==+++*##%%#**+**##%##******######%@                                                                                             \s
+                                                                                            %##*++***+====+++++++==+*****+++++*****####******#####%*#                                                                                            \s
+                                                                                            ###*++++=++**##%#*+=====+*#***#*#%@@%%####*******###*##*%%                                                                                           \s
+                                                                                            *+*+==+++##*#%%%##+===-=+*##+#*++*#**###**+++*****##*##*#%                                                                                           \s
+                                                                                            ++*+===+++====+***+=====+*#*+++++++++++++++++*******#%#**%                                                                                           \s
+                                                                                             =++=======+++=========++***++=========++++++*******%@%%*#                                                                                           \s
+                                                                                             +++========-----=======****++========++++++*********%%%#*                                                                                           \s
+                                                                                             +++=====--------======++*****+=======++++***********%%%#*                                                                                           \s
+                                                                                             =+++=====------=+=====++****#+======++++***********##**#                                                                                            \s
+                                                                                              +++++====--==+++=====+*#****@#+==++++++*******#*******                                                                                             \s
+                                                                                              *++==+======+**+*##**##%@@%%%%*+++++++***###**********                                                                                             \s
+                                                                                               +++======++*+===++=+*######***+++++***######****##**                                                                                              \s
+                                                                                               +++==+==++++======+++++*********+++***#####*******                                                                                                \s
+                                                                                                +++=+++++++++=====+++++++***#****+*******###**##                                                                                                 \s
+                                                                                                 +++==++++++++++***+*####%%%%%#*+++*****#######                                                                                                  \s
+                                                                                                 +++++++++*#****++++++**#####*+++++**#**#######                                                                                                  \s
+                                                                                                  +++++++++====+++++***####**+++++**##########                                                                                                   \s
+                                                                                                   ++++++++=====++***********+*****###########                                                                                                   \s
+                                                                                                    +++++++======+++++++++++******####%%#####*                                                                                                   \s
+                                                                                                     *++++++=========++++++*****###%%%%%####**                                                                                                   \s
+                                                                                                      ***+++++======++++******###%%%%%%####***                                                                                                   \s
+                                                                                                       *****+++++++++++***####%%%%%%%%#####**+@@@                                                                                                \s
+                                                                                                       +*************####%%%%%%%%%%%%######**+%@@@@@@                                                                                            \s
+                                                                                                      @%*+******##%%%%%%%%%%%%%%%%%#########++%@@@@@@@@@@                                                                                        \s
+                                                                                                @@@@@%%%+=++**********###%%%%%%%%##########+=*@@@@@@@@@@@@@@                                                                                     \s
+                                                                                           %%%%@%%%%%%%%*-:=+++++*****##################%#+++#@@@@@@@@@@@@@@@@@                                                                                  \s
+                                                                                      @@%@@@@@%%@@%%%%%%#-:::==+++++****#############%%#++++*@@@@@@@@@@@@@@@@@@@@@@                                                                              \s
+                                                                                 @%%%%%@@@@@@%@@@%%%%%%%%+:::::-=++++++++**##########+++++++%@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                                         \s
+                                                                           @@@%%%%%@@@@@@@@%%@@@%%%%%%%%%#-::::::-++++++++*######*=---==+++#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                               \s
+                                                                       @@@@@@@%@%@@%@@@@@@%%@@@@%%%%%%%%%%-::::::::-=++++******+-:----==++*@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%@@@@@@                                                       \s
+                                                                @@@@@@@@@@%@@@@@@@@@@@@@%%@@@@%%%%%%%%%%%%=::::::::::-=++++*+-::::----=++*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                   \s
+                                                            @@@@@@@@@%@@@%%%@@@@@@@@@@@%%@@@%%%%%%%%%%%%%%#::::::::::::-==-:::::::--==+**%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                 \s
+                                                          @@@%@@@@@@%%%%@@@@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%%%-:::::::::::+*++-:::::--=++**%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                \s
+                                                         @%@@@@@@@@%%%%%@@@@%@@@@@@@@@@@@@@%%%%%%%%%%%%%%%@+::::::::-=++++***=:---=+***%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                                \s
+                                                         %%@@%%%%%%%%%%%%@%@%@@@@@@@@@@@@@@%%%%%%%%%%%%%%%%#:::::::*+===++*####+-=++**#%@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               \s
+                                                         %%%@@%%%%%%%%%%%%@%@@@@@@%@%@@@%%%@%%%%%%%%%%%%%%%@-::::-#*++==+**###%%*=++**#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               \s
+                                                        %%%%@@%%%%%%%%%%%%@@@@@@@@@%@@%%%%%%%%%%%%%%%%%%%%%@+:::=###*+==+*###%%%%++++*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                               \s
+                                                        %%%%%@%%%%%%%%%%%%%%@@@%%%@%@%%%%%%%%%%%%%%%%%%%%%%@#::=####**+=*###%###+=-=+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              \s
+                                                       @@%%%%@@%%%%%%%%%%%%@@@@%@@@@%%%@@%%%%%%%%%%%%%%%%%%%%+-*###*-*++*#####**+-:=+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@                                              \s
+                                                      @@@%%%%@@%%%%%%%%%%%@%@@@@%@@@%@@@@%%%%%%%@%@%@%%%%%%@@%#*=----+++*####***=--+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                              \s
+                                                      @@@%%%%@@@%%%%%%%%%%%%@@%%%%@%@%@@%%%%%%@@@@@@@%%%%%%%@#+-=++=+*=+####****-:-*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                            \s
+                                                     %%%%%%%%@@@%%%%%%%%%%%%%%%@@%%%@@@%%@%%@%@@@@@@@%%%%%%%@#+-====*++*#####**+-:=%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                           \s
+                                                    %%%%%%%%%@@@%%%%%%%%%%%%%%%@@@%%%@%@@@@@@@@@@@@@@%%%%%%%@%*-===*+++*#####**+--+@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                          \s
+                                                    %%%%%%%%%@@@@%%%%%%%%%%%%%%@@@@%@@@@@@@@@@@@@%@@@%%%%%%%@@#=-=+++++*######*+--#@@@@@@@@#####%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                         \s
+                                                   %%%%%%%%%%@@@@%%%%%%%%%%%@%@@@@@@@@@@@@@@@@@@@@@@%@%%%%%%@@%*-+++=++*######*+-=%@@@@@@%*+#**#*++@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                        \s
+                                                   %@@%%%%%%%@@@@%%%%%%%%@%@%@@%%@%%@@@@@@@@@@@@@@@@@@%%%%%%@@%*=++=+++*#######+-*%@@@@@@#*+****+++%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                       \s
+                                                  %%@@%%%%%%%@@@@%%%%%%@@@@@%%%@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%@%#+==+=++*#######+=%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                       \s
+                                                 %%%%%@%%%%%%@@@@%%%%%@@@@@%@%%%@@%@@@@@@@@@@@@@@@@@@%%%%%%%%@@#*====++*#######=+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                       \s
+                                                %%%%%%%%%@@@@@@@@%%%%@@@@@%%%%@@@%%@@@@@@@@@@@@@@@@@@%%%%%%%%@@%*==++++**######+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                      \s
+                                               %%%%%%%%%%@@@@@@@@@%%@@@@@@@%%%@%@@%@@@@@@@@@@@@@@@@@@@@%%%%%%@@%+=+++++***######%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                    \s
+                                              @%%%%%%%%%%@@@@@@@@@%@@@@@@@@@%@%@@@@@@%@@@@@@@@@@@@@@@@@%%%%%%@@%*++++++****####%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                   \s
+                                              @@%%%%%%%%%@@@@@@@@@@@@@@@@@@%%%%@@@@@@@%%@%@@@@@@@@@@@@%@%%%%%@@%*++++++****####%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                                  \s
+                                             @@@%%%@%%%@@@@@@@@@@@@@@@@@@@@%%%%@@@@%@@%%%@@@@@@@@@@@@@@%%%%@%%@%*++++++*****###@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                               \s
+                                             @%@%%%@%@%@@@@@@@@@@@@@@@@@@@@%%%%@@@@@@%@@@@@@@@@@@@@@@@@%%%%%%@@@*+++++*******#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                             \s
+                                            @@%@@%%%@@@@@@@@@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@%%%%@%%%@@#+++++*******#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                             \s
+                                           @@%%%%@%%%@@@@@@@@@@@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%@%%@@@*++++++*****#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                            \s
+                                          %%%%@@@%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%@@@#++++++*****%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                           \s
+                                         @%@%@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@%@%%%@@@%++++++****#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                        \s
+                                         @@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%@@@*+++++****#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                      \s
+                                         @@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%+++******%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                    \s
+                                        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@****+****@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   \s
+                                        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#*******#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                 \s
+                                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*******%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                \s
+                                       @@@%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#******@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                \s
+                                      @%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%******@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@               \s
+                                      %%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#****#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@              \s
+                                     @%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%****%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@             \s
+                                    @%@@@@@%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#***%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@            \s
+                                    %%@%%@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#**#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           \s
+                                   %%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%**#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          \s
+                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         \s
+                                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%*%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@           @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        \s
+                               @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       \s
+                              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      \s
+                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      \s
+                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      \s
+                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      \s
+                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#*+++*#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      \s
+                             @@@@@@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%##%@@@@@@@@@@@@@@@@@@@@@@%+*#*+--------=+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      \s
+                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#+++++++************###*******+++++****=------==*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       \s
+                             @@@@@@@@@@@@@%%@@@@@@@@@@@@@@@@@@@@@@@@@@@#%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%*++++++++++++***+++++**+********+++++++++*****------===*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@       \s
+                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%*+++++++++++==++++*+++++*********++**+++*++*****+***-----====#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        \s
+                            %@@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@%%##%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%+++*++++++++++++++++++++++++++*+++*+*+**************+**#=-====++*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        \s
+                          #%@%%@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@@@%%%##%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*++++**+++++++++++++++++++++++++++**+**********************=++***##%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          \s
+                          %@@#%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%###%%@@%%%@@@@@@@@@@@@@@@@@@@@@@@@#+=+++++*+++++++++++*+++++++++++*++********************+***##+#####%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@            \s
+                         %@@#%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%###%%+++++**+++++#%@@@@@@@@@@@@@@@@@@@@%++++==++++++++**++***++++++++++++***********###***###****####**#####%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   \s
+                         %@%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@%#%@#++=++*+===++*%+=++**%@@%##%@@@@@@@@@@@@#+++===+++===++**++*****++++***++++++**##***#####*###%%#######**###%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                             \s
                     """);
 
-            System.out.println("""
-                    &&&&&&&&&&%%%%%%%%%%%%%%%%%%%%%%(/#&&%(/(#%%#(/(######%%%%%&&&&&&&&&&&&&&&&&&&&&&&&%%%###%%######(##((#####%%##%%##########################%##%%%%%%%%%%#%%%#%%%%######################((((((((((##(((((
-                    &&&&&&&&&&%%%%%%%%#######%%%#%%%((#&&%(/(#%%#(/(######%%%%%%&&&&&&&&&&&&&&&&&&&&&&&%%%###%%#####(###((####################(###########################################################(((((((((((#%(((((
-                    &&&&&&&&&&%%%%%%%%%##########%%%((#&&%(/(#%%#(//(#####%%%%%%&&&&&&&&&&&&&%&&&&&&&&&%%%%##%%#########((((##############(((((############################################################(((((((#((##(((((
-                    &&&&&&&&&&%%%%%%%%%%#########%%#/(#&&%(/(#%%#(//(######%%%%%&&&&&&&&&&&&&&%&&&&&&&&%%%%##&%#########(((############(##((((((###########################################################(((((((#((##(((((
-                    &&&&&&&&&&%%%%%%%%%%#########%%#/(#&&#(/(#%%#(//(######%%%%&&&&&&&&&&&&&&&&%&&&&&&&%%%%##&%#######(#(#(((#######(#########((############################################################(((#(((((%#(((((
-                    &&&&&&&&&&&&%%%%%%%%%#######%%%#/(#@%%((/#%%#(//(#####%%%%%&&&&&&&&&&&&&&&%%&&&&&&&%%%%##&%#######(###((################(((#############################################################(((####(#%#(#(((
-                    &&&&&&&&&&&&&%%%%%%%%#######%%%#/(#@%#(/(#%%#(//(######%%%%&&&&&&&&&&&&&&&%&&%&&&&&%%%###&%########(##################(((((#############################################################(####(#(#%#(((((
-                    &&&&&&&&&&&&&%%%%%%%%#######%%%#/(%@%%(/(#%%#(//(#####%%%%%&&&&&&&&&&&&&&&&&&%&&&&&%%##%%&%&&&%&%%%#####################(((##################################################################((##%#(((((
-                    &&&&&&&&&&&&&&%%%%%%%%######%%%(/(%@%%(//#%%#(//(######%%%%&&&&&&&&&&&&&&&&&&&%%%&&@@&&&&&&@&&&&&@@&&&&&&###########################################################################(########(###%#(((((
-                    &&&&&&&&&&&&&&%%%%%%%%%###%#%%%(/#%@%%#/((%%#(//(######%%%%&&&&&&&&&&&&&&&&#&%&%&@@&@@@&@@@@@@@@@&&@@&@@&&@@%######(####(####################################################################(###%#(((((
-                    &&&&&&&&&&&&&&&%%%%%%%%%%%%%%%%((#%@%%#(/(%%%(//(######%%%%&&&&&&&&&&&&&#&&&%%&@@@@@@@@@@@@@@@@@@@@&&&&&@@@@@&##############################%####%#####%%##############%#########################%##((((
-                    %%%%%&%&&&&%%%%%%%%%%%%###%%&%%(/#%@%%#(/(%%%(//(######%%%%%%%%%%%%%%%#%&@%%&%@&%&%(&@@@@@@@@@@&&&@&@@%@&&@@@@@&%#%#####%%%%%%%%###%%%%%%%%%%%#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%###########%##((((
-                    @@@@@@@@@&&&&&&&&&%%%%%%%%%%&%%(/#%@%%#(/(%%%#(/(#####%%%%%&&&&&&&&&#%%&&&&##(#%&#&@@@&%%##(/((((#%&@@&&&@@&@&&@@&&%&&%%%%%%%%%%%%%%%%%%%%%%%%%%&&&&&&&&&&&&&&&&%%%&%&&%%%%%%%%%%%###%###########%((((((
-                    @@@@@@@@@@@@@@@@@&&&&&&&&&&&&%%(/#%@%%#(/(%%%(//(######%%%%&@@@@@@@#&&%&%#%(/((&#%#*********/////((####%%@@@@@&@@@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&%%%%&&%%%%%%&%%%%&%#####%###########%((((#(
-                    @@@@@@@@@@@&&&&&&&&&%%%%%%%%&%%((#%@%%#(/(%%%(//(######%%%%%&&&&&&&%@%%/****(/*,,,,,,,,*******//((((((((##&&&@@@@@@&#########################%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%######%##########%%((((((
-                    @@@&&&&&&&&&&&&&&%%%%%%%%%%%&&%((#&@%#*,,(#%%(//(######%%%%%&&&&&&%%&#/****,,,,,,,,,,,,******//////(/((((#%&&@&@@@@&%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%&%%%%%%%%%%%%%%%%%%%%%%%%%%%%######%##########%%((((((
-                    @@&&&@@@@@@@@@@&&&&&&%%%%%%%%%#((#%@%%#,,,(%%#//(#######%%%%&@@@&%%&%(******,,,,,,,,*,,,,******////(/((((#%%%%&&&@@&%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%###%%%%######%##########%%((#(((
-                    @@@&&&@@@@@&&&&&&&%%%%%%%%#%%#(((/%@%%#(*,/%%#/*(#######%%%%%&&&&%%&%/*******,,,,,,*,,,,****/(((###((((((((##%%%%&@&###############################################%%%%####%%%%######%##########%%(###((
-                    @@@&&&@@@&&&&&&&&%%%%%%%%%%#%#//*/%@%#*,*(#%%#(/(#######%%%%%&&&&&%%(*//(%%&%&&%#///***/(##%&&%((##%%%#((((((##%%%&%#############%%%%%#################%%%#########%%%%##%%%%%%#####%%##########%%((##((
-                    @@@&&&@@&&&&&&&&&%%%%%%%%#%#(#((//&@%%#,.,(%%#(/(#######%%%%%&&&&&%#/*/#/*,,*//////***/((#(//(/((#####%#(((((####%###############%%%%###############%%%%&&@&%#######%%%###%%%%%#####%%##########%#(###(#
-                    @@@&&&@&&&&&&&&&&%%%%%%%%%#%(%(/(%@&%%#(*,/%%#(/((#####%%%%%%&&&&%/#***/*/@%@@@%&(**,,*/#%(%%**%###%&%(//((((##%(#((&############%%%%###########%%%##%%%&&@%##%%%%%%%%%###%%%%%#####%%##########&#(###(#
-                    @@@&&&@@&&&&&&&&&&%%%%%%%%#%&(,.*/@&%%#((((#%#(/(######%%%%%%%&&&&*(**,**//**//#/***,,*((#(****////**////(((((((#@%(%############%%%%#########%#%%%%%%&&&@%%%%%%%%%%%%%%%%%%%%%%####%%##########&#(####(
-                    @@@&&&@@&&&&&&&&&&%%%%%%%%%%((**//&&%%#(((#%%#((##%%###%%%%%%%&&&&*/****,,,,,,,,,,*****((((/********/////((((((((&&&(%%%%%#########%%#%%%%&&%%%%%%%%%%%%%%%%%%%%%%%%%%%%&&%%%%%%####%%##########&#(###(#
-                    &%%%%%%%###################%%%%%&%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*****,,.,,,,,,******/((##/*******//(/((####(((&###%%%&&%%%%%%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&%&&%%%%%####%%#########%&######(
-                    %%%%%%%&&&&&&&&&%%%%%%%%%%%%%%&&&&&%&&&&&&&&&&&&&&&&&&&&&%&%%%%%%%%//****,,,,,*/(***,*/(#(((@(***/*///((##((##((####%%%%%%%%%%&&&&&&&%&&&&&&&&&&&&&&&&@@@@@@@@@@@@&&&&&&&&%&%%%%###%%%##########&#######
-                    %%%%%%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&%&&&&&&&&&&&&&&&&&&&&&%&%%%%%%%%%//*******/((**%&(#%&&&@&%%(/////(((######(#(%(/%%%&&%%%&&&&&&%&&%%&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@&&&@@&%%@%%%####&%#########%&#######
-                    %%%%%&&&&&&&&&&&&&&&&&&&&&&&&&&&%%&&#&&&&&&&&&&&&&&&&&&&&%%#%%&&&&&&//******/(/******////(/((((((//((#######((#####%%%%%%%%&%&&&%%&#(#&&&&&&&&&&&&@@@@@@@@@@&@&&@@@@@@@@@&%#%%&&%%%#&%%%##%%###%&#######
-                    *./%%&&&&&&&%%%&&&&&&%%%%%%%%%%&%%&&/&&&&&&&&&&&&&&&&%&&&%#((%%%&&&&&#*****//////********//((####((/((#########/,*/(##%%%%&&&&&&&%&%#%&&&&&&&&&&&&@&&&&&&&&&&&@@@@@@@@@@&&&%#&%&&&&&&&&&%%%%%##%&#######
-                    #**#%&&&&&&&%%%%%%%%%%%%%%%%%%%%&&&&#&#%&&&&&&&&&&&%%&&&&&#%/(##%%&&&&/*****//#%(#/**/*//((####(/**/(##########/,,**/##%%&&&&&&&&&&&%&&&&&&&&&&&&&&&&&&&&&&&@@@@@@@@@@@@&&&%(@%&&&&&&&&&&&&&%%%%&#######
-                    %((#%&&&&&&&&%%%%%%%%%%%%%%&&&@@@@&@&%%#%&&&&&&&&&%&&&@&&&%&%#((#%%&&&&(/////*****///((######((////(####%%%###%##/**/#%%&&&&&&&@&&@@&&@&&&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@&&&%#&&&&&&&&&&&&&&&%%%&&%%#####
-                    &%%%&&&&&&&&&&%%%%%%%%%%&&&@@@@@@@@@&&%##%%&&&&&&&%%&&@@@@&&&&%#((%%&&&&#///********//////////(((((##%%%%%%%##&%%#(/(#%&&&&@@@@@@@@@@&@@@@@@@&&&&&&&&&&&&@@@@@@@@@@@@@@@&&&%%&&&&&&(%&&&&&&&&&&@&&%%%%%%
-                    &&%%&&&&&&&&&&&%%%%%%&&&&&@@@@@@@@@@&&%%(%#%&&&&&&%%&@@@@@@&&&&%#/(%&&&&&&/////*********////((((##%%%%%%%%%#(#&&%%#(/#%&&&&@@@@@@@@@@@@@@@@@@@@&&&&&&%&&@@@@@@@@@@@@@@@@@@@&@%%%%%&#%&%%&&&&&&&@&&%%%%%%
-                    &&&&&&&&@@@@@&&&%%%%&&&&&@@@@@@@@@@@@&&##(##%&&&&&&&&@@@@@@@@&&%%/*#%&&&&&&#(((////////(//(####%%%%%%%%%%%###*@@&%#/(#%&&&&@@@@@@@@@@@@@@@@@&&&@&&&&%%&&@@@@@@@@@@@@@@@@@@@@&%%%%&%#%&%%%%%%%%%@&&%%%%%%
-                    &&&&&&&&@@@@@@@&&&%%&&&@@@@@@@@@@@@@@&&%##%%%%&&&&&&&&@@@%%&@&&%%(,(%&&&&&&&*(/((#######%%%%%%&&%%%%%%%%%###(*@@@@@@@&%&&&&&&&@@@@@@@@@@@@@@@&&&@@&&%%&&@@@@@@@@@@@@@@@@@@@@%%%%%&%#%&%%%%%%%%%&&%%%%%%%
-                    &&&&&&&&&@@@@@@@&&&&&&&@@@@@@@@@@@@@@&&%(((##%&&&&&%%&&@@@@&&&&%#/*/%&@@@&&&/*/(((((((((##%%%%%%%%%%%%%%%###**@@@@@@@@@@@@@&&&@@@@@@%##@@@@@&&&@@@&&%%&@@@@@@@@@@@@@@@@@@@@%%%%%%&##%&%%%%%%%%%&&%%%%%%#
-                    &&&&&&&&&@@@@@@@@&&&&&&@@@&@@@@@@@@&&&%#(((##%&&&&&&%%&&&@&&&&%&&&&&&&&&&&&&%. ./////(((###%%%%%%%%%%%%%%#///#@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&@@@@&&&&@@@@@@@@@@@@@@@@@@@%%%%%%%%##%&%%%%%%%%%@&&%%%%%%
-                    &&@&@@@@@@@@@@@@@@&&&&%%&&&&&@@&&&&&&@#&%/##%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&,    ./*//////((#####%%%&**////(@@@@@@@@@@@@@@@@@&&&@&@@@&&&&&@&&&&@&&&&&@@@@@@@@@@@@@@@@@@@&%%%%%%%%#%%&%%%%%%%%%&&&&%%%%%
-                    &&&@@&@@@@@@@@@@@@&&%&%%%&&@&&&&&&&&&&&@%&#%&&&@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&%.      ,//**//((####*...,,*//(@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@&%%%%%%%&%%%&&%%%%%%%%&@&&&%%%%%
-                    &&&&@@@@@@@@&@@&&@@&&&%&&@&&%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&          ,/////(   ....,*//(@@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&&&&@@&@@&@@@@@@@@@@@@@@@@&&%%%%%%%&&%&@&%%%%%%%%&@&&&%%%%%
-                    &&@&@&@&&&&&%%@@@@@@&@@&&%%%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@&&&&&&&&&&&&&&&&&%.         . ,      ..,,/((%&&@@@@@@@@@@@@@@@@&&&&&&@&@&&@&&&&&&@@@@@@@&@@@@@@@@@@@@@@@@&%%%%%%%%%&&%%&&%%%%%%%%&@&&&%%%%%
-                    &&&&&&&&&&&@&&&@@&@&&&&&&&%%%%%%&%&&@&&&&&&&&&&&&&&&&&&&&&&&&&&@%&&&&&&&&&&&&&@.       ,//(/((#...,,/(((&&&@@@@&@@&&@@@@@@&&&&&&&&&&&&@@&&&@@@&@@@@&@@@@@@@@@@@@@@@@@&%%%%%%&&&&&&%%&&%%%%%%%%&&&&&&%%%%
-                    &@&&&&&&@&&&&&&@%&@@@@@@&&&&&&&%&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&/     #//**/(###%%(,//((#&@@@@@@@@@&&@@@@@&&&&&&&&&&&&&@&&&&@&&@&@@&@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&&%%%%%%%&&&&&&&%%%%
-                    &&&&&&&&&&&@&%&&&@@@@@@@@@&&&&&&&&&&&@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    %##/**/(#%%&%&#*//*@@@@@@@@@@&&@@@&&&@@@&&&&&&&&&&&&&&&&@@&@@&@@@@@@@@@@@@@@&@@@&&&&@@@@@&&%&%%&&&%%%%%%%&&&&&&&%%%%
-                    @@@@@@@@@&&&&&@&&@@@@@@@@@@@&&&&&&&&&@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@/.*%%%%/(,/#%%%##(*..*@&@@@@@@@&@@@@@&&&&&@@@@&&&&&&&&&&&&@@@@@@&@@@@@@@@@@@@@@@@@&&&&&&&&&&&@&&&%%&&&&&&&&&&&@@&&&&&%%%
-                    @@@@@@@@@&&&&&&&&&@&@@@@@@@@@@&&@&&&&@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@%&#...,,**(#%##(((..,&&@@@@&&&@&&&&@&@&&&@&@@&&&&&&&&&&&&&@&&@@@&@@@@@@@@@@@@@@@@&&&&&&@@&&&&&&&&%&&&&&&&&&&&&@&&&&&&%%%
-                    @@@@@@@@@@&&&&&&&&&@@@@@@@@@@@&&&&&&&&@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@%(,****#*/#%%#((#*..#&@@@@&&&&&&&&&&&&&@&@@&&&&&&&&&&&&&&&&&@&@&@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&%&&&%%%%%%%%&@&&&&&&%%%
-                    @@@@@@@@@@@&&&&&@&&&@@@@@@@@@&&&&&&&&&@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@#.,,*(/*(#%%#%(#*.,@&@@@@@&&&&&&&&&&&&&@@&&&&&&&&&&&&&&@&&@@@@&@@@@@@@@@@@@@@@@@%&&&&%&&&%&&&%&&%&&&%%%%%%&&&@&&&&&&&%%
-                    @@@@@@@@@@@@&&&&&@&&&@@@@@@@@&&&&&&&&&@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@&#.*//*/(###%%##,.#&@@@@@/((%//((#@&&&&@@&&&&&&&&&&&&&&&&@@@@&@@@@@@@@@@@@@@@@@@@&%&&&&&&&&&&%&&&&&&&&&&&&&&&@&&&&&&%%%
-                    @@@@@@@@@@@@@&&&&&&&&@@@@@@@&&&&&&&&&&@@&&&&&&&&&&&&&&&&&&&&&@&&&&&&&&&&&&&&&&&&@&%./*/**(##%%%%#,.@@@@@@@*,/**///,@&&&@&&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&&&&%&&&&&&&&&&&&&&&@&&&&@&&%%
-                    @@@@@@@@@@@@@@&&&&&&@@@@@@@&&&&&&&&&&&@@&&&&&&&&&&&&&&&&&&&&&&&&@@&&&&&&&&&&&&&&@@%/****/(##%%##% &&@@@@@&&&&&&&&&&&&@@&&&&&&&&@@@@@&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&&&&&&&&&&@@@@@@@@&%
-                    @@@@@@@@@@@@@@&&&&&&@&&@@&&&&&&&&&&&&&@@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@%(**///((###%%%,&@@@&&&&&&&&&&&&&&@@&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@&&&&&&&&&&&&&&@&&&&&&&&&&@@@@@@@@@&
-                    @@@@@@@@@@@@@@&&&&&&&&@@&&&&&&&&&&&&&@@@@&&&&@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@&/*////(#######&&@&@&&&&&&&&&&&&&@&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@&&&&&&&&&&&&@&&&&&&&&&@@@@@@@@@@&
-                    @@@@@@@@@@@@@@&&&&&&&&@&&&&&&&&&&&&&&@@@@&&&&@&&&&&&&&&&&&&&&&&&&@&&&&&&&&&&&&&&&&@///////((((##&&@@&&&&&&&&&&@&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@&@@@&&&&&&&@&&@@&&&&&&&&&@@@@@@@@@@@
-                    @@@@@@@@@@@@@@@&&&&&&&@&&&&&&&&&&@@@@@@@@@@&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&@(///*/((#(###&@@@@&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&@@&@@@@@@@@@@@@@@@@&&&&&@@@&&&&&&&&&@@@@@@@@@@@
-                    @@@@@@@@@@@@@@@&&&&&&@&&&&&&&&&&&@@@@@@@@@@&@&&&&&&&&&&&&&&&&&&&&@@&&&&&&&&&&&&&&&@&/////((((##%&@@@@&&&&&@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@&@&&&&@@@&&&&&&&&@@@@@@@@@@@@
-                    @@@@@@@@@@@@@@@@&&&&&&&&&&&&&&&&&@@@@@@@@@@@@@@&&&&&&&&&&&&&&@&@&@@&@&&&&&&&&&&&&&&@(//*//(#(##&@@@@&&&&&&@@&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&@@@@@@&&@@@&&&&&&@@@@@@@@@@@@@@
-                    @@@@@@@@@@@@@@@@&&&&&&&&&&@@&&&&@@@@@@@@@@@@&&@&&&&&&&&&&&&&&&&&@@@@&&&&&&&&&&&&&&&@@/(((((#((#&@@@@&&@&@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&@&@@@@@@@@@@@@@@@@@@@@@&&&&&@@@@@@@@@@@@@@@
-                    @@@@@@@@@@@@@@@&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@&&&&&&@&&&&&&&&@@&&&@&&&&&&&&&&&&&@@#((((((((&&@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                    @@@@@@@@@@@@@@@@&&&&&&&&&&@&&@@@@@@@@@@@@@@@@@@@@&&&@&&&&&&&@&&&&&&@&&&&&&&&&&&&&&&@@@((((/(((&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                    @@@@@@@@@@@@@@@@@&&&&@&&&&&@&&&&&@@@@@@@@@@@@@@@@&&&&&&&&&@@@@@@&@&&&&&&&&&&&@&&&&&&@@&((((((%&@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                    &&&&&&&&&&&@&&&&&&&&&&&&&&&@@&&&&&@@@@@@@@@@@@@@@&&@&&@@&@@@@@@@&@@&@@@@@@&@@@&&@&&&@@@((//((&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@&@@@@@@&&&&&&&&&&&&&%%
-                    &&&&&&&&&&&&&&&&&&&&&&&&&&@@@@&&&@@@@@@@@@@@@@@@@@&&&&@@&@@@@@@@@@@@@@@@@&@@@@@@&&&&@@@&(((##@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@&@@&@@@@@@@@@&&&&&&&&&&&&&&
-                    @@@@@@@@@@@@@@@@&&&&&&&&&@@&@&@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@&&&@@@@#((#&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@&@&@@@&@@@@@@&&&@@@@@@&&&&&&&&&&&&&
-                    @@@@@@@@@@@@@@&&&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@&((#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@&&&&&&&&&&&
-                    @@@@@@@@@@@@@@&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@&&@@@@%##&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&&&&
-                    @@@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@&@@@@@(#&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&&&
-                    @@@@@@@@@@@@@&&&&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&
-                    @@@@@@@@@&@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&@&&&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&
-                    @@@@@@@@&@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&
-                    @@@@@@@@@@@@&@&&&&@@@@&&@@@@@@@@@@@@@@@@@@@@@@@@(@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&#%&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&
-                    @@@@@@@@@@@@@@&&&&&&&&&&&@@@@@@@@@@@@@@@@@@@@@&#&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&@(//(%%&@@@@@@@@@@@@@@@@@,####(,.,,.,,,*&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&@&
-                    @@@@@@@@@@@@@@@&&&@&&&&&&&&&@&&&@@@@@@@@@@@@@@#%&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%(/**/*///((((////((((/(((((//(//////(((#.,,,,,**#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&
-                    &&%%%%&&%@@@@@@@&@&&&@&&&&&&@@@@@@@@@@@@@@@@@%&&%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#///*/////****/*////(/(((((((/(//(/((/(((((((//((,,,,,**/@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                    @@@@@@%&&%@@@@@@@@&@@@@&&&&&@&&&&&&&&@@@@@@@@&@##&@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/*(((//////////////////(//////((((/((#((((#(((((((#%*//(((#&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&&&
-                    @@@@@&&@%%&@@@@@@&&&&@@&&&&@@&&&@&&&@@@@@@@@#//#%@@#((&@@@@@@@@@@@@@@@@@@@@@**///*/(*////////((////////(/(/(((((#(###(#(##(((((((#%(%%%%%%&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&%%%%
-                    @@@@@&@%%&@@@@@@@@@@@@&&&&&&&&&&&&@@&&//**/(****/%#**//(&@@&#@@@@@@@@@@@@&///****/***//(((/((#(////(///(///((###(#######%%%%%%%##%,%#%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&&&&&&&&
-                    
-                    """);
+
 //            String filePath = "path/to/your/ascii_art.txt";
 //
 //            try {

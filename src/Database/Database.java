@@ -262,7 +262,12 @@ public class Database implements Serializable {
         users.remove(credentials);
     }
 
-
+    public void viewNews(int page) {
+        news.stream()
+                .skip((page - 1) * 5)
+                .limit(5)
+                .forEach(System.out::println);
+    }
 
 
 
