@@ -29,7 +29,7 @@ public class GradStudent extends Student  {
 		super(id, firstname, lastname, faculty, speciality);
 		this.publications = new Vector<>();
 		this.teacher = teacher;
-		beReseacrher(new Researcher(firstname + lastname));
+//		beReseacrher(new Researcher(firstname + lastname));
 	}
 
 	public Teacher getTeacher() {

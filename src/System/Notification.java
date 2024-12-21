@@ -75,8 +75,8 @@ public class Notification {
 
 	@Override
 	public String toString() {
-		return getClass().getName() +
-				"  author=" + author +
+		return getClass().getSimpleName() +
+				" author=" + author.getFirstname() + " " + author.getLastname() +
 				", text=" + text +
 				", date=" + date;
 

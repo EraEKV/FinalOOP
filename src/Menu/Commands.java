@@ -75,13 +75,13 @@ public class Commands {
 //                        researcherMenu.showMenu();
 //                        break;
 
-//                    case "Rector":
-//                        Rector rector = (Rector) user;
-//                        new ShowRector().execute();
-//                        System.out.println("\n\n\n");
-//                        System.out.println(rector);
-//                        RectorMenu rectorMenu = new RectorMenu(rector, reader);
-//                        rectorMenu.displayMenu();
+                    case "Rector":
+                        Rector rector = (Rector) user;
+                        new ShowRector().execute();
+                        System.out.println("\n\n\n");
+                        System.out.println(rector);
+                        RectorMenu rectorMenu = new RectorMenu(rector, reader);
+                        rectorMenu.displayMenu();
 
                     case "Admin":
                         Admin admin = (Admin) user;
@@ -218,6 +218,8 @@ public class Commands {
                     System.out.println("[0] Exit");
 
                     int choice = Integer.parseInt(reader.readLine());
+
+                    System.out.println(user.getNotifications());
 
                     switch (choice) {
                         case 1 -> viewNotifications("Message");
@@ -837,22 +839,47 @@ public class Commands {
         @Override
         public void execute() {
             try {
-                System.out.println("Enter author's name:");
+                System.out.print("Do you want to set yourself as the author? (y/Enter the name of author): ");
                 String author = reader.readLine();
-                System.out.println("Enter news title:");
+                if (author.equals("y")) {
+                    author = manager.getFirstname() + " " + manager.getLastname();
+                }
+
+                System.out.print("Enter news title: ");
                 String title = reader.readLine();
-                System.out.println("Enter news content:");
+                System.out.print("Enter news content: ");
                 String content = reader.readLine();
-                System.out.println("Enter news topic:");
-                String topicInput = reader.readLine();
-                NewsTopic newsTopic = NewsTopic.valueOf(topicInput.toUpperCase());
+
+                NewsTopic newsTopic = selectNewsTopic();
+
                 UniversitySystemMediator.publishNews(author, newsTopic, title, content);
-            } catch (IOException | IllegalArgumentException e) {
-                System.out.println("Error occurred while adding news.");
+                System.out.println("News has been successfully added.");
+
+            } catch (IOException e) {
+                System.out.println("Error occurred while adding news: " + e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid topic selection. Please try again.");
             }
+
             logging("AddNews", manager);
         }
+
+        private NewsTopic selectNewsTopic() throws IOException {
+            System.out.println("Select a news topic:");
+            NewsTopic[] topics = NewsTopic.values();
+            for (int i = 0; i < topics.length; i++) {
+                System.out.println("[" + (i + 1) + "] " + topics[i]);
+            }
+            System.out.print("Enter the number corresponding to the topic: ");
+            int choice = Integer.parseInt(reader.readLine()) - 1;
+
+            if (choice < 0 || choice >= topics.length) {
+                throw new IllegalArgumentException("Invalid topic index.");
+            }
+            return topics[choice];
+        }
     }
+
 
     // RedirectRequestCommand
     public static class RedirectRequestCommand implements Command {
@@ -1555,11 +1582,11 @@ public class Commands {
                             case 5:  // Manager
                                 newUser = factory.createUser(firstname, lastname);
                                 break;
-                            case 6:  // Researcher
-                                newResarcher = factory.createUser(firstname + lastname);
-                                System.out.println("Please enter the email for add Researcher to existing User. You can enter without domain (@kbtu.kz): ");
-                                email = reader.readLine();
-                                break;
+//                            case 6:  // Researcher
+//                                newResarcher = factory.createUser(firstname + lastname);
+//                                System.out.println("Please enter the email for add Researcher to existing User. You can enter without domain (@kbtu.kz): ");
+//                                email = reader.readLine();
+//                                break;
                             default:
                                 System.out.println("Invalid choice. User creation cancelled.");
                                 return;

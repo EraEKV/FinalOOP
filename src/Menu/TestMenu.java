@@ -2,6 +2,7 @@ package Menu;
 
 import Database.Database;
 import Users.Admin;
+import Users.Rector;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -14,11 +15,12 @@ public class TestMenu {
 //        AdminMenu adminMenu = new AdminMenu(new Admin(), br);
 //        adminMenu.displayMenu();
 
-        System.out.println(Database.getInstance().getUsers());
-
+//        System.out.println(Database.getInstance().getUsers());
+//
         MainMenu mainMenu = new MainMenu();
         mainMenu.displayMenu();
 
-
+//        RectorMenu menu = new RectorMenu(Rector.getInstance(), br);
+//        menu.displayMenu();
     }
 }

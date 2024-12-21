@@ -55,13 +55,13 @@ public class UserFactory {
 	}
 
 
-	public Researcher createUser(User user) {
-		return new Researcher(user.getFirstname() + user.getLastname());
-	}
-
-	public Researcher createUser(String pseudoname) {
-		return new Researcher(pseudoname);
-	}
+//	public Researcher createUser(User user) {
+//		return new Researcher(user.getFirstname() + user.getLastname());
+//	}
+//
+//	public Researcher createUser(String pseudoname) {
+//		return new Researcher(pseudoname);
+//	}
 
 
 	// generating ID for new User

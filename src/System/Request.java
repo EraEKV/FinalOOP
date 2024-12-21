@@ -1,10 +1,12 @@
 package System;
 
 import Enums.Status;
+
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID; // Import for generating unique IDs
 
-public class Request extends Notification {
+public class Request extends Notification implements Serializable {
     private String id;
     private String topic;
     private Boolean isSigned;

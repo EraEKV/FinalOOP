@@ -50,6 +50,7 @@ public class TestData {
 
         db.getNews().add(new News("Rector", "New WSP", "Welcome to our new University system WSP 2.0 with rickroll :D", NewsTopic.ANNOUNCMENTS));
 
+
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -59,6 +60,7 @@ public class TestData {
 
         db.getNews().add(new News("Manager", "test1", "Welcome to our new University system WSP 2.0 with rickroll :D", NewsTopic.ANNOUNCMENTS));
 
+        db.getUsers().put(new Credentials("gabdullin@kbtu.kz", "1234"), Rector.getInstance());
 
         try {
             Database.write();

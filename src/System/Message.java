@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Message extends Notification implements Serializable {
-    private boolean isWatched = false;
+    private boolean isWatched;
 
 
 //  constructors
@@ -18,6 +18,7 @@ public class Message extends Notification implements Serializable {
 
     public Message(User author, String text) {
         super(author, text);
+        isWatched = false;
     }
 
 
