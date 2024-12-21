@@ -8,7 +8,7 @@ import Enums.CitationFormat;
 public class ResearchPaper {
     private String name;
     private int pages;
-    private Researcher author;
+    private Researcher mainAuthor;
     private ResearchJournal researchJournal;
     private Vector<ResearchPaper> citations;
     private String DOI;
@@ -20,6 +20,13 @@ public class ResearchPaper {
     }
     public ResearchPaper() {
     }
+    public ResearchPaper(String name, String journalname){
+        this.name = name;
+        ResearchJournal j = new ResearchJournal(journalname);
+        this.researchJournal = j;
+    }
+
+
 
     public ResearchPaper(String name, int pages, ResearchJournal researchJournal, String DOI, Date date) {
         this.name = name;
@@ -92,12 +99,12 @@ public class ResearchPaper {
         this.authors = authors;
     }
 
-    public Researcher getAuthor() {
-        return author;
+    public Researcher getMainAuthor() {
+        return mainAuthor;
     }
 
-    public void setAuthor(Researcher author) {
-        this.author = author;
+    public void setMainAuthor(Researcher mainAuthor) {
+        this.mainAuthor = mainAuthor;
     }
 
     public String getCitation(CitationFormat format) {
@@ -120,7 +127,7 @@ public class ResearchPaper {
 
             case BIBTEX:
                 citation.append("@article{").append(DOI.replaceAll("[^a-zA-Z0-9]", "")).append(",\n") // Use DOI as the citation key
-                        .append("  author = {");
+                        .append("  mainAuthor = {");
                 for (int i = 0; i < authors.size(); i++) {
                     citation.append(authors.get(i));
                     if (i < authors.size() - 1) citation.append(" and ");

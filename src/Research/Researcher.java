@@ -6,140 +6,140 @@ import Enums.Faculty;
 import java.io.Serializable;
 import java.util.*;
 
-import Comparators.CitationComparator;
-import Users.Employee;
-
-public class Researcher implements CanResearch, Serializable {
-
-    private String pceudoname;
+public class Researcher implements CanResearch, Serializable, Subscriber {
+    private String pseudonym;
     private int citations;
-    List<ResearchPaper> papers;
+    private List<ResearchPaper> papers = new ArrayList<>();
+    private Faculty faculty;
 
+    public Researcher() {}
 
-    {
-        papers = new ArrayList<>();
+    public Researcher(String pseudonym, Faculty faculty) {
+        this.pseudonym = pseudonym;
+        this.faculty = faculty;
     }
 
-    public Researcher() {
+    public Faculty getFaculty() {
+        return faculty;
     }
 
-    public Researcher(String pceudoname) {
-        this.pceudoname = pceudoname;
+    public String getPseudonym() {
+        return pseudonym;
     }
 
-    public String getPceudoname() {
-        return pceudoname;
-    }
-
-    public void setPceudoname(String pceudoname) {
-        this.pceudoname = pceudoname;
-    }
-
-    public int calculateHIndex() {
-        CitationComparator citationComparator = new CitationComparator();
-        papers.sort(citationComparator);
-
-        int hIndex = 0;
-        for (int i = 0; i < papers.size(); i++) {
-            int citations = papers.get(i).getCitations().size();
-            if (citations >= (i + 1)) {
-                hIndex = i + 1;
-            } else {
-                break;
-            }
-        }
-
-        return hIndex;
-    }
-
-
-    public int calculateCitations() {
-        int totalCitations = 0;
-        for (ResearchPaper paper : papers) {
-            totalCitations += paper.getCitations().size();
-        }
-        return totalCitations;
-    }
-
-    public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
-        papers.add(paper);
-        Vector<ResearchPaper> prev = journal.getResearchPapers();
-        prev.add(paper);
-        journal.setResearchPapers(prev);
-    }
-
-    public void printPapers(Comparator comparator) {
-        papers.sort(comparator);
-        for (ResearchPaper paper : papers) {
-            System.out.println(paper);
-        }
-    }
-
-    public static void topCitedSchoolResearcher(Faculty faculty) {
-        int maxCitations = 0;
-        Researcher topCitedResearcher = new Researcher();
-        Vector<ResearchJournal> journals =  Database.getInstance().getResearchJournals();
-        for(ResearchJournal journal : journals) {
-            Vector<ResearchPaper> rp = journal.getResearchPapers();
-            for (ResearchPaper paper : rp) {
-                String pseudoname = paper.getAuthor().getPceudoname();
-                int citations = paper.getCitations().size();
-                if (pseudoname.equals(faculty)) {
-                    if (citations > maxCitations) {
-                        maxCitations = citations;
-                        topCitedResearcher = paper.getAuthor();
-                    }
-                }
-            }
-        }
-        System.out.println(topCitedResearcher);
-    }
-
-    public void topCitedResearcher() {
-        int maxCitations = 0;
-        Researcher topCitedResearcher = new Researcher();
-        Vector<ResearchJournal> journals =  Database.getInstance().getResearchJournals();
-        for(ResearchJournal journal : journals) {
-            Vector<ResearchPaper> rp = journal.getResearchPapers();
-            for (ResearchPaper paper : rp) {
-                String pseudoname = paper.getAuthor().getPceudoname();
-                int citations = paper.getCitations().size();
-                if (citations > maxCitations) {
-                    maxCitations = citations;
-                    topCitedResearcher = paper.getAuthor();
-                }
-            }
-        }
-        System.out.println(topCitedResearcher);
-    }
-
-    public List<ResearchPaper> getPapers() {
-        return papers;
+    public void setPseudonym(String pseudonym) {
+        this.pseudonym = pseudonym;
     }
 
     public int getCitations() {
         return citations;
     }
 
+    public List<ResearchPaper> getPapers() {
+        return papers;
+    }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Researcher that = (Researcher) o;
-        return citations == that.citations && Objects.equals(pceudoname, that.pceudoname) && Objects.equals(papers, that.papers);
+    public int calculateHIndex() {
+        papers.sort((p1, p2) -> Integer.compare(p2.getCitations().size(), p1.getCitations().size()));
+
+        int hIndex = 0;
+        for (int i = 0; i < papers.size(); i++) {
+            if (papers.get(i).getCitations().size() >= i + 1) {
+                hIndex = i + 1;
+            } else {
+                break;
+            }
+        }
+        return hIndex;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(pceudoname, citations, papers);
+    public int calculateCitations() {
+        return papers.stream().mapToInt(paper -> paper.getCitations().size()).sum();
+    }
+
+
+    @Override
+    public void printPapers(Comparator c) {
+        for (ResearchPaper paper : papers) {
+            System.out.println(paper);
+        }
+    }
+
+    public void updateCitations() {
+        citations = 0;
+        for (ResearchPaper paper : papers) {
+            citations += paper.getCitations().size();
+        }
+    }
+
+    public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
+        papers.add(paper);
+        journal.getResearchPapers().add(paper);
+        updateCitations();
+    }
+
+    public void printPapers() {
+        for (ResearchPaper paper : papers) {
+            System.out.println(paper);
+        }
+    }
+
+    public static void topCitedSchoolResearcher(Faculty faculty) {
+        Researcher topResearcher = null;
+        int maxCitations = 0;
+
+        for (ResearchJournal journal : Database.getInstance().getResearchJournals()) {
+            for (ResearchPaper paper : journal.getResearchPapers()) {
+                if (paper.getMainAuthor().getFaculty().equals(faculty)) {
+                    int paperCitations = paper.getCitations().size();
+                    if (paperCitations > maxCitations) {
+                        maxCitations = paperCitations;
+                        topResearcher = paper.getMainAuthor();
+                    }
+                }
+            }
+        }
+
+        if (topResearcher != null) {
+            System.out.println(topResearcher);
+        } else {
+            System.out.println("No researchers found for the given faculty.");
+        }
+    }
+
+    public void topCitedResearcher() {
+        Researcher topResearcher = null;
+        int maxCitations = 0;
+
+        for (ResearchJournal journal : Database.getInstance().getResearchJournals()) {
+            for (ResearchPaper paper : journal.getResearchPapers()) {
+                int paperCitations = paper.getCitations().size();
+                if (paperCitations > maxCitations) {
+                    maxCitations = paperCitations;
+                    topResearcher = paper.getMainAuthor();
+                }
+            }
+        }
+
+        if (topResearcher != null) {
+            System.out.println(topResearcher);
+        } else {
+            System.out.println("No researchers found.");
+        }
     }
 
     @Override
     public String toString() {
         return "Researcher{" +
-                "pceudoname='" + pceudoname + '\'' +
+                "pseudonym='" + pseudonym + '\'' +
                 ", citations=" + citations +
-                ", papers=" + papers +
+                ", papers=" + papers.size() +
                 '}';
+    }
+
+    @Override
+    public void update() {
+
     }
 }
