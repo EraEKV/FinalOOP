@@ -14,7 +14,6 @@ public abstract class User implements Subscriber, CanBeResearcher, Serializable 
 	private String firstname;
 	private String lastname;
 	private String email;
-	private Researcher isResearcher;
 	private Vector<Notification> notifications;
 	
 	public User() {
@@ -84,18 +83,6 @@ public abstract class User implements Subscriber, CanBeResearcher, Serializable 
 		System.out.println("New post in research journal!!!");
 	}
 
-	//researcher realization
-	@Override
-	public void beReseacrher(Researcher researcher) {
-		this.isResearcher = researcher;
-	}
-
-	public Researcher getIsResearcher() {
-		if (isResearcher == null) {
-			throw new NotAResearcherException("Access denied: User is not a researcher.");
-		}
-		return isResearcher;
-	}
 
 	@Override
 	public boolean equals(Object o) {

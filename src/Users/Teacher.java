@@ -4,6 +4,7 @@ package Users ;
 import Academic.Course;
 import Academic.Journal;
 import Academic.JournalLesson;
+import CustomExceptions.NotAResearcherException;
 import Enums.Attendance;
 import Enums.Faculty;
 import Enums.LessonType;
@@ -88,10 +89,6 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 		this.subjectName = subjectName;
 	}
 
-	@Override
-	public Researcher getIsResearcher() {
-		return isResearcher;
-	}
 
 	public void setIsResearcher(Researcher isResearcher) {
 		this.isResearcher = isResearcher;
@@ -137,6 +134,15 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 	public Vector<Student> viewStudentsInfo(Course course) {
 
 		return new Vector<Student>();
+	}
+
+
+	//researcher realization
+	public Researcher getIsResearcher() {
+		if (isResearcher == null) {
+			throw new NotAResearcherException("Access denied: User is not a researcher.");
+		}
+		return isResearcher;
 	}
 
 	@Override

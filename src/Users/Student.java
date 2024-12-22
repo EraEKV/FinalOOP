@@ -1,6 +1,7 @@
 package Users;
 
 import Academic.*;
+import CustomExceptions.NotAResearcherException;
 import Database.Database;
 import Enums.Faculty;
 import Enums.Speciality;
@@ -27,6 +28,7 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 	private Researcher researchSupervisor;
 	private Vector<Journal> journals;
 	private HashMap<Course, Teacher> registeredCourses;
+	private Researcher isResearcher;
 
 	private Attestation attestation;
 
@@ -208,6 +210,20 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 //		// TODO implement me
 //		return;
 //	}
+
+
+	//researcher realization
+	@Override
+	public void beReseacrher(Researcher researcher) {
+		this.isResearcher = researcher;
+	}
+
+	public Researcher getIsResearcher() {
+		if (isResearcher == null) {
+			throw new NotAResearcherException("Access denied: User is not a researcher.");
+		}
+		return isResearcher;
+	}
 
 
 
