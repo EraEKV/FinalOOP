@@ -280,8 +280,56 @@ public class Commands {
         }
 
         private void viewNews() {
-            System.out.println("News viewing feature is not yet implemented.");
+            try {
+                Database db = Database.getInstance();
+                int totalPages = db.getTotalNewsPages();
+                if (totalPages == 0) {
+                    System.out.println("No news available.");
+                    return;
+                }
+
+                int currentPage = 1;
+
+                while (true) {
+                    System.out.println("\nDisplaying news for page " + currentPage + " of " + totalPages + ":");
+                    db.viewNews(currentPage);
+
+                    // Меню навигации
+                    System.out.println("\n[1] Next Page [2] Previous Page [0] Back");
+                    System.out.print("Choose an option: ");
+                    String input = reader.readLine().trim();
+
+                    switch (input) {
+                        case "1": // Next Page
+                            if (currentPage < totalPages) {
+                                currentPage++;
+                            } else {
+                                System.out.println("You are already on the last page.");
+                            }
+                            break;
+
+                        case "2": // Previous Page
+                            if (currentPage > 1) {
+                                currentPage--;
+                            } else {
+                                System.out.println("You are already on the first page.");
+                            }
+                            break;
+
+                        case "0": // Back
+                            System.out.println("Exiting news viewer.");
+                            return;
+
+                        default:
+                            System.out.println("Invalid option. Please select 1, 2, or 0.");
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred while viewing news: " + e.getMessage());
+            }
         }
+
+
     }
 
 
@@ -679,7 +727,7 @@ public class Commands {
                     }
                 }
 
-                student.setRegisteredCourses(registeredCoursesMap);
+                student.getRegisteredCourses().putAll(registeredCoursesMap);
 
                 for (Map.Entry<Course, Teacher> entry : registeredCoursesMap.entrySet()) {
                     Course course = entry.getKey();
@@ -754,25 +802,9 @@ public class Commands {
                     return;
                 }
 
-                System.out.println("Enter faculty (e.g., 'Engineering', 'Science'):");
-                String facultyInput = reader.readLine().trim();
-                Faculty faculty;
-                try {
-                    faculty = Faculty.valueOf(facultyInput.toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid faculty. Please try again.");
-                    return;
-                }
+                Faculty faculty = selectFaculty(reader);
+                Speciality speciality = selectSpeciality(reader);
 
-                System.out.println("Enter speciality (e.g., 'Computer Science', 'Electrical Engineering'):");
-                String specialityInput = reader.readLine().trim();
-                Speciality speciality;
-                try {
-                    speciality = Speciality.valueOf(specialityInput.toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid speciality. Please try again.");
-                    return;
-                }
 
                 System.out.println("Enter number of credits (1-10):");
                 int credits;
@@ -787,17 +819,8 @@ public class Commands {
                     return;
                 }
 
-                System.out.println("Enter semester (e.g., 'FALL', 'SPRING'):");
-                String semesterInput = reader.readLine().trim();
-                Semester semester;
-                try {
-                    semester = Semester.valueOf(semesterInput.toUpperCase());
-                } catch (IllegalArgumentException e) {
-                    System.out.println("Invalid semester. Please try again.");
-                    return;
-                }
+                Semester semester = selectSemester(reader);
 
-                // Additional attributes like description or maximum students can be added here.
                 Course course = new Course(code, name, faculty, speciality, credits, semester);
                 manager.addCourse(course);
 
@@ -1565,34 +1588,36 @@ public class Commands {
 
                         switch (choice) {
                             case 1:  // Student
-                                Faculty studentFaculty = selectFaculty();
-                                Speciality studentSpeciality = selectSpeciality();
+                                Faculty studentFaculty = selectFaculty(reader);
+                                Speciality studentSpeciality = selectSpeciality(reader);
                                 newUser = factory.createUser(firstname, lastname, studentFaculty, studentSpeciality);
                                 break;
                             case 2:  // MasterStudent
-                                Faculty masterFaculty = selectFaculty();
-                                Speciality masterSpeciality = selectSpeciality();
+                                Faculty masterFaculty = selectFaculty(reader);
+                                Speciality masterSpeciality = selectSpeciality(reader);
                                 newUser = factory.createUser(firstname, lastname, masterFaculty, masterSpeciality);
                                 break;
                             case 3:  // GradStudent
-                                Faculty gradFaculty = selectFaculty();
-                                Speciality gradSpeciality = selectSpeciality();
-                                newUser = factory.createUser(firstname, lastname, gradFaculty, gradSpeciality);
+                                Faculty gradFaculty = selectFaculty(reader);
+                                Speciality gradSpeciality = selectSpeciality(reader);
+                                System.out.println("Choose");
+                                String studentType = selectStudentType();
+                                newUser = factory.createUser(firstname, lastname, gradFaculty, gradSpeciality, studentType);
                                 break;
                             case 4:  // Teacher
                                 TeacherType teacherType = selectTeacherType();
-                                Faculty teacherFaculty = selectFaculty();
+                                Faculty teacherFaculty = selectFaculty(reader);
                                 newUser = factory.createUser(firstname, lastname, teacherType, teacherFaculty);
                                 break;
                             case 5:  // Manager
                                 newUser = factory.createUser(firstname, lastname);
                                 break;
-//                            case 6:  // Researcher
-//                                Faculty selectedFaculty = selectFaculty();
-//                                newResarcher = factory.createUser(firstname + lastname, selectedFaculty);
-//                                System.out.println("Please enter the email for add Researcher to existing User. You can enter without domain (@kbtu.kz): ");
-//                                email = reader.readLine();
-//                                break;
+                            case 6:  // Researcher
+                                Faculty selectedFaculty = selectFaculty(reader);
+                                newResarcher = factory.createUser(firstname + lastname, selectedFaculty);
+                                System.out.println("Please enter the email for add Researcher to existing User. You can enter without domain (@kbtu.kz): ");
+                                email = reader.readLine();
+                                break;
                             default:
                                 System.out.println("Invalid choice. User creation cancelled.");
                                 return;
@@ -1626,7 +1651,7 @@ public class Commands {
                                 continue user;
                             } else {
                                 if(user instanceof Student) {
-                                    user.beResearcher();
+                                    user.beReseacrher(newResarcher);
                                 }
 
                                 db.getResearchers().add(newResarcher);
@@ -1645,43 +1670,7 @@ public class Commands {
             logging("AddUser", admin);
         }
 
-    private Faculty selectFaculty() throws IOException {
-        while (true) {
-            System.out.println("Select a faculty:");
-            for (Faculty faculty : Faculty.values()) {
-                System.out.println("[" + (faculty.ordinal() + 1) + "] " + faculty);
-            }
-            try {
-                int facultyChoice = Integer.parseInt(reader.readLine()) - 1;
-                if (facultyChoice >= 0 && facultyChoice < Faculty.values().length) {
-                    return Faculty.values()[facultyChoice];
-                } else {
-                    System.out.println("Invalid choice. Please select a valid faculty.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
-            }
-        }
-    }
 
-    private Speciality selectSpeciality() throws IOException {
-        while (true) {
-            System.out.println("Select a speciality:");
-            for (Speciality speciality : Speciality.values()) {
-                System.out.println("[" + (speciality.ordinal() + 1) + "] " + speciality);
-            }
-            try {
-                int specialityChoice = Integer.parseInt(reader.readLine()) - 1;
-                if (specialityChoice >= 0 && specialityChoice < Speciality.values().length) {
-                    return Speciality.values()[specialityChoice];
-                } else {
-                    System.out.println("Invalid choice. Please select a valid speciality.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
-            }
-        }
-    }
 
     private TeacherType selectTeacherType() throws IOException {
         while (true) {
@@ -1702,8 +1691,86 @@ public class Commands {
         }
     }
 
+    private String selectStudentType() throws IOException {
+        while (true) {
+            System.out.println("Select a student type:");
+            System.out.println("[1] MasterStudent");
+            System.out.println("[2] PhDStudent");
+            try {
+                int choice = Integer.parseInt(reader.readLine());
+                if(choice == 1) {
+                    return MasterStudent.class.getSimpleName();
+                } else if(choice == 2) {
+                    return PhDStudent.class.getSimpleName();
+                } else {
+                    System.out.println("Invalid choice. Please select a valid student type.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
 
 }
+
+    private static Faculty selectFaculty(BufferedReader reader) throws IOException {
+        while (true) {
+            System.out.println("Select a faculty:");
+            for (Faculty faculty : Faculty.values()) {
+                System.out.println("[" + (faculty.ordinal() + 1) + "] " + faculty);
+            }
+            try {
+                int facultyChoice = Integer.parseInt(reader.readLine()) - 1;
+                if (facultyChoice >= 0 && facultyChoice < Faculty.values().length) {
+                    return Faculty.values()[facultyChoice];
+                } else {
+                    System.out.println("Invalid choice. Please select a valid faculty.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+    private static Speciality selectSpeciality(BufferedReader reader) throws IOException {
+        while (true) {
+            System.out.println("Select a speciality:");
+            for (Speciality speciality : Speciality.values()) {
+                System.out.println("[" + (speciality.ordinal() + 1) + "] " + speciality);
+            }
+            try {
+                int choice = Integer.parseInt(reader.readLine()) - 1;
+                if (choice >= 0 && choice < Speciality.values().length) {
+                    return Speciality.values()[choice];
+                } else {
+                    System.out.println("Invalid choice. Please select a valid speciality.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
+    private static Semester selectSemester(BufferedReader reader) throws IOException {
+        while (true) {
+            System.out.println("Select a semester:");
+            for (Semester semester : Semester.values()) {
+                System.out.println("[" + (semester.ordinal() + 1) + "] " + semester);
+            }
+            try {
+                int choice = Integer.parseInt(reader.readLine()) - 1;
+                if (choice >= 0 && choice < Semester.values().length) {
+                    return Semester.values()[choice];
+                } else {
+                    System.out.println("Invalid choice. Please select a valid faculty.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. Please enter a number.");
+            }
+        }
+    }
+
 
 
 
@@ -1810,6 +1877,31 @@ public class Commands {
     // GradStudentMenu
     //
     //
+
+
+    public static class OpenTeacherMenu implements Command {
+        private BufferedReader reader;
+        private GradStudent user;
+
+        public OpenTeacherMenu(GradStudent user, BufferedReader reader) {
+            this.reader = reader;
+            this.user = user;
+        }
+
+
+        @Override
+        public void execute() {
+            Teacher teacher = user.getTeacher();
+            if(teacher == null) {
+                System.out.println("You are not a teacher, please send request to managers.");
+            } else {
+                new TeacherMenu(teacher, reader).displayMenu();
+            }
+
+            logging("OpenTeacherMenu", user);
+        }
+    }
+
 
     public static class ViewResearchTopicCommand implements Command {
         private final GradStudent gradStudent;
@@ -2275,173 +2367,5 @@ public class Commands {
         }
     }
 
-    /// researcher menu
 
-
-    public static class AddPaperCommand implements Command {
-        private final Researcher researcher;
-        private final BufferedReader reader;
-
-        public AddPaperCommand(Researcher researcher, BufferedReader reader) {
-            this.researcher = researcher;
-            this.reader = reader;
-        }
-
-        @Override
-        public void execute() {
-            try {
-                System.out.print("Enter the title of the paper: ");
-                String title = reader.readLine();
-                System.out.print("Enter the journal name: ");
-                String journal = reader.readLine();
-
-                ResearchPaper paper = new ResearchPaper(title, journal);
-                researcher.getPapers().add(paper);
-                System.out.println("Paper added successfully.");
-            } catch (IOException e) {
-                System.out.println("An error occurred while adding the paper.");
-            }
-        }
-    }
-
-    public static class ViewPapersCommand implements Command {
-        private final Researcher researcher;
-
-        public ViewPapersCommand(Researcher researcher) {
-            this.researcher = researcher;
-        }
-
-        @Override
-        public void execute() {
-            for (ResearchPaper paper : researcher.getPapers()) {
-                System.out.println(paper);
-            }
-        }
-    }
-
-    public static class CalculateHIndexCommand implements Command {
-        private final Researcher researcher;
-
-        public CalculateHIndexCommand(Researcher researcher) {
-            this.researcher = researcher;
-        }
-
-        @Override
-        public void execute() {
-            int hIndex = researcher.calculateHIndex();
-            System.out.println(researcher.getAcademicContributor() + "'s H-Index: " + hIndex);
-        }
-    }
-
-    public static class CalculateCitationsCommand implements Command {
-        private final Researcher researcher;
-
-        public CalculateCitationsCommand(Researcher researcher) {
-            this.researcher = researcher;
-        }
-
-        @Override
-        public void execute() {
-            int totalCitations = researcher.calculateCitations();
-            System.out.println("Total Citations: " + totalCitations);
-        }
-    }
-
-    public static class SubscribeToJournalCommand implements Command {
-        private final ResearchJournal journal;
-        private final Researcher researcher;
-
-        public SubscribeToJournalCommand(String journalName, Researcher researcher) {
-            if (!isJournalInDatabase(journalName)) {
-                throw new IllegalArgumentException("Journal '" + journalName + "' does not exist in the database.");
-            }
-            this.journal = findJournalByName(journalName);
-            this.researcher = researcher;
-        }
-
-        private static boolean isJournalInDatabase(String journalName) {
-            Database database = Database.getInstance();
-            for (ResearchJournal dbJournal : database.getResearchJournals()) {
-                if (dbJournal.getName().equalsIgnoreCase(journalName)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        private ResearchJournal findJournalByName(String journalName) {
-            Database database = Database.getInstance();
-            for (ResearchJournal dbJournal : database.getResearchJournals()) {
-                if (dbJournal.getName().equalsIgnoreCase(journalName)) {
-                    return dbJournal;
-                }
-            }
-            throw new IllegalArgumentException("Journal '" + journalName + "' not found in the database.");
-        }
-
-        @Override
-        public void execute() {
-            journal.getSubscribers().add(researcher.getAcademicContributor());
-
-            System.out.println(researcher.getAcademicContributor() + " is now subscribed to the journal: " + journal.getName());
-        }
-    }
-
-
-    public static class PrintPapersCommand implements Command {
-        private final Researcher researcher;
-
-        public PrintPapersCommand(Researcher researcher) {
-            this.researcher = researcher;
-        }
-
-        @Override
-        public void execute() {
-            researcher.printPapers();
-        }
-    }
-
-    public static class TopCitedResearcherCommand implements Command {
-        private final List<Researcher> allResearchers;
-
-        public TopCitedResearcherCommand(List<Researcher> allResearchers) {
-
-            this.allResearchers = allResearchers;
-        }
-
-        @Override
-        public void execute() {
-            Researcher topCited = getTopCitedResearcher();
-            System.out.println("Top Cited Researcher: " + topCited.getAcademicContributor() + " with " + topCited.calculateCitations() + " citations.");
-        }
-
-        private Researcher getTopCitedResearcher() {
-            Researcher topCited = null;
-            int maxCitations = -1;
-
-            for (Researcher r : allResearchers) {
-                int citations = r.calculateCitations();
-                if (citations > maxCitations) {
-                    maxCitations = citations;
-                    topCited = r;
-                }
-            }
-
-            return topCited;
-        }
-    }
-
-    public static class PublishPaperCommand implements Command {
-        private final Researcher researcher;
-
-        public PublishPaperCommand(Researcher researcher) {
-            this.researcher = researcher;
-        }
-
-        @Override
-        public void execute() {
-            int totalCitations = researcher.calculateCitations();
-            System.out.println("Total Citations for published papers: " + totalCitations);
-        }
-    }
 }

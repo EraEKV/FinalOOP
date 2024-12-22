@@ -124,10 +124,6 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		this.researchSupervisor = researchSupervisor;
 	}
 
-	public void setJournals(Vector<Journal> journals) {
-		this.journals = journals;
-	}
-
 	public Attestation getAttestation() {
 		return attestation;
 	}
@@ -140,24 +136,13 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		return countRetakes;
 	}
 
-	public void setCountRetakes(HashMap<Course, Integer> countRetakes) {
-		this.countRetakes = countRetakes;
-	}
-
 	public HashMap<Course, Teacher> getRegisteredCourses() {
 		return registeredCourses;
 	}
 
-	public void setRegisteredCourses(HashMap<Course, Teacher> registeredCourses) {
-		this.registeredCourses = registeredCourses;
-	}
 
 	public Vector<Teacher> getTeachers() {
 		return new Vector<>(registeredCourses.values());
-	}
-
-	public void setWarnings(Vector<Complaint> warnings) {
-		this.warnings = warnings;
 	}
 
 

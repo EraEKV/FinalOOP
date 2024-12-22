@@ -33,10 +33,14 @@ public class DisciplinaryCommittee extends Employee {
     }
 
     // Methods
+
+    /**
+     * @author Abumuslim Abakarov
+     * @param student
+     * @param complaint
+     */
     public void makeWarning(Student student, Complaint complaint) {
-        Vector<Complaint> currentComplaints = student.getWarnings();
-        currentComplaints.add(complaint);
-        student.setWarnings(currentComplaints);
+        student.getWarnings().add(complaint);
         System.out.println(student + " was got warning for " + complaint);
     }
 

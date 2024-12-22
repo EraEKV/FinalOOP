@@ -131,6 +131,14 @@ public class Database implements Serializable {
 
     public void setRegistrationOpened(Boolean registrationOpened) {
         isRegistrationOpened = registrationOpened;
+        if(registrationOpened) {
+            users.values()
+                    .forEach(u -> {
+                        if(u instanceof Student) {
+                            ((Student) u).setRegistered(false);
+                        }
+                    });
+        }
     }
 
     public Vector<Researcher> getResearchers() {
@@ -262,11 +270,19 @@ public class Database implements Serializable {
         users.remove(credentials);
     }
 
+    public int getTotalNewsPages() {
+        return (news.size() > 5 ? news.size() / 5 : 1);
+    }
+
     public void viewNews(int page) {
-        news.stream()
-                .skip((page - 1) * 5)
-                .limit(5)
-                .forEach(System.out::println);
+        if(news == null || news.size() == 0) {
+            System.out.println("No news for view");
+        } else {
+            news.stream()
+                    .skip((page - 1) * 5)
+                    .limit(5)
+                    .forEach(System.out::println);
+        }
     }
 
 

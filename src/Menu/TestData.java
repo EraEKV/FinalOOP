@@ -13,6 +13,8 @@ import java.io.IOException;
 public class TestData {
 
     public static void main(String args[]) {
+        System.out.println(2 / 5);
+
         Database db = Database.getInstance();
         UserFactory factory = UserFactory.getInstance();
 
