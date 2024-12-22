@@ -9,11 +9,8 @@ import Research.CanBeResearcher;
 import Research.Researcher;
 import System.Complaint;
 import System.Organization;
-import System.Notification;
-import System.CustomPair;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -30,6 +27,7 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 	private HashMap<Course, Teacher> registeredCourses;
 	private Researcher isResearcher;
 
+	private Transcript transcript;
 	private Attestation attestation;
 
 
@@ -57,6 +55,9 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		this.warnings = new Vector<Complaint>();
 		this.registeredCourses = new HashMap<Course, Teacher>();
 		this.countRetakes = new HashMap<Course, Integer>();
+
+		this.transcript = new Transcript(this);
+		this.attestation = new Attestation(this);
 	}
 
 
@@ -89,12 +90,12 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		return journals;
 	}
 
-	public Journal getJournal(Course course) {
-		return journals.stream()
-				.filter(journal -> journal.getCourse().equals(course))
-				.findFirst()
-				.orElse(null);
-	}
+//	public Journal getJournal(Course course) {
+//		return journals.stream()
+//				.filter(journal -> journal.getCourse().equals(course))
+//				.findFirst()
+//				.orElse(null);
+//	}
 
 
 	public Speciality getSpeciality() {
@@ -133,8 +134,8 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		return attestation;
 	}
 
-	public void setAttestation(Attestation attestation) {
-		this.attestation = attestation;
+	public Transcript getTranscript() {
+		return transcript;
 	}
 
 	public HashMap<Course, Integer> getCountRetakes() {
@@ -158,17 +159,7 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 			System.out.println("Course: " + course.getName() + ", Mark: " + mark);
 		}
 	}
-	
-	
-	public void viewTranscript() {
-		Vector<Transcript> transcripts = Database.getInstance().getTranscripts();
-		for(Transcript t : transcripts){
-			if(t.getOwner().equals(this)){
-				System.out.println(t);
-			}
-		}
-	}
-	
+
 	
 	public void rateTeacher(Teacher t, Integer rate) {
 		// TODO implement me

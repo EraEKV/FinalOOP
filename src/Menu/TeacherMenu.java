@@ -21,8 +21,8 @@ public class TeacherMenu {
         commands.put(1, new Commands.ViewCoursesCommand(teacher));
         commands.put(2, new Commands.ManageCourseCommand(teacher, reader));
         commands.put(3, new Commands.ViewStudentsInfoCommand(teacher, reader));
-        //commands.put(4, new Commands.PutMarksCommand(teacher, reader));
-        commands.put(5, new Commands.PutAttendanceCommand(teacher, reader));
+        commands.put(4, new Commands.PutMarksCommand(teacher, reader));
+//        commands.put(5, new Commands.PutAttendanceCommand(teacher, reader));
         commands.put(6, new Commands.SendMessageCommand(teacher, reader));
         commands.put(7, new Commands.SendComplaint(teacher, reader));
         commands.put(8, new Commands.SubscribeResearchJournalCommand(teacher, reader));

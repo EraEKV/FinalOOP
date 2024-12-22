@@ -24,7 +24,7 @@ public class Database implements Serializable {
 	private boolean isRegistrationOpened;
 
 
-	private HashMap<Credentials, User> users = new HashMap<Credentials, User>(); // email, class User
+	private HashMap<Credentials, User> users = new HashMap<Credentials, User>();
 
     private Rector rector; // singleton
 
@@ -44,8 +44,8 @@ public class Database implements Serializable {
     private PriorityQueue<News> news = new PriorityQueue<>(new DateComparator<>());
 
 
-
-	private Vector<Journal> journals = new Vector<Journal>();
+//
+//	private Vector<Journal> journals = new Vector<Journal>();
 
 //	private Semester semester;
 	
@@ -54,8 +54,7 @@ public class Database implements Serializable {
 //	private Vector<User> newsSubscribers;
 	
 	private Vector<Organization> organizations = new Vector<Organization>();
-	
-	private Vector<Transcript> transcripts = new Vector<Transcript>();
+
 
 //	initialization block
 	static {
@@ -144,14 +143,6 @@ public class Database implements Serializable {
         return researchers;
     }
 
-    public Vector<Transcript> getTranscripts() {
-        return transcripts;
-    }
-
-    public void setTranscripts(Vector<Transcript> transcripts) {
-        this.transcripts = transcripts;
-    }
-
     public Vector<Organization> getStudentOrganizations() {
         return organizations;
     }
@@ -177,9 +168,6 @@ public class Database implements Serializable {
         return logs;
     }
 
-    public Vector<Journal> getJournals() {
-        return journals;
-    }
 
     //    public HashMap<String, HashMap<Language, String>> getLanguageData() {
 //        return languageData;
@@ -262,7 +250,7 @@ public class Database implements Serializable {
                 return storedCredentials;
             }
         }
-        return null; // Если ничего не найдено
+        return null;
     }
 
     public void deleteUser(Credentials credentials) {
@@ -283,12 +271,6 @@ public class Database implements Serializable {
                     .forEach(System.out::println);
         }
     }
-
-
-
-//	public void newUserAdded(User user) {
-////	logic of checking
-//	}
 
 
     @Override
