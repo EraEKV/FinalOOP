@@ -2369,4 +2369,175 @@ public class Commands {
     }
 
 
+    /// researcher menu
+
+
+    public static class AddPaperCommand implements Command {
+        private final Researcher researcher;
+        private final BufferedReader reader;
+
+        public AddPaperCommand(Researcher researcher, BufferedReader reader) {
+            this.researcher = researcher;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                System.out.print("Enter the title of the paper: ");
+                String title = reader.readLine();
+                System.out.print("Enter the journal name: ");
+                String journal = reader.readLine();
+
+                ResearchPaper paper = new ResearchPaper(title, journal);
+                researcher.getPapers().add(paper);
+                System.out.println("Paper added successfully.");
+            } catch (IOException e) {
+                System.out.println("An error occurred while adding the paper.");
+            }
+        }
+    }
+
+    public static class ViewPapersCommand implements Command {
+        private final Researcher researcher;
+
+        public ViewPapersCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            for (ResearchPaper paper : researcher.getPapers()) {
+                System.out.println(paper);
+            }
+        }
+    }
+
+    public static class CalculateHIndexCommand implements Command {
+        private final Researcher researcher;
+
+        public CalculateHIndexCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            int hIndex = researcher.calculateHIndex();
+            System.out.println(researcher.getAcademicContributor() + "'s H-Index: " + hIndex);
+        }
+    }
+
+    public static class CalculateCitationsCommand implements Command {
+        private final Researcher researcher;
+
+        public CalculateCitationsCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            int totalCitations = researcher.calculateCitations();
+            System.out.println("Total Citations: " + totalCitations);
+        }
+    }
+
+    public static class SubscribeToJournalCommand implements Command {
+        private final ResearchJournal journal;
+        private final Researcher researcher;
+
+        public SubscribeToJournalCommand(String journalName, Researcher researcher) {
+            if (!isJournalInDatabase(journalName)) {
+                throw new IllegalArgumentException("Journal '" + journalName + "' does not exist in the database.");
+            }
+            this.journal = findJournalByName(journalName);
+            this.researcher = researcher;
+        }
+
+        private static boolean isJournalInDatabase(String journalName) {
+            Database database = Database.getInstance();
+            for (ResearchJournal dbJournal : database.getResearchJournals()) {
+                if (dbJournal.getName().equalsIgnoreCase(journalName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private ResearchJournal findJournalByName(String journalName) {
+            Database database = Database.getInstance();
+            for (ResearchJournal dbJournal : database.getResearchJournals()) {
+                if (dbJournal.getName().equalsIgnoreCase(journalName)) {
+                    return dbJournal;
+                }
+            }
+            throw new IllegalArgumentException("Journal '" + journalName + "' not found in the database.");
+        }
+
+        @Override
+        public void execute() {
+            journal.getSubscribers().add(researcher.getAcademicContributor());
+
+            System.out.println(researcher.getAcademicContributor() + " is now subscribed to the journal: " + journal.getName());
+        }
+    }
+
+
+    public static class PrintPapersCommand implements Command {
+        private final Researcher researcher;
+
+        public PrintPapersCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            researcher.printPapers();
+        }
+    }
+
+    public static class TopCitedResearcherCommand implements Command {
+        private final List<Researcher> allResearchers;
+
+        public TopCitedResearcherCommand(List<Researcher> allResearchers) {
+
+            this.allResearchers = allResearchers;
+        }
+
+        @Override
+        public void execute() {
+            Researcher topCited = getTopCitedResearcher();
+            System.out.println("Top Cited Researcher: " + topCited.getAcademicContributor() + " with " + topCited.calculateCitations() + " citations.");
+        }
+
+        private Researcher getTopCitedResearcher() {
+            Researcher topCited = null;
+            int maxCitations = -1;
+
+            for (Researcher r : allResearchers) {
+                int citations = r.calculateCitations();
+                if (citations > maxCitations) {
+                    maxCitations = citations;
+                    topCited = r;
+                }
+            }
+
+            return topCited;
+        }
+    }
+
+    public static class PublishPaperCommand implements Command {
+        private final Researcher researcher;
+
+        public PublishPaperCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            int totalCitations = researcher.calculateCitations();
+            System.out.println("Total Citations for published papers: " + totalCitations);
+        }
+    }
+
+
 }

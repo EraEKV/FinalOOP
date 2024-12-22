@@ -8,7 +8,6 @@ public class Attestation {
 	SemesterPeriod semesterPeriod;
 	private Map<Course, AttestationMark> info;
 
-
 	{
 		this.info = new HashMap<>();
 	}
