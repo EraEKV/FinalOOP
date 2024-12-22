@@ -24,7 +24,8 @@ public class TeacherMenu {
         //commands.put(4, new Commands.PutMarksCommand(teacher, reader));
         commands.put(5, new Commands.PutAttendanceCommand(teacher, reader));
         commands.put(6, new Commands.SendMessageCommand(teacher, reader));
-        commands.put(7, new Commands.SubscribeResearchJournalCommand(teacher, reader));
+        commands.put(7, new Commands.SendComplaint(teacher, reader));
+        commands.put(8, new Commands.SubscribeResearchJournalCommand(teacher, reader));
         commands.put(9, new Commands.ChangePasswordCommand(teacher, reader));
         commands.put(10, new Commands.ViewNotificationsCommand(teacher, reader));
         try {
@@ -45,7 +46,8 @@ public class TeacherMenu {
                 System.out.println("[4] Put Marks");
                 System.out.println("[5] Put Attendance");
                 System.out.println("[6] Send Message");
-                System.out.println("[7] Subscribe to Research Journal");
+                System.out.println("[7] Send Complaint");
+                System.out.println("[8] Subscribe to Research Journal");
                 System.out.println("[9] Change Password");
                 System.out.println("[10] Notifications");
                 if(commands.containsKey(11)) {
@@ -65,7 +67,7 @@ public class TeacherMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5, 6, 7, 9, 10, 11 -> {
+                    case 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();

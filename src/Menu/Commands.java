@@ -14,6 +14,7 @@ import System.Credentials;
 import System.UniversitySystemMediator;
 import Research.*;
 import System.Notification;
+import System.Complaint;
 
 import java.io.BufferedReader;
 import java.io.*;
@@ -1168,6 +1169,82 @@ public class Commands {
         }
     }
 
+    public static class SendComplaint implements Command {
+        private Teacher teacher;
+        private BufferedReader reader;
+        public SendComplaint(Teacher teacher, BufferedReader reader) {
+            this.teacher = teacher;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            Database db = Database.getInstance();
+            try {
+                System.out.println("=== Send Complaint ===");
+                Vector<Course> courses = db.getCourses();
+                if (courses == null || courses.isEmpty()) {
+                    System.out.println("No courses available.");
+                    return;
+                }
+
+                int courseChoice = chooseCourse(teacher, reader);
+                if (courseChoice == 0) {
+                    return;
+                }
+
+                Course selectedCourse = courses.get(courseChoice);
+
+                Vector<Student> students = getStudentsForCourse(teacher, selectedCourse);
+                if (students.isEmpty()) {
+                    System.out.println("No students enrolled in this course.");
+                } else {
+                    showStudents(students);
+                    int studentChoice = chooseStudent(reader, students);
+                    if (studentChoice != 0) {
+                        Student selectedStudent = students.get(studentChoice);
+                        System.out.println("You selected: " + selectedStudent.getFirstname() + " " + selectedStudent.getLastname());
+
+                        System.out.print("Are you sure you want to send a complaint for this student? (y/n): ");
+                        String confirmation = reader.readLine().trim().toLowerCase();
+                        if (confirmation.equals("y")) {
+                            System.out.print("Enter complaint text: ");
+                            String complaintText = reader.readLine();
+
+                            System.out.println("Select urgency level:");
+                            for (Urgency urgency : Urgency.values()) {
+                                System.out.println("[" + (urgency.ordinal() + 1) + "] " + urgency);
+                            }
+                            System.out.print("Enter urgency choice: ");
+                            int urgencyChoice = Integer.parseInt(reader.readLine()) - 1;
+
+                            Urgency selectedUrgency = Urgency.values()[urgencyChoice];
+
+                            Complaint newComplaint = new Complaint(teacher, selectedStudent, complaintText, selectedUrgency);
+
+                            System.out.println("Complaint created: " + newComplaint);
+                            System.out.print("Confirm sending the complaint? (confirm to send): ");
+                            String finalConfirmation = reader.readLine().trim().toLowerCase();
+                            if (finalConfirmation.equals("confirm")) {
+                                DisciplinaryCommittee.getInstance().getComplaints().add(newComplaint);
+                                System.out.println("Complaint sent successfully.");
+                            } else {
+                                System.out.println("Complaint not sent.");
+                            }
+                        } else {
+                            System.out.println("Complaint creation canceled.");
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                System.out.println("Error occurred while managing courses.");
+            }
+
+            logging("SendComplaint", teacher);
+        }
+    }
+
     public static class ManageCourseCommand implements Command {
         private final Teacher teacher;
         private final BufferedReader reader;
@@ -1177,24 +1254,86 @@ public class Commands {
             this.reader = reader;
         }
 
-
         @Override
         public void execute() {
             Database db = Database.getInstance();
             try {
                 System.out.println("=== Manage Course ===");
                 Vector<Course> courses = db.getCourses();
-                if (courses.isEmpty()) {
+                if (courses == null || courses.isEmpty()) {
                     System.out.println("No courses available.");
                     return;
-                } else {
-
                 }
+
+                int courseChoice = chooseCourse(teacher, reader);
+                if (courseChoice == 0) {
+                    return;
+                }
+
+                Course selectedCourse = courses.get(courseChoice);
+
+                Vector<Student> students = getStudentsForCourse(teacher, selectedCourse);
+                if (students.isEmpty()) {
+                    System.out.println("No students enrolled in this course.");
+                } else {
+                    showStudents(students);
+                    int studentChoice = chooseStudent(reader, students);
+                    if (studentChoice != -1) {
+                        Student selectedStudent = students.get(studentChoice);
+                        System.out.println("You selected: " + selectedStudent.getFirstname() + " " + selectedStudent.getLastname());
+                    }
+                }
+
             } catch (Exception e) {
-                System.out.println("Error occurred while fetching the courses.");
+                System.out.println("Error occurred while managing courses.");
             }
+
             logging("ManageCourse", teacher);
         }
+
+
+    }
+
+    private static int chooseCourse(Teacher teacher, BufferedReader reader) throws IOException {
+        try {
+            Vector<Course> courses = teacher.getCurrentCourses();
+            System.out.println("Select a course from the list:");
+            for (int i = 0; i < courses.size(); i++) {
+                System.out.println("[" + (i + 1) + "] " + courses.get(i).getName());
+            }
+            System.out.print("Enter course number (or 0 to cancel): ");
+            int choice = Integer.parseInt(reader.readLine()) - 1;
+            if (choice >= 0 && choice < courses.size()) {
+                return choice;
+            }
+            return -1;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Vector<Student> getStudentsForCourse(Teacher teacher, Course course) {
+        Vector<Student> students = new Vector<>();
+        if (course.getTeachers().contains(teacher)) {
+            students = course.getStudents();
+        }
+        return students;
+    }
+
+    private static void showStudents(Vector<Student> students) {
+        System.out.println("Select a student from the list:");
+        for (int i = 0; i < students.size(); i++) {
+            System.out.println("[" + (i + 1) + "] " + students.get(i).getFirstname() + " " + students.get(i).getLastname());
+        }
+    }
+
+    private static int chooseStudent(BufferedReader reader, Vector<Student> students) throws IOException {
+        System.out.print("Enter student number to select (or 0 to cancel): ");
+        int choice = Integer.parseInt(reader.readLine()) - 1;
+        if (choice >= 0 && choice < students.size()) {
+            return choice;
+        }
+        return -1;
     }
 
 

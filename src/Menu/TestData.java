@@ -15,9 +15,12 @@ public class TestData {
     public static void main(String args[]) {
         Database db = Database.getInstance();
         UserFactory factory = UserFactory.getInstance();
+
         Rector r = Rector.getInstance();
         db.setRector(r);
 
+        DisciplinaryCommittee committee = DisciplinaryCommittee.getInstance();
+        db.setDisciplinaryCommittee(committee);
 
         System.out.println(db.getUsers());
 

@@ -13,6 +13,7 @@ public class DisciplinaryCommittee extends Employee {
     private Vector<Complaint> complaints;
 
     private DisciplinaryCommittee() {
+        super("Disciplinary", "Committee", "committee@kbtu.kz");
         this.complaints = new Vector<>();
     }
 
