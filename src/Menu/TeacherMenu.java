@@ -67,7 +67,7 @@ public class TeacherMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 -> {
+                    case 1, 2, 3, 4, 6, 7, 8, 9, 10, 11 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();

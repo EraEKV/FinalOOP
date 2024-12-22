@@ -244,6 +244,13 @@ public class Database implements Serializable {
         return users.getOrDefault(credentials, null);
     }
 
+    public Organization findOrganization(String name) throws NoSuchElementException {
+        return organizations.stream()
+                .filter(o -> o.getName().equals(name))
+                .findFirst()
+                .orElse(null);
+    }
+
     public Credentials findCredentials(Credentials credentials) {
         for (Credentials storedCredentials : users.keySet()) {
             if (storedCredentials.equals(credentials)) {
