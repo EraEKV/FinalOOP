@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Vector;
 
 // NewsSubscriber interface
-public abstract class User implements Subscriber, CanBeResearcher, Serializable {
+public abstract class User implements Subscriber, Serializable {
 
 	private String firstname;
 	private String lastname;

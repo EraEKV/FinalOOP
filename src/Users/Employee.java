@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
 import System.Message;
+import System.Notification;
 
 
 public class Employee extends User {
@@ -99,6 +100,12 @@ public class Employee extends User {
 
 	public Vector<Message> getMessages() {
 		return messages;
+	}
+
+	public void sendMessage(Employee employee, Message message) {
+		employee.getMessages().add(message);
+		Notification n = new Notification(this, "Your receive new message from " +  this.getEmail());
+		employee.getNotifications().add(message);
 	}
 
 	public boolean getVacation(Date date) {
