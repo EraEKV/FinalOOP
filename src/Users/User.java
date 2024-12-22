@@ -1,5 +1,6 @@
 package Users ;
 
+import CustomExceptions.InsufficientAccessRightsException;
 import CustomExceptions.NotAResearcherException;
 import Research.*;
 import System.News;
@@ -35,6 +36,16 @@ public abstract class User implements Subscriber, Serializable {
 		return null;	
 	}
 
+	public void removePersonalData(User user) throws InsufficientAccessRightsException {
+		if(user instanceof DisciplinaryCommittee || user instanceof Admin) {
+			this.firstname = null;
+			this.lastname = null;
+			this.email = null;
+			this.notifications = new Vector<Notification>();
+		} else {
+			throw new InsufficientAccessRightsException("You have insufficient access rights for deletion sensitive information");
+		}
+	}
 	
 //	public void addComments(News news, String text) {
 //		// TODO implement me

@@ -20,8 +20,9 @@ public class Organization implements Serializable {
 		this.dateCreated = new Date();
 	}
 
-	public Organization(String name) {
+	public Organization(String name, Student head) {
 		this.name = name;
+		this.head = head;
 		this.slogan = "";
 		this.members = new Vector<>();
 		this.dateCreated = new Date();
@@ -49,6 +50,14 @@ public class Organization implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setHead(Student head) {
+		this.head = head;
+	}
+
+	public Student getHead() {
+		return head;
 	}
 
 	public Vector<Student> getMembers() {

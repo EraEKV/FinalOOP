@@ -13,20 +13,24 @@ public class DisciplinaryCommitteeMenu {
 
     public DisciplinaryCommitteeMenu(DisciplinaryCommittee committee, BufferedReader reader) {
         this.reader = reader;
-//        commands.put(1, new Commands.ManageComplaintsCommand(committee));
-//        commands.put(2, new Commands.SetResearchTopicCommand(committee, reader));
-//        commands
-//        commands.put(9, new Commands.ChangePasswordCommand(committee, reader));
+        commands.put(1, new Commands.ManageComplaintsCommand(committee, reader));
+        commands.put(2, new Commands.KickStudent(committee, reader));
+//        commands.put(3, new Commands.DeleteOrganization(committee, reader));
+        commands.put(4, new Commands.SendMessageCommand(committee, reader));
+        commands.put(9, new Commands.ChangePasswordCommand(committee, reader));
+        commands.put(10, new Commands.ViewNotificationsCommand(committee, reader));
     }
 
     public void displayMenu() {
         while (true) {
             try {
-                System.out.println("\n=== Grad Student Menu ===");
+                System.out.println("\n=== Disciplinary Committee Menu ===");
                 System.out.println("[1] View Complaints");
                 System.out.println("[2] Kick student");
                 System.out.println("[3] Delete Organization");
+                System.out.println("[4] Send Message");
                 System.out.println("[9] Change Password");
+                System.out.println("[10] Notifications");
                 System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
@@ -41,7 +45,7 @@ public class DisciplinaryCommitteeMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5, 9, 10 -> {
+                    case 1, 2, 3, 4, 9, 10 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();

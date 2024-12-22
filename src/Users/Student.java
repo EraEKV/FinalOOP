@@ -37,6 +37,8 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 
 	private boolean registered;
 
+	Vector<Organization> joinedOrganizations;
+	Organization isHead = null;
 
 //	constructors
 	public Student() {
@@ -60,6 +62,7 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 
 		this.transcript = new Transcript(this);
 		this.attestation = new Attestation(this);
+		this.joinedOrganizations = new Vector<Organization>();
 	}
 
 
@@ -87,6 +90,13 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		this.faculty = faculty;
 	}
 
+	public Organization getIsHead() {
+		return isHead;
+	}
+
+	public void setIsHead(Organization isHead) {
+		this.isHead = isHead;
+	}
 
 	public Vector<Journal> getJournals() {
 		return journals;
@@ -99,6 +109,10 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 //				.orElse(null);
 //	}
 
+
+	public Vector<Organization> getJoinedOrganizations() {
+		return joinedOrganizations;
+	}
 
 	public Speciality getSpeciality() {
 		return speciality;
@@ -228,7 +242,7 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 			System.out.println("Organization name cannot be empty.");
 			return;
 		}
-		Organization org = new Organization(name);
+		Organization org = new Organization(name, this);
 		org.addMember(this);
 		System.out.println("Organization '" + name + "' created successfully.");
 	}

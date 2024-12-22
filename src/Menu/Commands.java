@@ -22,6 +22,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Commands {
     //
@@ -592,7 +593,7 @@ public class Commands {
                         case 1 -> {
                             System.out.print("Enter the name of the new organization: ");
                             String name = reader.readLine();
-                            organizations.add(new Organization(name));
+                            organizations.add(new Organization(name, student));
                             System.out.println("Organization created successfully!");
                         }
                         case 2 -> {
@@ -2832,5 +2833,193 @@ public class Commands {
         }
     }
 
+
+
+
+
+    //
+    //
+    // DISCIPLINARY COMMITTEE MENU
+    //
+    //
+
+
+    public static class ManageComplaintsCommand implements Command {
+        private DisciplinaryCommittee dc;
+        private BufferedReader reader;
+
+        public ManageComplaintsCommand(DisciplinaryCommittee dc, BufferedReader reader) {
+            this.dc = dc;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            logging("Managing Complaints", dc);
+            try {
+                System.out.println("=== Manage Complaints ===");
+
+                PriorityQueue<Complaint> complaints = dc.getComplaints();
+                List<Complaint> complaintList = new ArrayList<>(complaints);
+
+                int pageSize = 5;
+                int currentPage = 1;
+                int totalPages = (int) Math.ceil((double) complaintList.size() / pageSize);
+
+                while (true) {
+                    displayComplaintsPage(complaintList, currentPage, pageSize);
+
+                    System.out.println("Page " + currentPage + " of " + totalPages);
+                    System.out.println("[1] Next page");
+                    System.out.println("[2] Previous page");
+                    System.out.println("[0] Select complaint");
+                    System.out.print("Your choice: ");
+                    int action = Integer.parseInt(reader.readLine());
+
+                    switch (action) {
+                        case 1:
+                            if (currentPage < totalPages) {
+                                currentPage++;
+                            }
+                            break;
+                        case 2:
+                            if (currentPage > 1) {
+                                currentPage--;
+                            }
+                            break;
+                        case 0:
+                            System.out.print("Enter complaint number to select: ");
+                            int complaintChoice = Integer.parseInt(reader.readLine());
+                            if (complaintChoice > 0 && complaintChoice <= complaintList.size()) {
+                                Complaint selectedComplaint = complaintList.get(complaintChoice - 1);
+                                System.out.println("You selected: " + selectedComplaint);
+                                System.out.println("Choose action:");
+                                System.out.println("[1] Mark as Done");
+                                System.out.println("[2] Mark as Rejected");
+                                int actionChoice = Integer.parseInt(reader.readLine());
+                                switch (actionChoice) {
+                                    case 1:
+                                        selectedComplaint.setStatus(Status.DONE);
+                                        selectedComplaint.getStudent().getNotifications().add(selectedComplaint);
+                                        System.out.println("Complaint marked as Done.");
+                                        break;
+                                    case 2:
+                                        selectedComplaint.setStatus(Status.REJECTED);
+                                        selectedComplaint.getAuthor().getNotifications().add(selectedComplaint);
+                                        System.out.println("Complaint marked as Rejected.");
+                                        break;
+                                    default:
+                                        System.out.println("Invalid choice.");
+                                }
+                            }
+                            break;
+                        default:
+                            System.out.println("Invalid choice.");
+                    }
+                }
+
+            } catch (IOException e) {
+                System.out.println("Error occurred while managing complaints.");
+            }
+        }
+
+        private void displayComplaintsPage(List<Complaint> complaints, int currentPage, int pageSize) {
+            int start = (currentPage - 1) * pageSize;
+            int end = Math.min(start + pageSize, complaints.size());
+
+            for (int i = start; i < end; i++) {
+                Complaint complaint = complaints.get(i);
+                System.out.println("[" + (i + 1) + "] " + complaint);
+            }
+        }
+
+    }
+
+    public static class KickStudent implements Command {
+        private DisciplinaryCommittee dc;
+        private BufferedReader reader;
+
+        public KickStudent(DisciplinaryCommittee committee, BufferedReader reader) {
+            this.dc = committee;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                System.out.println("=== Delete User ===");
+                Database db = Database.getInstance();
+                System.out.print("Enter the student's email (with or without '@kbtu.kz'): ");
+                String email = reader.readLine().trim();
+
+
+                if (!email.contains("@")) {
+                    email += "@kbtu.kz"; // Assuming the default domain is "@kbtu.kz"
+                }
+
+                System.out.println("You entered: " + email);
+                System.out.print("Are you sure you want to remove this student? (y/n): ");
+                String confirmation = reader.readLine().trim().toLowerCase();
+
+                if ("y".equals(confirmation)) {
+                    User student = db.findUserByEmail(email);
+
+                    if (student != null && student instanceof Student) {
+                        student.removePersonalData(dc);
+                        System.out.println("Student " + student.getFirstname() + " " + student.getLastname() + " has been removed.");
+                    } else {
+                        System.out.println("Student with email " + email + " not found.");
+                    }
+                } else {
+                    System.out.println("Operation canceled.");
+                }
+            } catch (IOException e) {
+                System.out.println("Error occurred while processing the request.");
+                e.printStackTrace();
+            }
+            logging("RemoveStudentData", dc);
+        }
+    }
+
+
+    public static class DeleteOrganization implements Command {
+        private DisciplinaryCommittee dc;
+        private BufferedReader reader;
+
+        public DeleteOrganization(DisciplinaryCommittee dc, BufferedReader reader) {
+            this.dc = dc;
+            this.reader = reader;
+        }
+
+
+        @Override
+        public void execute() {
+            try {
+                System.out.println("=== Delete Organization ===");
+                System.out.print("Enter the name of the organization: ");
+                String name = reader.readLine().trim();
+
+                Database db = Database.getInstance();
+                Organization org = db.findOrganization(name);
+
+                if (org != null) {
+                    Vector<Student> members = org.getMembers();
+                    for(Student m : members) {
+                        m.getNotifications().add(new Message(dc, "Organization you are joined with name: " + org.getName() + "now not exists" ));
+                        m.getJoinedOrganizations().remove(org);
+                    }
+                    org.getHead().setIsHead(null);
+                    db.getStudentOrganizations().remove(org);
+                    System.out.println("Organization " + name + " has been removed.");
+                } else {
+                    System.out.println("Organization with name " + name + " not found.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            logging("DeleteOrganization", dc);
+        }
+    }
 
 }
