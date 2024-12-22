@@ -1,44 +1,38 @@
 package Users;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Vector;
 import System.Message;
 import System.Notification;
-
 
 public class Employee extends User {
 
 	private int salary;
-	private Date dateHired;
+	private LocalDate dateHired;
 	private boolean onVacation;
-	private Date vacationStartDate;
-	private Date vacationEndDate;
+	private LocalDate vacationStartDate;
+	private LocalDate vacationEndDate;
+	private LocalDate lastVacationDate;
 	private int vacationCoolDown;
-	private Vector<Message> messages;
+	private List<Message> messages;
 
 	public Employee() {
+		initializeDefaults();
 	}
 
 	public Employee(String firstname, String lastname) {
 		super(firstname, lastname);
-		this.onVacation = false;
-		this.vacationEndDate = null;
-		this.vacationStartDate = null;
-		this.vacationCoolDown = 0;
-		this.messages = new Vector<>();
-		this.salary = 0;
+		initializeDefaults();
 	}
 
 	public Employee(String firstname, String lastname, String email) {
 		super(firstname, lastname, email);
-		this.onVacation = false;
-		this.vacationEndDate = null;
-		this.vacationStartDate = null;
-		this.vacationCoolDown = 0;
-		this.messages = new Vector<>();
-		this.salary = 0;
-		this.dateHired = new Date();
+		initializeDefaults();
+		this.dateHired = LocalDate.now();
 	}
 
 	public Employee(String firstname, String lastname, int salary) {
@@ -51,6 +45,17 @@ public class Employee extends User {
 		this.salary = salary;
 	}
 
+	private void initializeDefaults() {
+		this.onVacation = false;
+		this.vacationStartDate = null;
+		this.vacationEndDate = null;
+		this.vacationCoolDown = 0;
+		this.lastVacationDate = null;
+		this.messages = new ArrayList<>();
+		this.salary = 0;
+		this.dateHired = LocalDate.now();
+	}
+
 	public int getSalary() {
 		return salary;
 	}
@@ -59,11 +64,11 @@ public class Employee extends User {
 		this.salary = salary;
 	}
 
-	public Date getDateHired() {
+	public LocalDate getDateHired() {
 		return dateHired;
 	}
 
-	public void setDateHired(Date dateHired) {
+	public void setDateHired(LocalDate dateHired) {
 		this.dateHired = dateHired;
 	}
 
@@ -75,19 +80,28 @@ public class Employee extends User {
 		this.onVacation = onVacation;
 	}
 
-	public Date getVacationEndDate() {
-		return vacationEndDate;
-	}
-
-	public void setVacationEndDate(Date vacationEndDate) {
-		this.vacationEndDate = vacationEndDate;
-	}
-	public Date getVacationStartDate() {
+	public LocalDate getVacationStartDate() {
 		return vacationStartDate;
 	}
 
-	public void setVacationStartDate(Date vacationStartDate) {
+	public void setVacationStartDate(LocalDate vacationStartDate) {
 		this.vacationStartDate = vacationStartDate;
+	}
+
+	public LocalDate getVacationEndDate() {
+		return vacationEndDate;
+	}
+
+	public void setVacationEndDate(LocalDate vacationEndDate) {
+		this.vacationEndDate = vacationEndDate;
+	}
+
+	public LocalDate getLastVacationDate() {
+		return lastVacationDate;
+	}
+
+	public void setLastVacationDate(LocalDate lastVacationDate) {
+		this.lastVacationDate = lastVacationDate;
 	}
 
 	public int getVacationCoolDown() {
@@ -98,35 +112,31 @@ public class Employee extends User {
 		this.vacationCoolDown = vacationCoolDown;
 	}
 
-	public Vector<Message> getMessages() {
+	public List<Message> getMessages() {
 		return messages;
 	}
 
 	public void sendMessage(Employee employee, Message message) {
 		employee.getMessages().add(message);
-		Notification n = new Notification(this, "Your receive new message from " +  this.getEmail());
-		employee.getNotifications().add(message);
+		Notification notification = new Notification(this, "You received a new message from " + this.getEmail());
+		employee.getNotifications().add(notification);
 	}
 
-	public boolean getVacation(Date date) {
+	public boolean requestVacation(LocalDate requestDate) {
 		if (!onVacation) {
-			System.out.println("Vacation is available.");
-			return true;
-		} else if (date.after(vacationEndDate)) {
-			System.out.println("Vacation is available after " + vacationCoolDown + " days.");
+			if (lastVacationDate == null || ChronoUnit.DAYS.between(lastVacationDate, requestDate) >= vacationCoolDown) {
+				return true;
+			}
+			return false;
+		} else if (vacationEndDate != null && requestDate.isAfter(vacationEndDate)) {
 			return true;
 		}
-		System.out.println("Currently on vacation until " + vacationEndDate + "starting from "+ vacationStartDate);
 		return false;
-	}
-
-	public <T> T getUserType() {
-		return null;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(salary, dateHired, onVacation, vacationEndDate, messages, vacationCoolDown, vacationStartDate);
+		return Objects.hash(salary, dateHired, onVacation, vacationStartDate, vacationEndDate, lastVacationDate, vacationCoolDown, messages);
 	}
 
 	@Override
@@ -136,10 +146,11 @@ public class Employee extends User {
 		Employee employee = (Employee) obj;
 		return salary == employee.salary &&
 				onVacation == employee.onVacation &&
+				vacationCoolDown == employee.vacationCoolDown &&
 				Objects.equals(dateHired, employee.dateHired) &&
+				Objects.equals(vacationStartDate, employee.vacationStartDate) &&
 				Objects.equals(vacationEndDate, employee.vacationEndDate) &&
-				Objects.equals(messages, employee.messages)
-				&& Objects.equals(vacationCoolDown, employee.vacationCoolDown)
-				&& Objects.equals(vacationStartDate, employee.vacationStartDate);
+				Objects.equals(lastVacationDate, employee.lastVacationDate) &&
+				Objects.equals(messages, employee.messages);
 	}
 }
