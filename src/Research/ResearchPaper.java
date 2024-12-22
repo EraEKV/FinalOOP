@@ -46,6 +46,7 @@ public class ResearchPaper {
 
 
 
+
     public ResearchPaper(String name, int pages, ResearchJournal researchJournal, String DOI, Date date) {
         this.name = name;
         this.pages = pages;
@@ -96,6 +97,7 @@ public class ResearchPaper {
     public String getDOI() {
         return DOI;
     }
+
 
     public void setDOI(String DOI) {
         this.DOI = DOI;
@@ -191,4 +193,6 @@ public class ResearchPaper {
                 ", authors=" + authors +
                 '}';
     }
+
+
 }

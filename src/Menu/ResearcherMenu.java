@@ -7,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class ResearcherMenu {
     private final Map<Integer, Command> commands = new HashMap<>();
@@ -24,24 +23,8 @@ public class ResearcherMenu {
         commands.put(3, new Commands.CalculateHIndexCommand(researcher));
         commands.put(4, new Commands.CalculateCitationsCommand(researcher));
         commands.put(5, new Commands.PrintPapersCommand(researcher));
-        commands.put(6, new Commands.PublishPaperCommand(researcher));
+        commands.put(6, new PublishPaperCommand(researcher, reader));
         commands.put(7, new Commands.TopCitedResearcherCommand(Database.getInstance().getResearchers()));
-
-        System.out.print("Enter the journal name to subscribe: ");
-        try {
-            String journalName = reader.readLine().trim();
-            if (!journalName.isEmpty()) {
-                ResearchJournalsName journal = ResearchJournalsName.valueOf(journalName.toUpperCase()); // Преобразование строки в enum
-                commands.put(8, new Commands.SubscribeToJournalCommand(journal, researcher));
-            } else {
-                System.out.println("Journal name cannot be empty.");
-            }
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid journal name provided. Please use a valid journal name.");
-        } catch (IOException e) {
-            System.err.println("Error reading journal name: " + e.getMessage());
-        }
-
     }
 
     public void displayMenu() {
@@ -88,4 +71,80 @@ public class ResearcherMenu {
         System.out.println("[0] Exit");
         System.out.print("Enter your choice: ");
     }
+
+    private static class PublishPaperCommand implements Command {
+        private final Researcher researcher;
+        private final BufferedReader reader;
+
+        public PublishPaperCommand(Researcher researcher, BufferedReader reader) {
+            this.researcher = researcher;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                System.out.println("\nChoose a journal to publish your paper:");
+                System.out.println("[1] Times");
+                System.out.println("[2] Forbes");
+                System.out.println("[3] KBTU");
+                System.out.print("Enter your choice: ");
+
+                String input = reader.readLine().trim();
+                int choice;
+
+                try {
+                    choice = Integer.parseInt(input);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                    return;
+                }
+
+                ResearchJournalsName selectedJournalName;
+                switch (choice) {
+                    case 1:
+                        selectedJournalName = ResearchJournalsName.TIMES;
+                        break;
+                    case 2:
+                        selectedJournalName = ResearchJournalsName.FORBES;
+                        break;
+                    case 3:
+                        selectedJournalName = ResearchJournalsName.KBTU;
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please select a valid journal.");
+                        return;
+                }
+
+                ResearchJournal selectedJournal = null;
+
+                for (ResearchJournal journal : Database.getInstance().getResearchJournals()) {
+                    if (journal.getResearchJournalsName().equals(selectedJournalName)) {
+                        selectedJournal = journal;
+                        break;
+                    }
+                }
+
+                if (selectedJournal == null) {
+                    System.out.println("Journal not found");
+                    return;
+                }
+                ResearchPaper paper = null;
+                for (ResearchPaper p : researcher.getPapers()) {
+                    paper = p;
+                    break;
+                }
+
+                if (paper == null) {
+                    System.out.println("No papers found");
+                    return;
+                }
+                paper.setResearchJournal(selectedJournal);
+                System.out.println("Paper published in " + selectedJournal.getResearchJournalsName() + " successfully.");
+            } catch (IOException e) {
+                System.err.println("Error during publishing: " + e.getMessage());
+            }
+        }
+    }
+
 }
