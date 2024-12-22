@@ -26,6 +26,8 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 	private Vector<Journal> journals;
 	private HashMap<Course, Teacher> registeredCourses;
 	private Researcher isResearcher;
+	private DiplomaProject diplomaProject;
+
 
 	private Transcript transcript;
 	private Attestation attestation;
@@ -277,6 +279,30 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		}
 	}
 
+	public DiplomaProject getDiplomaProject() {
+		return diplomaProject;
+	}
+
+	public void setDiplomaProject(DiplomaProject diplomaProject) {
+		this.diplomaProject = diplomaProject;
+	}
+
+	public void workOnDiplomaProject() {
+		if (diplomaProject != null) {
+			System.out.println(getFirstname() + " is working on diploma project: " + diplomaProject.getTopic());
+		} else {
+			System.out.println(getFirstname() + " has no diploma project assigned.");
+		}
+	}
+
+	public void submitDiplomaProject() {
+		if (diplomaProject != null) {
+			diplomaProject.submit();
+			System.out.println("Diploma project submitted successfully!");
+		} else {
+			System.out.println("No diploma project to submit.");
+		}
+	}
 
 
 
