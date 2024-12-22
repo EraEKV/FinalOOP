@@ -1,13 +1,7 @@
 package Users;
 
-import Research.CanResearch;
-import Research.ResearchJournal;
-import Research.ResearchPaper;
 import Enums.Faculty;
 import Enums.Speciality;
-import Research.Researcher;
-
-import java.util.List;
 import java.util.Vector;
 
 public class GradStudent extends Student  {
@@ -15,14 +9,11 @@ public class GradStudent extends Student  {
 	private Vector<String> publications;
 	private Teacher teacher;
 
-	List<ResearchPaper> papers;
-
 	{
 		super.beResearcher();
 	}
 
 	public GradStudent() {
-
 	}
 
 	public GradStudent(String id) {

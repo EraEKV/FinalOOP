@@ -19,15 +19,6 @@ public class ResearchJournal implements Serializable {
     public ResearchJournal(String name) {
         this.name = name;
     }
-    public ResearchJournal(String name, Vector<Subscriber> subscribers) {
-        this.name = name;
-        this.subscribers = subscribers;
-    }
-    public ResearchJournal(String name, Vector<Subscriber> subscribers, Vector<ResearchPaper> researchPapers) {
-        this.name = name;
-        this.subscribers = subscribers;
-        this.researchPapers = researchPapers;
-    }
 
     public String getName() {
         return name;
