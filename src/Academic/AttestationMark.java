@@ -6,8 +6,19 @@ public class AttestationMark {
 	private double firstAtt;
 	private double secondAtt;
 	private double finalExam;
-	private int numericValue;
-	private Mark fullAtt;
+	private String fullAtt;
+
+	private static final String[] GRADE_SCALE = {"D", "D+", "C-", "C", "C+", "B-", "B", "B+", "A-", "A"};
+
+
+//	Constructors
+
+	public AttestationMark() {
+		this.firstAtt = 0;
+		this.secondAtt = 0;
+		this.finalExam = 0;
+		calculateFullAtt();
+	}
 
 	public AttestationMark(double firstAtt, double secondAtt, double finalExam) {
 		this.firstAtt = firstAtt;
@@ -15,6 +26,8 @@ public class AttestationMark {
 		this.finalExam = finalExam;
 		calculateFullAtt();
 	}
+
+
 
 	public double getFirstAtt() {
 		return firstAtt;
@@ -48,60 +61,20 @@ public class AttestationMark {
 	}
 
 
-	public Mark getFullAtt() {
+	public String getFullAtt() {
 		return fullAtt;
 	}
 
-	public int getNumericValue() {
-		return numericValue;
-	}
-
-	public void setNumericValue(int numericValue) {
-		this.numericValue = numericValue;
-	}
-
-	public void setFullAtt(Mark fullAtt) {
+	public void setFullAtt(String fullAtt) {
 		this.fullAtt = fullAtt;
 	}
 
 	private void calculateFullAtt() {
-		int total = (int) getTotal();
-//		Mark marks[] = {Mark.F, Mark.D, Mark.D_PLUS, Mark.C_MINUS, Mark.C, Mark.C_PLUS, Mark.B_MINUS, Mark.B, Mark.B_PLUS, Mark.A_MINUS, Mark.A};
-//
-
-//		if (total < 40) {
-//			fullAtt =  marks[0];
-//			return;
-//		}
-//
-//		int index = Math.min((int) ((total - 40) / 5) + 1, marks.length - 1);
-//
-//		fullAtt =  marks[index];
-
-		if (total >= 95) {
-			fullAtt = Mark.A;
-		} else if (total >= 90) {
-			fullAtt = Mark.A_MINUS;
-		} else if (total >= 85) {
-			fullAtt = Mark.B_PLUS;
-		} else if (total >= 80) {
-			fullAtt = Mark.B;
-		} else if (total >= 75) {
-			fullAtt = Mark.B_MINUS;
-		} else if (total >= 70) {
-			fullAtt = Mark.C_PLUS;
-		} else if (total >= 65) {
-			fullAtt = Mark.C;
-		} else if (total >= 60) {
-			fullAtt = Mark.C_MINUS;
-		} else if (total >= 55) {
-			fullAtt = Mark.D_PLUS;
-		} else if(total >= 50){
-			fullAtt = Mark.D;
-		}else {
-			fullAtt = Mark.F;
-		}
+		double total = getTotal();
+		int index = Math.min((int) Math.floor((total / 10) - 5), GRADE_SCALE.length - 1);
+		fullAtt = index >= 0 ? GRADE_SCALE[index] : "F";
 	}
+
 
 	@Override
 	public String toString() {

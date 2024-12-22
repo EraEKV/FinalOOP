@@ -51,13 +51,6 @@ public class Attestation {
 		return semesterPeriod;
 	}
 
-	public void updateAttestation(Course course, AttestationMark mark) {
-		if (course == null || mark == null) {
-			throw new IllegalArgumentException("Course and mark cannot be null");
-		}
-		info.put(course, mark);
-	}
-
 	public void calculateAverageMark() {
 		double totalMarks = 0;
 		int count = info.size();
@@ -74,6 +67,8 @@ public class Attestation {
 		double average = totalMarks / count;
 		System.out.println("Average Mark for " + student.getId() + " is  : " + average);
 	}
+
+
 
 
 	@Override
