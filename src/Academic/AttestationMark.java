@@ -70,19 +70,23 @@ public class AttestationMark {
 	}
 
 	private void calculateFullAtt() {
-		double total = getTotal();
-		int index = Math.min((int) Math.floor((total / 10) - 5), GRADE_SCALE.length - 1);
-		fullAtt = index >= 0 ? GRADE_SCALE[index] : "F";
+		if (firstAtt < 30 || secondAtt < 30 || finalExam < 10) {
+			fullAtt = "F";
+		} else {
+			double total = getTotal();
+			int index = Math.min((int) Math.floor((total / 10) - 5), GRADE_SCALE.length - 1);
+			fullAtt = index >= 0 ? GRADE_SCALE[index] : "F";
+		}
 	}
 
 
 	@Override
 	public String toString() {
-		return "AttestationMark{" +
+		return "AttestationMark[" +
 				"firstAtt=" + firstAtt +
 				", secondAtt=" + secondAtt +
 				", finalExam=" + finalExam +
 				", fullAtt=" + fullAtt +
-				'}';
+				']';
 	}
 }
