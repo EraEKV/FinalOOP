@@ -9,7 +9,8 @@ import java.util.Objects;
 import java.util.Vector;
 import java.util.Map;
 import System.CustomPair;
-
+import java.util.Scanner;
+import java.util.HashMap;
 
 
 public class Transcript implements Serializable {
@@ -94,20 +95,61 @@ public class Transcript implements Serializable {
 		this.owner = owner;
 	}
 
-	public double calculateSemesterGPA() {
-		return 0.0;
+	public double calculateGrade(int percentage) {
+		if (percentage >= 95) {
+			return 4.0;
+		} else if (percentage >= 90) {
+			return 3.67;
+		} else if (percentage >= 85) {
+			return 3.33;
+		} else if (percentage >= 80) {
+			return 3.0;
+		} else if (percentage >= 75) {
+			return 2.67;
+		} else if (percentage >= 70) {
+			return 2.33;
+		} else if (percentage >= 65) {
+			return 2.0;
+		} else if (percentage >= 60) {
+			return 1.67;
+		} else if (percentage >= 55) {
+			return 1.33;
+		} else if (percentage >= 50) {
+			return 1.0;
+		} else {
+			return 0.0;
+		}
 	}
 
-	public double calculateTotalGPA() {
-		return 0.0;
-	}
+	public Map<String, Object> calculateGPA() {
+		Scanner scanner = new Scanner(System.in);
 
-	public int calculateTotalCreditsCounted() {
-		return 0;
-	}
+		System.out.print("Enter the number of courses: ");
+		int numCourses = scanner.nextInt();
 
-	public int calculateTotalCreditsTook() {
-		return 0;
+		double totalQualityPoints = 0;
+		int totalCredits = 0;
+
+		for (int i = 1; i <= numCourses; i++) {
+			System.out.print("Enter the number of credits for course " + i + ": ");
+			int credits = scanner.nextInt();
+
+			System.out.print("Enter the grade percentage for course " + i + ": ");
+			int percentage = scanner.nextInt();
+
+			double gradePoint = calculateGrade(percentage);
+			totalQualityPoints += gradePoint * credits;
+			totalCredits += credits;
+		}
+
+		double gpa = totalCredits == 0 ? 0.0 : totalQualityPoints / totalCredits;
+
+		Map<String, Object> result = new HashMap<>();
+		result.put("GPA", gpa);
+		result.put("Total Credits", totalCredits);
+		result.put("Number of Courses", numCourses);
+
+		return result;
 	}
 
 	@Override
