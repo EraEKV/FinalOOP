@@ -1,7 +1,10 @@
 package Research;
 
 
-public  interface CanBeResearcher {
-	public void beReseacrher(Researcher researcher) ;
+import Enums.Faculty;
+
+public  interface CanBeResearcher extends Subscriber {
+	public void beResearcher() ;
+	public Faculty getFaculty();
 }
 

@@ -214,8 +214,8 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 
 	//researcher realization
 	@Override
-	public void beReseacrher(Researcher researcher) {
-		this.isResearcher = researcher;
+	public void beResearcher() {
+		this.isResearcher = new Researcher(this);;
 	}
 
 	public Researcher getIsResearcher() {

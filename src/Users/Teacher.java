@@ -89,11 +89,6 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 		this.subjectName = subjectName;
 	}
 
-
-	public void setIsResearcher(Researcher isResearcher) {
-		this.isResearcher = isResearcher;
-	}
-
 	public void setFaculty(Faculty faculty) {
 		this.faculty = faculty;
 	}
@@ -124,9 +119,9 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 	}
 
 	@Override
-	public void beReseacrher(Researcher researcher) {
+	public void beResearcher() {
 		if(!teacherType.equals(TeacherType.PROFESSOR)) {
-			isResearcher = researcher;
+			isResearcher = new Researcher(this);
 		}
 	}
 

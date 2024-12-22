@@ -2,37 +2,22 @@ package Research;
 
 import Database.Database;
 import Enums.Faculty;
-
 import java.io.Serializable;
 import java.util.*;
 
-public class Researcher implements CanResearch, Serializable, Subscriber {
-    private String pseudonym;
-    private int citations;
+public class Researcher implements CanResearch, Serializable {
+    private int citationsCount;
     private List<ResearchPaper> papers = new ArrayList<>();
-    private Faculty faculty;
+    private CanBeResearcher academicContributor;
 
     public Researcher() {}
 
-    public Researcher(String pseudonym, Faculty faculty) {
-        this.pseudonym = pseudonym;
-        this.faculty = faculty;
+    public Researcher(CanBeResearcher academicContributor) {
+        this.academicContributor = academicContributor;
     }
 
-    public Faculty getFaculty() {
-        return faculty;
-    }
-
-    public String getPseudonym() {
-        return pseudonym;
-    }
-
-    public void setPseudonym(String pseudonym) {
-        this.pseudonym = pseudonym;
-    }
-
-    public int getCitations() {
-        return citations;
+    public int getCitationsCount() {
+        return citationsCount;
     }
 
     public List<ResearchPaper> getPapers() {
@@ -58,6 +43,9 @@ public class Researcher implements CanResearch, Serializable, Subscriber {
         return papers.stream().mapToInt(paper -> paper.getCitations().size()).sum();
     }
 
+    public CanBeResearcher getAcademicContributor() {
+        return academicContributor;
+    }
 
     @Override
     public void printPapers(Comparator c) {
@@ -67,9 +55,9 @@ public class Researcher implements CanResearch, Serializable, Subscriber {
     }
 
     public void updateCitations() {
-        citations = 0;
+        citationsCount = 0;
         for (ResearchPaper paper : papers) {
-            citations += paper.getCitations().size();
+            citationsCount += paper.getCitations().size();
         }
     }
 
@@ -91,7 +79,7 @@ public class Researcher implements CanResearch, Serializable, Subscriber {
 
         for (ResearchJournal journal : Database.getInstance().getResearchJournals()) {
             for (ResearchPaper paper : journal.getResearchPapers()) {
-                if (paper.getMainAuthor().getFaculty().equals(faculty)) {
+                if (paper.getMainAuthor().getAcademicContributor().getFaculty().equals(faculty)) {
                     int paperCitations = paper.getCitations().size();
                     if (paperCitations > maxCitations) {
                         maxCitations = paperCitations;
@@ -132,14 +120,8 @@ public class Researcher implements CanResearch, Serializable, Subscriber {
     @Override
     public String toString() {
         return "Researcher{" +
-                "pseudonym='" + pseudonym + '\'' +
-                ", citations=" + citations +
+                ", citationsCount=" + citationsCount +
                 ", papers=" + papers.size() +
                 '}';
-    }
-
-    @Override
-    public void update() {
-
     }
 }

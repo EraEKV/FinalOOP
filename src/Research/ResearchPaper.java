@@ -3,6 +3,8 @@ package Research;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
+
+import Database.Database;
 import Enums.CitationFormat;
 
 public class ResearchPaper {
@@ -20,10 +22,26 @@ public class ResearchPaper {
     }
     public ResearchPaper() {
     }
-    public ResearchPaper(String name, String journalname){
+
+    public ResearchPaper(String name, String journalName) {
         this.name = name;
-        ResearchJournal j = new ResearchJournal(journalname);
-        this.researchJournal = j;
+
+        Vector<ResearchJournal> journals = Database.getInstance().getResearchJournals();
+
+        ResearchJournal foundJournal = null;
+
+        for (ResearchJournal journal : journals) {
+            if (journal.getName().equals(journalName)) {
+                foundJournal = journal;
+                break;
+            }
+        }
+
+        if (foundJournal != null) {
+            this.researchJournal = foundJournal;
+        } else {
+            throw new IllegalArgumentException("Journal not found in the database: " + journalName);
+        }
     }
 
 

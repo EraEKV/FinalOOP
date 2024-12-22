@@ -17,6 +17,10 @@ public class GradStudent extends Student  {
 
 	List<ResearchPaper> papers;
 
+	{
+		super.beResearcher();
+	}
+
 	public GradStudent() {
 
 	}
@@ -29,7 +33,6 @@ public class GradStudent extends Student  {
 		super(id, firstname, lastname, faculty, speciality);
 		this.publications = new Vector<>();
 		this.teacher = teacher;
-//		beReseacrher(new Researcher(firstname + lastname));
 	}
 
 	public Teacher getTeacher() {

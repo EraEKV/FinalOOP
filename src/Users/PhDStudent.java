@@ -4,7 +4,6 @@ import Enums.Faculty;
 
 public class PhDStudent extends GradStudent {
 
-
 	public PhDStudent(String id) {
 		super(id);
 	}
