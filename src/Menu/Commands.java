@@ -2022,7 +2022,7 @@ public class Commands {
             try {
                 System.out.println("\nAvailable Research Journals:");
                 for (int i = 0; i < journals.size(); i++) {
-                    System.out.println("[" + (i + 1) + "] " + journals.get(i).getName());
+                    System.out.println("[" + (i + 1) + "] " + journals.get(i).getResearchJournalsName());
                 }
                 System.out.print("Enter the number of the journal you want to subscribe to: ");
 
@@ -2043,7 +2043,7 @@ public class Commands {
 
                 ResearchJournal selectedJournal = journals.get(choice);
                 selectedJournal.subscribe(user);
-                System.out.println("Successfully subscribed to " + selectedJournal.getName() + ".");
+                System.out.println("Successfully subscribed to " + selectedJournal.getResearchJournalsName() + ".");
             } catch (IOException e) {
                 System.out.println("An error occurred while reading input. Please try again.");
             } catch (Exception e) {
@@ -2385,16 +2385,33 @@ public class Commands {
         public void execute() {
             try {
                 System.out.print("Enter the title of the paper: ");
-                String title = reader.readLine();
-                System.out.print("Enter the journal name: ");
-                String journal = reader.readLine();
+                String title = reader.readLine().trim();
 
-                ResearchPaper paper = new ResearchPaper(title, journal);
-                researcher.getPapers().add(paper);
-                System.out.println("Paper added successfully.");
+                if (title.isEmpty()) {
+                    System.out.println("The title of the paper cannot be empty.");
+                    return;
+                }
+
+                System.out.print("Enter the journal name: ");
+                String journal = reader.readLine().trim();
+
+                if (journal.isEmpty()) {
+                    System.out.println("The journal name cannot be empty.");
+                    return;
+                }
+
+                try {
+                    ResearchJournalsName journalName = ResearchJournalsName.valueOf(journal.toUpperCase());
+                    ResearchPaper paper = new ResearchPaper(title, journalName);
+                    researcher.getPapers().add(paper);
+                    System.out.println("Paper added successfully.");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid journal name provided. Please use a valid journal name.");
+                }
             } catch (IOException e) {
-                System.out.println("An error occurred while adding the paper.");
+                System.out.println("An error occurred while adding the paper: " + e.getMessage());
             }
+
         }
     }
 
@@ -2445,7 +2462,7 @@ public class Commands {
         private final ResearchJournal journal;
         private final Researcher researcher;
 
-        public SubscribeToJournalCommand(String journalName, Researcher researcher) {
+        public SubscribeToJournalCommand(ResearchJournalsName journalName, Researcher researcher) {
             if (!isJournalInDatabase(journalName)) {
                 throw new IllegalArgumentException("Journal '" + journalName + "' does not exist in the database.");
             }
@@ -2453,20 +2470,20 @@ public class Commands {
             this.researcher = researcher;
         }
 
-        private static boolean isJournalInDatabase(String journalName) {
+        private static boolean isJournalInDatabase(ResearchJournalsName journalName) {
             Database database = Database.getInstance();
             for (ResearchJournal dbJournal : database.getResearchJournals()) {
-                if (dbJournal.getName().equalsIgnoreCase(journalName)) {
+                if (dbJournal.getResearchJournalsName() == (journalName)) {
                     return true;
                 }
             }
             return false;
         }
 
-        private ResearchJournal findJournalByName(String journalName) {
+        private ResearchJournal findJournalByName(ResearchJournalsName journalName) {
             Database database = Database.getInstance();
             for (ResearchJournal dbJournal : database.getResearchJournals()) {
-                if (dbJournal.getName().equalsIgnoreCase(journalName)) {
+                if (dbJournal.getResearchJournalsName() == (journalName)) {
                     return dbJournal;
                 }
             }
@@ -2477,7 +2494,7 @@ public class Commands {
         public void execute() {
             journal.getSubscribers().add(researcher.getAcademicContributor());
 
-            System.out.println(researcher.getAcademicContributor() + " is now subscribed to the journal: " + journal.getName());
+            System.out.println(researcher.getAcademicContributor() + " is now subscribed to the journal: " + journal.getResearchJournalsName());
         }
     }
 

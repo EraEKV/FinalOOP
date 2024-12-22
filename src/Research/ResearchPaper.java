@@ -23,7 +23,7 @@ public class ResearchPaper {
     public ResearchPaper() {
     }
 
-    public ResearchPaper(String name, String journalName) {
+    public ResearchPaper(String name, ResearchJournalsName researchJournalsName) {
         this.name = name;
 
         Vector<ResearchJournal> journals = Database.getInstance().getResearchJournals();
@@ -31,7 +31,7 @@ public class ResearchPaper {
         ResearchJournal foundJournal = null;
 
         for (ResearchJournal journal : journals) {
-            if (journal.getName().equals(journalName)) {
+            if (journal.getResearchJournalsName().equals(researchJournalsName)) {
                 foundJournal = journal;
                 break;
             }
@@ -40,7 +40,7 @@ public class ResearchPaper {
         if (foundJournal != null) {
             this.researchJournal = foundJournal;
         } else {
-            throw new IllegalArgumentException("Journal not found in the database: " + journalName);
+            throw new IllegalArgumentException("Journal not found in the database: " + researchJournalsName);
         }
     }
 
@@ -137,7 +137,7 @@ public class ResearchPaper {
                     if (i < authors.size() - 1) citation.append(", ");
                 }
                 citation.append("\n")
-                        .append("Journal: ").append(researchJournal.getName()).append("\n")
+                        .append("Journal: ").append(researchJournal.getResearchJournalsName() + "\n" )
                         .append("DOI: ").append(DOI).append("\n")
                         .append("Date: ").append(date.toString()).append("\n")
                         .append("Pages: ").append(pages);
@@ -152,7 +152,7 @@ public class ResearchPaper {
                 }
                 citation.append("},\n")
                         .append("  title = {").append(name).append("},\n")
-                        .append("  journal = {").append(researchJournal.getName()).append("},\n")
+                        .append("  journal = {").append(researchJournal.getResearchJournalsName()).append("},\n")
                         .append("  year = {").append(date.getYear() + 1900).append("},\n")
                         .append("  pages = {").append(pages).append("},\n")
                         .append("  doi = {").append(DOI).append("}\n")

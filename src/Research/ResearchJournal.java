@@ -1,83 +1,75 @@
 package Research;
+import Research.ResearchJournalsName;
+import Research.ResearchPaper;
+import Research.Subscriber;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
-import java.util.Vector;
-
+import java.util.Set;
 
 public class ResearchJournal implements Serializable {
-    private String name;
-    private Vector<Subscriber> subscribers;
-    private Vector<ResearchPaper> researchPapers;
-    {
-        subscribers = new Vector<>();
-        researchPapers = new Vector<>();
-    }
-    public ResearchJournal() {
+    private static final long serialVersionUID = 1L;
 
-    }
-    public ResearchJournal(String name) {
-        this.name = name;
+    private ResearchJournalsName researchJournalsName;
+    private final Set<Subscriber> subscribers = new HashSet<>();
+    private final Set<ResearchPaper> researchPapers = new HashSet<>();
+
+    public ResearchJournal() {}
+
+    public ResearchJournal(ResearchJournalsName researchJournalsName) {
+        this.researchJournalsName = researchJournalsName;
     }
 
-    public String getName() {
-        return name;
+    public ResearchJournalsName getResearchJournalsName() {
+        return researchJournalsName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setResearchJournalsName(ResearchJournalsName name) {
+        this.researchJournalsName = name;
     }
 
-    public Vector<Subscriber> getSubscribers() {
+    public Set<Subscriber> getSubscribers() {
         return subscribers;
     }
 
-    public void setSubscribers(Vector<Subscriber> subscribers) {
-        this.subscribers = subscribers;
-    }
-
-    public Vector<ResearchPaper> getResearchPapers() {
+    public Set<ResearchPaper> getResearchPapers() {
         return researchPapers;
     }
 
-    public void setResearchPapers(Vector<ResearchPaper> researchPapers) {
-        this.researchPapers = researchPapers;
-    }
-
-    public void subscribe(Subscriber s) {
-        if (s != null && !subscribers.contains(s)) {
-            subscribers.add(s);
+    public void subscribe(Subscriber subscriber) {
+        if (subscriber != null) {
+            subscribers.add(subscriber);
         }
     }
 
-    public void unsubscribe(Subscriber s) {
-        subscribers.remove(s);
+    public void unsubscribe(Subscriber subscriber) {
+        subscribers.remove(subscriber);
     }
 
     public void notifySubscribers() {
-        for (Subscriber subscriber : subscribers) {
-            subscriber.update();
-        }
+        subscribers.forEach(Subscriber::update);
     }
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResearchJournal that = (ResearchJournal) o;
-        return Objects.equals(name, that.name) && Objects.equals(subscribers, that.subscribers) && Objects.equals(researchPapers, that.researchPapers);
+        return Objects.equals(researchJournalsName, that.researchJournalsName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, subscribers, researchPapers);
+        return Objects.hash(researchJournalsName);
     }
 
     @Override
     public String toString() {
         return "ResearchJournal{" +
-                "name='" + name + '\'' +
-                ", subscribers=" + subscribers +
-                ", researchPapers=" + researchPapers +
+                "researchJournalsName=" + researchJournalsName +
+                ", subscribers=" + subscribers.size() +
+                ", researchPapers=" + researchPapers.size() +
                 '}';
     }
 }
