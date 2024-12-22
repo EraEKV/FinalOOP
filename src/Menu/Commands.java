@@ -14,6 +14,7 @@ import System.UniversitySystemMediator;
 import Research.*;
 import System.Notification;
 import System.Complaint;
+import System.Invite;
 
 import java.io.BufferedReader;
 import java.io.*;
@@ -219,7 +220,9 @@ public class Commands {
                     System.out.println("Choose what you want to view:");
                     System.out.println("[1] Messages");
                     System.out.println("[2] Complaints");
-                    System.out.println("[3] Invites");
+                    if(user instanceof Student) {
+                        System.out.println("[3] Invites");
+                    }
                     System.out.println("[4] News");
                     System.out.println("[0] Exit");
 
@@ -230,7 +233,7 @@ public class Commands {
                     switch (choice) {
                         case 1 -> viewNotifications("Message");
                         case 2 -> viewNotifications("Complaint");
-                        case 3 -> viewNotifications("Invite");
+                        case 3 -> viewInvites();
                         case 4 -> viewNews();
                         case 0 -> {
                             return;
@@ -277,6 +280,103 @@ public class Commands {
                 } else {
                     System.out.println("Invalid choice or no more pages.");
                 }
+            }
+        }
+
+        private void viewInvites() throws IOException {
+            Student student = null;
+            if(user instanceof Student) {
+                student = (Student) user;
+            } else {
+                System.out.println("You are not student");
+                return;
+            }
+            try {
+                Vector<Invite> invites = student.getNotifications().stream()
+                        .filter(notification -> notification instanceof Invite)
+                        .map(notification -> (Invite) notification)
+                        .collect(Collectors.toCollection(Vector::new));
+
+                if (invites.isEmpty()) {
+                    System.out.println("You have no invites.");
+                    return;
+                }
+
+                int pageSize = 5;
+                int currentPage = 1;
+                int totalPages = (int) Math.ceil((double) invites.size() / pageSize);
+
+                while (true) {
+                    displayInvitesPage(invites, currentPage, pageSize);
+
+                    System.out.println("Page " + currentPage + " of " + totalPages);
+                    System.out.println("[1] Next page");
+                    System.out.println("[2] Previous page");
+                    System.out.println("[0] Select invite");
+                    System.out.print("Your choice: ");
+                    int action = Integer.parseInt(reader.readLine());
+
+                    switch (action) {
+                        case 1:
+                            if (currentPage < totalPages) {
+                                currentPage++;
+                            } else {
+                                System.out.println("You are on the last page.");
+                            }
+                            break;
+                        case 2:
+                            if (currentPage > 1) {
+                                currentPage--;
+                            } else {
+                                System.out.println("You are on the first page.");
+                            }
+                            break;
+                        case 0:
+                            System.out.print("Enter invite number to select: ");
+                            int inviteChoice = Integer.parseInt(reader.readLine());
+                            int inviteIndex = (currentPage - 1) * pageSize + inviteChoice - 1;
+
+                            if (inviteIndex >= 0 && inviteIndex < invites.size()) {
+                                processInvite(invites.get(inviteIndex), student);
+                            } else {
+                                System.out.println("Invalid choice.");
+                            }
+                            return;
+                        default:
+                            System.out.println("Invalid choice.");
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Error occurred while viewing invites.");
+                e.printStackTrace();
+            }
+        }
+
+        private void displayInvitesPage(List<Invite> invites, int currentPage, int pageSize) {
+            int start = (currentPage - 1) * pageSize;
+            int end = Math.min(start + pageSize, invites.size());
+
+            for (int i = start; i < end; i++) {
+                Invite invite = invites.get(i);
+                System.out.println("[" + (i - start + 1) + "] From: " + invite.getAuthor().getFirstname()
+                        + " (" + invite.getOrg().getName() + ")");
+                System.out.println("    Message: " + invite.getText());
+            }
+        }
+
+        private void processInvite(Invite invite, Student student) throws IOException {
+            System.out.println("You selected an invite from: " + invite.getOrg().getName());
+            System.out.print("Do you accept this invite? (y/n): ");
+            String confirmation = reader.readLine().trim().toLowerCase();
+
+            if ("y".equals(confirmation)) {
+                Organization org = invite.getOrg();
+                student.joinOrganization(org);
+                student.getNotifications().remove(invite);
+            } else if ("n".equals(confirmation)) {
+                System.out.println("You declined the invite.");
+            } else {
+                System.out.println("Invalid input. Returning to the main menu.");
             }
         }
 
@@ -332,6 +432,7 @@ public class Commands {
 
 
     }
+
 
 
 
@@ -583,8 +684,13 @@ public class Commands {
                     System.out.println("\n=== Manage Organizations ===");
                     System.out.println("[1] Create Organization");
                     System.out.println("[2] Join Organization");
-                    System.out.println("[3] Leave Organization");
-                    System.out.println("[4] Delete Organization");
+                    if(student.getJoinedOrganizations() != null || !student.getJoinedOrganizations().isEmpty()) {
+                        System.out.println("[3] Leave Organization");
+                    }
+                    if(student.getIsHead() != null) {
+                        System.out.println("[4] Delete Organization");
+                        System.out.println("[5] Update slogan");
+                    }
                     System.out.println("[0] Back to Main Menu");
                     System.out.print("Enter your choice: ");
                     int choice = Integer.parseInt(reader.readLine());
@@ -593,13 +699,14 @@ public class Commands {
                         case 1 -> {
                             System.out.print("Enter the name of the new organization: ");
                             String name = reader.readLine();
-                            organizations.add(new Organization(name, student));
+                            student.createOrganization(name);
+
                             System.out.println("Organization created successfully!");
                         }
                         case 2 -> {
                             System.out.println("Select an organization to join:");
                             for (int i = 0; i < organizations.size(); i++) {
-                                System.out.println((i + 1) + ". " + organizations.get(i).getName());
+                                System.out.println("[" + (i + 1) + "] " + organizations.get(i).getName());
                             }
                             int orgIndex = Integer.parseInt(reader.readLine()) - 1;
 
@@ -610,9 +717,10 @@ public class Commands {
                             student.joinOrganization(organizations.get(orgIndex));
                         }
                         case 3 -> {
+                            organizations = student.getJoinedOrganizations();
                             System.out.println("Select an organization to leave:");
                             for (int i = 0; i < organizations.size(); i++) {
-                                System.out.println((i + 1) + ". " + organizations.get(i).getName());
+                                System.out.println("[" + (i + 1) + "] " + organizations.get(i).getName());
                             }
                             int orgIndex = Integer.parseInt(reader.readLine()) - 1;
 
@@ -621,6 +729,26 @@ public class Commands {
                                 continue;
                             }
                             student.leaveOrganization(organizations.get(orgIndex));
+                        }
+                        case 4 -> {
+                            Organization org = student.getIsHead();
+                            if(org == null) {
+                                System.out.println("You are not the head of any organization.");
+                            } else {
+                                UniversitySystemMediator.deleteOrganization(org.getName());
+                            }
+                        }
+                        case 5 -> {
+                            Organization org = student.getIsHead();
+                            if(org == null) {
+                                System.out.println("You are not the head of any organization.");
+                            } else {
+                                System.out.println("Old slogan is: " + org.getSlogan());
+                                System.out.println("Enter the new slogan:");
+                                String newSlogan = reader.readLine().trim();
+                                org.setSlogan(newSlogan);
+                                System.out.println("New slogan updated successfully!");
+                            }
                         }
                         case 0 -> {
                             return;
@@ -757,6 +885,8 @@ public class Commands {
                     Teacher teacher = entry.getValue();
 
                     course.addStudentToTeacher(teacher, student);
+                    student.getTranscript().getTranscriptData().put(course, 0.0);
+                    student.getAttestation().getInfo().put(course, new AttestationMark());
                 }
 
 
@@ -782,6 +912,66 @@ public class Commands {
             }
         }
     }
+
+
+
+    public static class InviteCommand implements Command {
+        private Student student;
+        private BufferedReader reader;
+
+        public InviteCommand(Student student, BufferedReader reader) {
+            this.student = student;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                Organization org = student.getIsHead();
+                if (org == null) {
+                    System.out.println("You are not the head of any organization.");
+                    return;
+                }
+
+                System.out.println("Organization: " + org.getName());
+                String email = "";
+                User invitee = null;
+                while (!email.equals("0")) {
+                    System.out.print("Enter the email of the student to invite (o Exit): ");
+                    email = reader.readLine().trim();
+
+                    if (!email.contains("@")) {
+                        email += "@kbtu.kz";
+                    }
+                    invitee = Database.getInstance().findUserByEmail(email);
+                    if (invitee == null) {
+                        System.out.println("No student found with email: " + email);
+                        return;
+                    } else if (!(invitee instanceof Student)) {
+                        System.out.println("That person is not a student.");
+                    }
+                }
+
+                System.out.println("You are inviting: " + invitee.getFirstname() + " " + invitee.getLastname());
+
+                System.out.print("Are you sure you want to send an invite? (y/n): ");
+                String confirmation = reader.readLine().trim().toLowerCase();
+
+                if ("y".equals(confirmation)) {
+                    UniversitySystemMediator.sendInvite(student, (Student) invitee, null, org);
+                } else {
+                    System.out.println("Invite canceled.");
+                }
+            } catch (IOException e) {
+                System.out.println("Error occurred while sending the invite.");
+                e.printStackTrace();
+            }
+
+            logging("InviteToOrganization", student);
+        }
+    }
+
+
 
 
 
@@ -1490,7 +1680,7 @@ public class Commands {
                 return;
             }
 
-            HashMap<Course, Double> transcriptMarks = transcript.getTranscript();
+            HashMap<Course, Double> transcriptMarks = transcript.getTranscriptData();
 
             if (!transcriptMarks.containsKey(course)) {
                 System.out.println("Student does not have a mark for this course.");
@@ -2999,21 +3189,8 @@ public class Commands {
                 System.out.print("Enter the name of the organization: ");
                 String name = reader.readLine().trim();
 
-                Database db = Database.getInstance();
-                Organization org = db.findOrganization(name);
+                UniversitySystemMediator.deleteOrganization(name);
 
-                if (org != null) {
-                    Vector<Student> members = org.getMembers();
-                    for(Student m : members) {
-                        m.getNotifications().add(new Message(dc, "Organization you are joined with name: " + org.getName() + "now not exists" ));
-                        m.getJoinedOrganizations().remove(org);
-                    }
-                    org.getHead().setIsHead(null);
-                    db.getStudentOrganizations().remove(org);
-                    System.out.println("Organization " + name + " has been removed.");
-                } else {
-                    System.out.println("Organization with name " + name + " not found.");
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

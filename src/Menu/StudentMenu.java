@@ -25,11 +25,11 @@ class StudentMenu {
         commands.put(8, new Commands.SubscribeResearchJournalCommand(student, reader));
         commands.put(9, new Commands.ChangePasswordCommand(student, reader));
         commands.put(10, new Commands.ViewNotificationsCommand(student, reader));
-        try {
-            Researcher researcher = student.getIsResearcher();
-            commands.put(11, new Commands.ChangeToResearcherMenu(researcher, reader));
-        } catch (NotAResearcherException e) {
-//            ...
+        Researcher researcher = student.getIsResearcher();
+        commands.put(11, new Commands.ChangeToResearcherMenu(researcher, reader));
+
+        if(student.getIsHead() != null) {
+            commands.put(12, new Commands.InviteCommand(student, reader));
         }
     }
 
@@ -50,6 +50,9 @@ class StudentMenu {
                 if(commands.containsKey(11)) {
                     System.out.println("[11] Researcher Menu");
                 }
+                if(commands.containsKey(12)) {
+                    System.out.println("[12] Invite to Organization");
+                }
                 System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
@@ -64,7 +67,7 @@ class StudentMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 -> {
+                    case 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();

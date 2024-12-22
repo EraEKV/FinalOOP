@@ -5,11 +5,13 @@ import CustomExceptions.InvalidAuthDataException;
 import CustomExceptions.RegistrationCreditsException;
 import Enums.NewsTopic;
 import Enums.Urgency;
+import Users.Admin;
 import Users.Student;
 import Users.User;
 
 import Database.Database;
 
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Vector;
@@ -46,6 +48,28 @@ public class UniversitySystemMediator {
 			return user;
 		}
 		return null;
+	}
+
+
+	public static void deleteOrganization(String name) {
+		Database db = Database.getInstance();
+		Organization org = db.findOrganization(name);
+
+		if (org != null) {
+
+			Vector<Student> members = org.getMembers();
+
+
+			for(Student m : members) {
+				m.getNotifications().add(new Message(new Admin("University", "System", "vsp"), "Organization you are joined with name: " + org.getName() + "now not exists" ));
+				m.getJoinedOrganizations().remove(org);
+			}
+			org.getHead().setIsHead(null);
+			db.getStudentOrganizations().remove(org);
+			System.out.println("Organization " + name + " has been removed.");
+		} else {
+			System.out.println("Organization with name " + name + " not found.");
+		}
 	}
 
 
@@ -110,13 +134,20 @@ public class UniversitySystemMediator {
 
 
 //	Send Invite
-	public void sendInvite(User sender, Student student, String text, Organization org) {
-		try {
-			student.getNotifications().add(new Invite(sender, text, org));
-			System.out.println("Invite sent to " + student.getEmail());
-		} catch (NullPointerException e) {
-			e.printStackTrace();
+	public static void sendInvite(User sender, Student invitee, String text, Organization org) {
+		if(text == null) {
+			text = "Dear " + invitee.getFirstname() + ",\n"
+					+ "You are invited to join the organization: " + org.getName() + ".\n"
+					+ "We would be glad to have you as part of our team.\n";
+
+			if (org.getSlogan() != null && !org.getSlogan().isEmpty()) {
+				text += "\nOur slogan: " + org.getSlogan() + "\n" + "With love, " + sender.getFirstname();
+			}
 		}
+		Invite invite = new Invite(sender, text, org);
+		invitee.getNotifications().add(invite);
+
+		System.out.println("Invite sent successfully!");
 	}
 
 

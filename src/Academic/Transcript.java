@@ -26,7 +26,7 @@ public class Transcript implements Serializable {
 
 
 //	accessors
-	public HashMap<Course, Double> getTranscript() {
+	public HashMap<Course, Double> getTranscriptData() {
 		return transcriptData;
 	}
 

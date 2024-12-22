@@ -241,22 +241,10 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 			return;
 		}
 		Organization org = new Organization(name, this);
+		this.setIsHead(org);
 		org.addMember(this);
+		Database.getInstance().getStudentOrganizations().add(org);
 		System.out.println("Organization '" + name + "' created successfully.");
-	}
-
-	@Override
-	public void deleteOrganization(Organization org) {
-		if (org == null) {
-			System.out.println("Organization cannot be null.");
-			return;
-		}
-		if (org.getMembers().contains(this)) {
-			org.getMembers().clear(); // remove all members.
-			System.out.println("The organization '" + org.getName() + "' has been deleted successfully.");
-		} else {
-			System.out.println("You do not have the rights to delete the organization: " + org.getName());
-		}
 	}
 
 	@Override
@@ -265,7 +253,9 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 			System.out.println("Organization cannot be null.");
 			return;
 		}
-		if (org.addMember(this)) {
+		if (!this.joinedOrganizations.contains(org)) {
+			org.getMembers().add(this);
+			this.joinedOrganizations.add(org);
 			System.out.println("You have successfully joined the organization: " + org.getName());
 		} else {
 			System.out.println("You are already a member of the organization: " + org.getName());
@@ -278,7 +268,9 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 			System.out.println("Organization cannot be null.");
 			return;
 		}
-		if (org.removeMember(this)) {
+		if (!this.joinedOrganizations.contains(org)) {
+			this.joinedOrganizations.remove(org);
+			org.getMembers().remove(this);
 			System.out.println("You have successfully left the organization: " + org.getName());
 		} else {
 			System.out.println("You are not a member of the organization: " + org.getName());
