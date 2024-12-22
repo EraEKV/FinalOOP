@@ -13,14 +13,16 @@ import java.io.IOException;
 public class TestData {
 
     public static void main(String args[]) {
-        System.out.println(2 / 5);
-
         Database db = Database.getInstance();
         UserFactory factory = UserFactory.getInstance();
+        Rector r = Rector.getInstance();
+        db.setRector(r);
+
 
         System.out.println(db.getUsers());
 
         Admin admin = new Admin("krutoi", "chelik", "777");
+        admin.setEmail("krutoi@kbtu.kz");
         Credentials c1 = new Credentials("777", "777");
 
 
@@ -42,7 +44,7 @@ public class TestData {
         ms.setEmail("a_panaguzhiyev@kbtu.kz");
         Credentials c5 = new Credentials("a_panaguzhiyev@kbtu.kz", "1234");
 
-        Rector r = Rector.getInstance();
+
 
         db.getUsers().put(c1, admin);
         db.getUsers().put(c2, s);

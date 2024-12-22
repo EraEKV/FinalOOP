@@ -3,8 +3,7 @@ package Database ;
 
 import Academic.Journal;
 import Academic.Transcript;
-import Comparators.LogComparator;
-import Comparators.NewsComparator;
+import Comparators.DateComparator;
 import CustomExceptions.UserTypeException;
 import Research.ResearchJournal;
 import Research.Researcher;
@@ -40,9 +39,9 @@ public class Database implements Serializable {
 
 
 //  priority queue with comparators
-    private PriorityQueue<Log> logs = new PriorityQueue<>(new LogComparator());
+    private PriorityQueue<Log> logs = new PriorityQueue<>(new DateComparator());
 
-    private PriorityQueue<News> news = new PriorityQueue<>(new NewsComparator());
+    private PriorityQueue<News> news = new PriorityQueue<>(new DateComparator<>());
 
 
 

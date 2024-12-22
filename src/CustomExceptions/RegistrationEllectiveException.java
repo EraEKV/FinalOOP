@@ -1,7 +1,6 @@
 package CustomExceptions ;
 
 public class RegistrationEllectiveException extends Exception {
-	public RegistrationEllectiveException(String message) { super(message); }
-
+	public RegistrationEllectiveException(int count) { super("On registration you cant register for " + count + " elective courses"); }
 }
 

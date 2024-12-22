@@ -8,11 +8,11 @@ import java.util.Vector;
 public class Rector extends Employee {
 	private static Rector instance;
 	private Vector<Request> requests;
-	private String email = "gabdullin@kbtu.kz";
 
 
 
 	private Rector() {
+		super("Gabdullin", "Maratbek", "gabdullin@kbtu.kz");
 		this.requests = new Vector<>();
 	}
 

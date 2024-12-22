@@ -180,15 +180,15 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 	}
 	
 	
-	public void viewAbsenses() {
-		// TODO implement me
-		for(Journal journal : journals){
-			Vector<JournalLesson > jl = journal.getJournalData().get(this);
-			for(JournalLesson j : jl){
-				System.out.println(j.getAttendance());
-			}
-		}
-	}
+//	public void viewAbsenses() {
+//		// TODO implement me
+//		for(Journal journal : journals){
+//			Vector<JournalLesson > jl = journal.getJournalData().get(this);
+//			for(JournalLesson j : jl){
+//				System.out.println(j.getAttendance());
+//			}
+//		}
+//	}
 
 
 //	public void requestDocument(DocumentType parameter) {
