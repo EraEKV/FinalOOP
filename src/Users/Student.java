@@ -75,6 +75,11 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		return faculty;
 	}
 
+	@Override
+	public User getUser() {
+		return this;
+	}
+
 	public void setFaculty(Faculty faculty) {
 		this.faculty = faculty;
 	}
@@ -203,7 +208,7 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		this.isResearcher = new Researcher(this);;
 	}
 
-	public Researcher getIsResearcher() {
+	public Researcher getIsResearcher() throws NotAResearcherException {
 		if (isResearcher == null) {
 			throw new NotAResearcherException("Access denied: User is not a researcher.");
 		}

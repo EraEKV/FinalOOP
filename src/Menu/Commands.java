@@ -398,7 +398,29 @@ public class Commands {
     }
 
 
+    public static class ChangeToResearcherMenu implements Command {
+        private Researcher researcher;
+        private BufferedReader reader;
 
+        public ChangeToResearcherMenu(Researcher researcher, BufferedReader reader) {
+            this.researcher = researcher;
+            this.reader = reader;
+        }
+
+
+        @Override
+        public void execute() {
+            User user = researcher.getAcademicContributor().getUser();
+            if(user != null) {
+                ResearcherMenu menu = new ResearcherMenu(researcher, reader);
+                menu.displayMenu();
+            } else {
+                System.out.println("You are not researcher");
+            }
+
+            logging("Changed to Researcher Menu", user);
+        }
+    }
 
 
     //

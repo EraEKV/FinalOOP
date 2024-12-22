@@ -1,6 +1,8 @@
 package Menu;
 
+import CustomExceptions.NotAResearcherException;
 import Research.ResearchJournal;
+import Research.Researcher;
 import Users.Teacher;
 
 import java.io.BufferedReader;
@@ -25,6 +27,12 @@ public class TeacherMenu {
         commands.put(7, new Commands.SubscribeResearchJournalCommand(teacher, reader));
         commands.put(9, new Commands.ChangePasswordCommand(teacher, reader));
         commands.put(10, new Commands.ViewNotificationsCommand(teacher, reader));
+        try {
+            Researcher researcher = teacher.getIsResearcher();
+            commands.put(11, new Commands.ChangeToResearcherMenu(researcher, reader));
+        } catch (NotAResearcherException e) {
+//            ...
+        }
     }
 
     public void displayMenu() {
@@ -40,6 +48,9 @@ public class TeacherMenu {
                 System.out.println("[7] Subscribe to Research Journal");
                 System.out.println("[9] Change Password");
                 System.out.println("[10] Notifications");
+                if(commands.containsKey(11)) {
+                    System.out.println("[11] Researcher Menu");
+                }
                 System.out.println("[0] Exit");
                 System.out.print("Enter your choice: ");
 
@@ -54,7 +65,7 @@ public class TeacherMenu {
                 }
 
                 switch (choice) {
-                    case 1, 2, 3, 4, 5, 6, 7, 9, 10 -> {
+                    case 1, 2, 3, 4, 5, 6, 7, 9, 10, 11 -> {
                         Command command = commands.get(choice);
                         if (command != null) {
                             command.execute();
