@@ -59,9 +59,9 @@ public class UserFactory {
 //		return new Researcher(user.getFirstname() + user.getLastname());
 //	}
 
-	public Researcher createUser(String pseudoname, Faculty faculty) {
-		return new Researcher(pseudoname, faculty);
-	}
+//	public Researcher createUser(String pseudoname, Faculty faculty) {
+//		return new Researcher(pseudoname, faculty);
+//	}
 
 
 	// generating ID for new User
