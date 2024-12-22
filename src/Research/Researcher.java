@@ -121,8 +121,9 @@ public class Researcher implements CanResearch, Serializable {
     @Override
     public String toString() {
         return "Researcher{" +
-                ", citationsCount=" + citationsCount +
-                ", papers=" + papers.size() +
+                "citationsCount=" + citationsCount +
+                ", papers=" + papers +
+                ", academicContributor=" + academicContributor +
                 '}';
     }
 }

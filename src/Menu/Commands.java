@@ -1,8 +1,6 @@
 package Menu;
 
 import Academic.JournalLesson;
-import Comparators.DateComparator;
-import Comparators.UserNameComparator;
 import CustomExceptions.InvalidAuthDataException;
 import Enums.*;
 import Users.*;
@@ -266,7 +264,6 @@ public class Commands {
                         .forEach(notification -> System.out.println(notification));
 
                 System.out.println("\n[1] Next Page [2] Previous Page [0] Back");
-                System.out.println("[5] Sort Notifications");
                 System.out.print("Your choice: ");
                 int action = Integer.parseInt(reader.readLine());
 
@@ -276,55 +273,10 @@ public class Commands {
                     currentPage--;
                 } else if (action == 0) {
                     break;
-                } else if (action == 5) {
-                    sortNotifications(notifications, notificationType);
                 } else {
                     System.out.println("Invalid choice or no more pages.");
                 }
             }
-        }
-
-        private void sortNotifications(Vector<Notification> notifications, String notificationType) throws IOException {
-            System.out.println("\nChoose sorting option:");
-            System.out.println("[1] Sort by text");
-            System.out.println("[2] Sort by author");
-            System.out.println("[3] Sort by date");
-            System.out.println("[0] Back to notifications");
-            System.out.print("Your choice: ");
-            int sortChoice = Integer.parseInt(reader.readLine());
-
-            Comparator<Notification> comparator = null;
-
-            switch (sortChoice) {
-                case 1:
-                    comparator = Comparator.comparing(Notification::getText);
-                    break;
-                case 2:
-                    comparator = Comparator.comparing(notification -> notification.getAuthor(), new UserNameComparator());
-                    break;
-                case 3:
-                    comparator = new DateComparator<>();
-                    break;
-                case 0:
-                    return;
-                default:
-                    System.out.println("Invalid choice. Returning to notifications.");
-                    return;
-            }
-
-            System.out.print("Sort in ascending order? (y/n): ");
-            String order = reader.readLine().trim().toLowerCase();
-
-            if ("y".equals(order)) {
-                notifications.sort(comparator);
-            } else if ("n".equals(order)) {
-                notifications.sort(comparator.reversed());
-            } else {
-                System.out.println("Invalid input. Returning to notifications.");
-                return;
-            }
-
-            System.out.println("Notifications sorted successfully.");
         }
 
         private void viewNews() {
@@ -403,43 +355,37 @@ public class Commands {
                     String input = reader.readLine();
                     String recipientChoice;
 
-                    message: while (true) {
-                        try {
-                            recipientChoice = input;
-                            User selectedRecipient = db.findUserByEmail(recipientChoice + "@kbtu.kz");
-                            if (selectedRecipient == null) {
-                                System.out.println("Invalid recipient choice. Try again.");
-                                break message;
-                            } else if (selectedRecipient == sender) {
-                                System.out.println("You cannot send message to yourself.");
-                                break message;
-                            }
-
-                            System.out.println("Enter your message:");
-                            String messageContent = reader.readLine();
-
-                            if (messageContent.trim().isEmpty()) {
-                                System.out.println("Message cannot be empty. Try again.");
-                                continue;
-                            }
-
-                            selectedRecipient.getNotifications().add(new Message(sender, messageContent));
-
-                            System.out.println("Message sent to " + selectedRecipient.getFirstname() + " " + selectedRecipient.getLastname());
-
-                            System.out.println("Would you like to send another message? (y/n):");
-                            String response = reader.readLine();
-                            if ("n".equalsIgnoreCase(response)) {
-                                break recipient;
-                            } else if (!"y".equalsIgnoreCase(response)) {
-                                System.out.println("Invalid response. Please enter 'y' or 'n'.");
-                                break message;
-                            }
-
-                        } catch (NumberFormatException e) {
-                            System.out.println("Invalid input. Please enter a valid number for recipient selection.");
+                    try {
+                        recipientChoice = input;
+                        User selectedRecipient = db.findUserByEmail(recipientChoice + "@kbtu.kz");
+                        if (selectedRecipient == null) {
+                            System.out.println("Invalid recipient choice. Try again.");
                             continue;
                         }
+
+                        System.out.println("Enter your message:");
+                        String messageContent = reader.readLine();
+
+                        if (messageContent.trim().isEmpty()) {
+                            System.out.println("Message cannot be empty. Try again.");
+                            continue;
+                        }
+
+                        selectedRecipient.getNotifications().add(new Message(sender, messageContent));
+
+                        System.out.println("Message sent to " + selectedRecipient.getFirstname() + " " + selectedRecipient.getLastname());
+
+                        System.out.println("Would you like to send another message? (y/n):");
+                        String response = reader.readLine();
+                        if ("n".equalsIgnoreCase(response)) {
+                            break recipient;
+                        } else if (!"y".equalsIgnoreCase(response)) {
+                            System.out.println("Invalid response. Please enter 'y' or 'n'.");
+                        }
+
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid input. Please enter a valid number for recipient selection.");
+                        continue;
                     }
                 }
 
@@ -1593,7 +1539,7 @@ public class Commands {
 
 
 
-//
+    //
 //
 //  ADMIN MENU
 //
@@ -1617,7 +1563,7 @@ public class Commands {
                     System.out.println("[3] GradStudent");
                     System.out.println("[4] Teacher");
                     System.out.println("[5] Manager");
-//                    System.out.println("[6] Researcher");
+                    System.out.println("[6] Researcher");
                     System.out.println("[0] Exit");
 
                     String input = reader.readLine();
@@ -1692,28 +1638,28 @@ public class Commands {
 
                             Database.getInstance().getUsers().put(credentials, newUser);
                             break user;
+                        } else if(newResarcher != null) {
+                            Database db = Database.getInstance();
+
+                            if(email == null) continue user;
+                            if(!email.contains("@kbtu.kz")) email += "@kbtu.kz";
+
+                            User user = db.findUserByEmail(email);
+
+                            if(user == null) {
+                                System.out.println("User with email " + email + " not found. This needed to add new Researcher to existed User.");
+                                continue user;
+                            } else {
+                                if(user instanceof Student) {
+                                    Student s = (Student) user;
+                                    s.beResearcher();
+                                }
+
+                                db.getResearchers().add(newResarcher);
+
+                                break user;
+                            }
                         }
-//                        else if(newResarcher != null) {
-//                            Database db = Database.getInstance();
-//
-//                            if(email == null) continue user;
-//                            if(!email.contains("@kbtu.kz")) email += "@kbtu.kz";
-//
-//                            User user = db.findUserByEmail(email);
-//
-//                            if(user == null) {
-//                                System.out.println("User with email " + email + " not found. This needed to add new Researcher to existed User.");
-//                                continue user;
-//                            } else {
-//                                if(user instanceof Student) {
-//                                    user.beReseacrher(newResarcher);
-//                                }
-//
-//                                db.getResearchers().add(newResarcher);
-//
-//                                break user;
-//                            }
-//                        }
                     }
                 }
 
@@ -1727,47 +1673,47 @@ public class Commands {
 
 
 
-    private TeacherType selectTeacherType() throws IOException {
-        while (true) {
-            System.out.println("Select a teacher type:");
-            for (TeacherType teacherType : TeacherType.values()) {
-                System.out.println("[" + (teacherType.ordinal() + 1) + "] " + teacherType);
-            }
-            try {
-                int teacherTypeChoice = Integer.parseInt(reader.readLine()) - 1;
-                if (teacherTypeChoice >= 0 && teacherTypeChoice < TeacherType.values().length) {
-                    return TeacherType.values()[teacherTypeChoice];
-                } else {
-                    System.out.println("Invalid choice. Please select a valid teacher type.");
+        private TeacherType selectTeacherType() throws IOException {
+            while (true) {
+                System.out.println("Select a teacher type:");
+                for (TeacherType teacherType : TeacherType.values()) {
+                    System.out.println("[" + (teacherType.ordinal() + 1) + "] " + teacherType);
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
+                try {
+                    int teacherTypeChoice = Integer.parseInt(reader.readLine()) - 1;
+                    if (teacherTypeChoice >= 0 && teacherTypeChoice < TeacherType.values().length) {
+                        return TeacherType.values()[teacherTypeChoice];
+                    } else {
+                        System.out.println("Invalid choice. Please select a valid teacher type.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a number.");
+                }
             }
         }
-    }
 
-    private String selectStudentType() throws IOException {
-        while (true) {
-            System.out.println("Select a student type:");
-            System.out.println("[1] MasterStudent");
-            System.out.println("[2] PhDStudent");
-            try {
-                int choice = Integer.parseInt(reader.readLine());
-                if(choice == 1) {
-                    return MasterStudent.class.getSimpleName();
-                } else if(choice == 2) {
-                    return PhDStudent.class.getSimpleName();
-                } else {
-                    System.out.println("Invalid choice. Please select a valid student type.");
+        private String selectStudentType() throws IOException {
+            while (true) {
+                System.out.println("Select a student type:");
+                System.out.println("[1] MasterStudent");
+                System.out.println("[2] PhDStudent");
+                try {
+                    int choice = Integer.parseInt(reader.readLine());
+                    if(choice == 1) {
+                        return MasterStudent.class.getSimpleName();
+                    } else if(choice == 2) {
+                        return PhDStudent.class.getSimpleName();
+                    } else {
+                        System.out.println("Invalid choice. Please select a valid student type.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. Please enter a number.");
                 }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
             }
         }
+
+
     }
-
-
-}
 
     private static Faculty selectFaculty(BufferedReader reader) throws IOException {
         while (true) {
@@ -2076,7 +2022,7 @@ public class Commands {
             try {
                 System.out.println("\nAvailable Research Journals:");
                 for (int i = 0; i < journals.size(); i++) {
-                    System.out.println("[" + (i + 1) + "] " + journals.get(i).getName());
+                    System.out.println("[" + (i + 1) + "] " + journals.get(i).getResearchJournalsName());
                 }
                 System.out.print("Enter the number of the journal you want to subscribe to: ");
 
@@ -2097,7 +2043,7 @@ public class Commands {
 
                 ResearchJournal selectedJournal = journals.get(choice);
                 selectedJournal.subscribe(user);
-                System.out.println("Successfully subscribed to " + selectedJournal.getName() + ".");
+                System.out.println("Successfully subscribed to " + selectedJournal.getResearchJournalsName() + ".");
             } catch (IOException e) {
                 System.out.println("An error occurred while reading input. Please try again.");
             } catch (Exception e) {
@@ -2419,6 +2365,194 @@ public class Commands {
             } catch (IOException e) {
                 System.out.println("An error occurred while reading input.");
             }
+        }
+    }
+
+
+    /// researcher menu
+
+
+    public static class AddPaperCommand implements Command {
+        private final Researcher researcher;
+        private final BufferedReader reader;
+
+        public AddPaperCommand(Researcher researcher, BufferedReader reader) {
+            this.researcher = researcher;
+            this.reader = reader;
+        }
+
+        @Override
+        public void execute() {
+            try {
+                System.out.print("Enter the title of the paper: ");
+                String title = reader.readLine().trim();
+
+                if (title.isEmpty()) {
+                    System.out.println("The title of the paper cannot be empty.");
+                    return;
+                }
+
+                System.out.print("Enter the journal name: ");
+                String journal = reader.readLine().trim();
+
+                if (journal.isEmpty()) {
+                    System.out.println("The journal name cannot be empty.");
+                    return;
+                }
+
+                try {
+                    ResearchJournalsName journalName = ResearchJournalsName.valueOf(journal.toUpperCase());
+                    ResearchPaper paper = new ResearchPaper(title, journalName);
+                    researcher.getPapers().add(paper);
+                    System.out.println("Paper added successfully.");
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Invalid journal name provided. Please use a valid journal name.");
+                }
+            } catch (IOException e) {
+                System.out.println("An error occurred while adding the paper: " + e.getMessage());
+            }
+
+        }
+    }
+
+    public static class ViewPapersCommand implements Command {
+        private final Researcher researcher;
+
+        public ViewPapersCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            for (ResearchPaper paper : researcher.getPapers()) {
+                System.out.println(paper);
+            }
+        }
+    }
+
+    public static class CalculateHIndexCommand implements Command {
+        private final Researcher researcher;
+
+        public CalculateHIndexCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            int hIndex = researcher.calculateHIndex();
+            System.out.println(researcher.getAcademicContributor() + "'s H-Index: " + hIndex);
+        }
+    }
+
+    public static class CalculateCitationsCommand implements Command {
+        private final Researcher researcher;
+
+        public CalculateCitationsCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            int totalCitations = researcher.calculateCitations();
+            System.out.println("Total Citations: " + totalCitations);
+        }
+    }
+
+    public static class SubscribeToJournalCommand implements Command {
+        private final ResearchJournal journal;
+        private final Researcher researcher;
+
+        public SubscribeToJournalCommand(ResearchJournalsName journalName, Researcher researcher) {
+            if (!isJournalInDatabase(journalName)) {
+                throw new IllegalArgumentException("Journal '" + journalName + "' does not exist in the database.");
+            }
+            this.journal = findJournalByName(journalName);
+            this.researcher = researcher;
+        }
+
+        private static boolean isJournalInDatabase(ResearchJournalsName journalName) {
+            Database database = Database.getInstance();
+            for (ResearchJournal dbJournal : database.getResearchJournals()) {
+                if (dbJournal.getResearchJournalsName() == (journalName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private ResearchJournal findJournalByName(ResearchJournalsName journalName) {
+            Database database = Database.getInstance();
+            for (ResearchJournal dbJournal : database.getResearchJournals()) {
+                if (dbJournal.getResearchJournalsName() == (journalName)) {
+                    return dbJournal;
+                }
+            }
+            throw new IllegalArgumentException("Journal '" + journalName + "' not found in the database.");
+        }
+
+        @Override
+        public void execute() {
+            journal.getSubscribers().add(researcher.getAcademicContributor());
+
+            System.out.println(researcher.getAcademicContributor() + " is now subscribed to the journal: " + journal.getResearchJournalsName());
+        }
+    }
+
+
+    public static class PrintPapersCommand implements Command {
+        private final Researcher researcher;
+
+        public PrintPapersCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            researcher.printPapers();
+        }
+    }
+
+    public static class TopCitedResearcherCommand implements Command {
+        private final List<Researcher> allResearchers;
+
+        public TopCitedResearcherCommand(List<Researcher> allResearchers) {
+
+            this.allResearchers = allResearchers;
+        }
+
+        @Override
+        public void execute() {
+            Researcher topCited = getTopCitedResearcher();
+            System.out.println("Top Cited Researcher: " + topCited.getAcademicContributor() + " with " + topCited.calculateCitations() + " citations.");
+        }
+
+        private Researcher getTopCitedResearcher() {
+            Researcher topCited = null;
+            int maxCitations = -1;
+
+            for (Researcher r : allResearchers) {
+                int citations = r.calculateCitations();
+                if (citations > maxCitations) {
+                    maxCitations = citations;
+                    topCited = r;
+                }
+            }
+
+            return topCited;
+        }
+    }
+
+    public static class PublishPaperCommand implements Command {
+        private final Researcher researcher;
+
+        public PublishPaperCommand(Researcher researcher) {
+            this.researcher = researcher;
+        }
+
+        @Override
+        public void execute() {
+            int totalCitations = researcher.calculateCitations();
+            System.out.println("Total Citations for published papers: " + totalCitations);
         }
     }
 

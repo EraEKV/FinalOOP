@@ -21,8 +21,12 @@ public class ResearchJournal implements Serializable {
         this.researchJournalsName = researchJournalsName;
     }
 
-    public ResearchJournalsName getName() {
+    public ResearchJournalsName getResearchJournalsName() {
         return researchJournalsName;
+    }
+
+    public void setResearchJournalsName(ResearchJournalsName name) {
+        this.researchJournalsName = name;
     }
 
     public Set<Subscriber> getSubscribers() {
