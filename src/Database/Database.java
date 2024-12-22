@@ -18,6 +18,10 @@ import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The {@code Database} class represents a database that stores information about users, courses, research, news, and other educational data.
+ * It is a singleton and template class that ensures access to a single instance of the database.
+ */
 public class Database implements Serializable {
 	private static Database DATABASE;
 	
@@ -75,12 +79,22 @@ public class Database implements Serializable {
 
 //    work with database
 
+    /**
+     * Reads the database from a file and returns an instance of {@code Database}.
+     * @return An instance of {@code Database} read from the file.
+     * @throws IOException If an error occurs while reading the file.
+     * @throws ClassNotFoundException If the {@code Database} class is not found.
+     */
     public static Database read() throws IOException, ClassNotFoundException {
         FileInputStream fis = new FileInputStream("database");
         ObjectInputStream oin = new ObjectInputStream(fis);
         return (Database) oin.readObject();
     }
 
+    /**
+     * Writes the current {@code Database} instance to a file.
+     * @throws IOException If an error occurs while writing to the file.
+     */
     public static void write() throws IOException {
         FileOutputStream fos = new FileOutputStream("database");
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -88,7 +102,12 @@ public class Database implements Serializable {
         oos.close();
     }
 
-	public static Database getInstance() {
+    /**
+     * Returns the single instance of {@code Database}.
+     * @return The {@code Database} instance.
+     */
+
+    public static Database getInstance() {
 		if (DATABASE == null) {
 			DATABASE = new Database();
 		}

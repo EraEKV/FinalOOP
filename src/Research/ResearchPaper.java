@@ -7,6 +7,9 @@ import java.util.Vector;
 import Database.Database;
 import Enums.CitationFormat;
 
+/**
+ * Represents a research paper with various metadata and citation handling functionality.
+ */
 public class ResearchPaper {
     private String name;
     private int pages;
@@ -16,13 +19,13 @@ public class ResearchPaper {
     private String DOI;
     private Date date;
     private Vector<Researcher> authors;
+
     {
         this.citations = new Vector<>();
         this.authors = new Vector<>();
     }
     public ResearchPaper() {
     }
-
     public ResearchPaper(String name, ResearchJournalsName researchJournalsName) {
         this.name = name;
 
@@ -44,9 +47,6 @@ public class ResearchPaper {
         }
     }
 
-
-
-
     public ResearchPaper(String name, int pages, ResearchJournal researchJournal, String DOI, Date date) {
         this.name = name;
         this.pages = pages;
@@ -61,7 +61,6 @@ public class ResearchPaper {
         this.DOI = DOI;
         this.date = date;
     }
-
     public String getName() {
         return name;
     }
@@ -98,7 +97,6 @@ public class ResearchPaper {
         return DOI;
     }
 
-
     public void setDOI(String DOI) {
         this.DOI = DOI;
     }
@@ -127,6 +125,12 @@ public class ResearchPaper {
         this.mainAuthor = mainAuthor;
     }
 
+    /**
+     * Generates a citation for the research paper in the specified format.
+     *
+     * @param format The desired citation format.
+     * @return The formatted citation as a String.
+     */
     public String getCitation(CitationFormat format) {
         StringBuilder citation = new StringBuilder();
 
@@ -139,7 +143,7 @@ public class ResearchPaper {
                     if (i < authors.size() - 1) citation.append(", ");
                 }
                 citation.append("\n")
-                        .append("Journal: ").append(researchJournal.getResearchJournalsName() + "\n" )
+                        .append("Journal: ").append(researchJournal.getResearchJournalsName() + "\n")
                         .append("DOI: ").append(DOI).append("\n")
                         .append("Date: ").append(date.toString()).append("\n")
                         .append("Pages: ").append(pages);
@@ -168,7 +172,6 @@ public class ResearchPaper {
         return citation.toString();
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -193,6 +196,4 @@ public class ResearchPaper {
                 ", authors=" + authors +
                 '}';
     }
-
-
 }

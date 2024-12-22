@@ -14,7 +14,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-
+/**
+ * The student class represents a student within the academic system.
+ * It manages various attributes and actions related to a student such as course registrations,
+ * research supervisor assignments, diploma project, course grades, organizations, and more.
+ * The student class implements various interfaces, including ,mageOrganization,
+ *  CanViewTeachers, and CanBeResearcher, allowing students to manage their organizations,
+ * interact with teachers, and engage in research-related activities.
+ */
 public class Student extends User implements ManageOrganization, CanViewTeachers, CanBeResearcher {
 
 	private String id;
@@ -168,6 +175,9 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 	}
 
 
+	/**
+	 * Displays all the marks for the courses in the student's attestation.
+	 */
 	public void viewMarks() {
 		for (Map.Entry<Course, AttestationMark> entry : attestation.getInfo().entrySet()) {
 			Course course = entry.getKey();
@@ -184,9 +194,13 @@ public class Student extends User implements ManageOrganization, CanViewTeachers
 		t.setRatings(curRating);
 	}
 
-	
-	
-	public void viewTeacherInfo(Teacher t) {
+
+/**
+ * Displays basic information about a teacher. Currently, it simply prints the teacher object.
+ * This method can be expanded to display more specific details.
+ */
+
+ public void viewTeacherInfo(Teacher t) {
 		// TODO implement me
 		System.out.println(t);
 	}

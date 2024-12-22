@@ -5,6 +5,10 @@ import Enums.Faculty;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Represents a researcher who can conduct research, publish papers, and calculate metrics like h-index and citation count.
+ * This class interacts with a research database, journals, and papers.
+ */
 public class Researcher implements CanResearch, Serializable {
     private int citationsCount;
     private List<ResearchPaper> papers = new ArrayList<>();
@@ -14,7 +18,7 @@ public class Researcher implements CanResearch, Serializable {
 
     public Researcher(CanBeResearcher academicContributor) {
         this.academicContributor = academicContributor;
-        Database.getInstance().getResearchers().add(this);  // very weird hope it works
+        Database.getInstance().getResearchers().add(this);  // Registers the researcher in the database.
     }
 
     public int getCitationsCount() {
@@ -25,6 +29,12 @@ public class Researcher implements CanResearch, Serializable {
         return papers;
     }
 
+    /**
+     * Calculates the researcher's h-index.
+     * The h-index is the maximum value such that the researcher has at least h papers with h or more citations.
+     *
+     * @return the h-index of the researcher
+     */
     public int calculateHIndex() {
         papers.sort((p1, p2) -> Integer.compare(p2.getCitations().size(), p1.getCitations().size()));
 
@@ -39,6 +49,11 @@ public class Researcher implements CanResearch, Serializable {
         return hIndex;
     }
 
+    /**
+     * Calculates the total number of citations for all the researcher's papers.
+     *
+     * @return the total number of citations
+     */
     @Override
     public int calculateCitations() {
         return papers.stream().mapToInt(paper -> paper.getCitations().size()).sum();
@@ -48,6 +63,11 @@ public class Researcher implements CanResearch, Serializable {
         return academicContributor;
     }
 
+    /**
+     * Prints all research papers sorted using the provided comparator.
+     *
+     * @param c the comparator to sort the papers
+     */
     @Override
     public void printPapers(Comparator c) {
         for (ResearchPaper paper : papers) {
@@ -55,6 +75,9 @@ public class Researcher implements CanResearch, Serializable {
         }
     }
 
+    /**
+     * Updates the total citation count for the researcher by recalculating it from the papers.
+     */
     public void updateCitations() {
         citationsCount = 0;
         for (ResearchPaper paper : papers) {
@@ -62,18 +85,32 @@ public class Researcher implements CanResearch, Serializable {
         }
     }
 
+    /**
+     * Publishes a research paper in a specified journal and updates the citation count.
+     *
+     * @param paper   the research paper to publish
+     * @param journal the journal in which the paper is published
+     */
     public void publishPaper(ResearchPaper paper, ResearchJournal journal) {
         papers.add(paper);
         journal.getResearchPapers().add(paper);
         updateCitations();
     }
 
+    /**
+     * Prints all research papers authored by the researcher.
+     */
     public void printPapers() {
         for (ResearchPaper paper : papers) {
             System.out.println(paper);
         }
     }
 
+    /**
+     * Finds and prints the top-cited researcher within a specific faculty.
+     *
+     * @param faculty the faculty to filter researchers
+     */
     public static void topCitedSchoolResearcher(Faculty faculty) {
         Researcher topResearcher = null;
         int maxCitations = 0;
@@ -97,6 +134,9 @@ public class Researcher implements CanResearch, Serializable {
         }
     }
 
+    /**
+     * Finds and prints the top-cited researcher among all researchers.
+     */
     public void topCitedResearcher() {
         Researcher topResearcher = null;
         int maxCitations = 0;
@@ -118,6 +158,11 @@ public class Researcher implements CanResearch, Serializable {
         }
     }
 
+    /**
+     * Returns a string representation of the Researcher object.
+     *
+     * @return a string containing details about the researcher
+     */
     @Override
     public String toString() {
         return "Researcher{" +

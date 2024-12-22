@@ -1,20 +1,20 @@
 package Users;
 
 import Academic.Course;
-import Academic.Journal;
-import Academic.JournalLesson;
+import System.News;
 import Database.Database;
 import System.Request;
-
 import java.util.*;
 
-import System.News;
-
+/**
+ * The Manager class represents a university system manager who handles tasks like adding courses, viewing requests, generating reports,
+ * adding news, setting student registrations, and redirecting requests to a rector.
+ * The class extends the Employee class, inheriting basic employee details such as first name, last name, and email.
+ */
 public class Manager extends Employee {
 
 	private String id;
 	private Vector<Request> requests;
-
 
 	{
 		requests = new Vector<>();
@@ -32,7 +32,6 @@ public class Manager extends Employee {
 		this.id = id;
 	}
 
-
 	public String getId() {
 		return id;
 	}
@@ -40,6 +39,7 @@ public class Manager extends Employee {
 	public void setId(String id) {
 		this.id = id;
 	}
+
 
 	public Vector<Request> getRequests() {
 		return requests;
@@ -49,8 +49,11 @@ public class Manager extends Employee {
 		this.requests = requests;
 	}
 
-
-
+	/**
+	 * Adds a new course to the university system database.
+	 * Checks for duplicate courses using the course code.
+	 * @param c The course to be added.
+	 */
 	public void addCourse(Course c) {
 		if (c != null) {
 			Vector<Course> courses = Database.getInstance().getCourses();
@@ -58,6 +61,7 @@ public class Manager extends Employee {
 				courses = new Vector<>();
 			}
 
+			// Check if the course with the same code already exists
 			if (courses.stream().anyMatch(course -> course.getCode().equals(c.getCode()))) {
 				System.out.println("Course with this code already exists in the database.");
 				return;
@@ -71,7 +75,10 @@ public class Manager extends Employee {
 		}
 	}
 
-
+	/**
+	 * Displays all the requests the manager is handling.
+	 * If no requests are available, a message is displayed.
+	 */
 	public void viewRequests() {
 		if (requests.isEmpty()) {
 			System.out.println("No requests available.");
@@ -82,6 +89,11 @@ public class Manager extends Employee {
 		}
 	}
 
+	/**
+	 * Generates a report for a specific course.
+	 * @param c The course to generate the report for.
+	 * @return A string containing the report for the course.
+	 */
 	public String getReport(Course c) {
 		if (c == null) {
 			return "No course provided.";
@@ -89,40 +101,53 @@ public class Manager extends Employee {
 		return "Report for course: " + c;
 	}
 
+	/**
+	 * Generates a statistical report from the manager's perspective.
+	 * The report includes the manager's name, email, and the average grade of all students.
+	 * @return A string containing the manager's report.
+	 */
 	public String getReport() {
-		double total = 0;
-		int count = 0;
-		Vector<Journal> journalData = Database.getInstance().getJournals();
-		if(journalData == null) {
-			return "No journal data available.";
+		StringBuilder report = new StringBuilder();
+
+		report.append("===== Manager Report =====\n");
+		report.append("Name: ").append(this.getFirstname()).append("\n");
+		report.append("Email: ").append(this.getEmail()).append("\n");
+
+		Vector<Student> students = Database.getInstance().getStudents();
+		int avg = 0;
+		for (Student s : students) {
+			avg += s.getTranscript().getAvgGrades();
 		}
-		for(Journal j : journalData) {
-			Collection<Vector<JournalLesson>> JournalLessons = j.getJournalData().values();
-			for(Vector<JournalLesson> jl : JournalLessons) {
-				for(JournalLesson jls : jl) {
-					total += jls.getMark();
-					count++;
-				}
-			}
-		}
-		double average = total/count;
-		return "Report : "  + average;
+
+		report.append("Average grade is : ").append(avg / students.size()).append("\n");
+
+		report.append("==========================\n");
+		return report.toString();
 	}
 
-//	public void addNews(News n) {
-//		if (n != null) {
-//			PriorityQueue<News> news = Database.getInstance().getNews();
-//			if(news == null) {
-//				news = new PriorityQueue<>();
-//			}
-//			news.add(n);
-//			Database.getInstance().setNews(news);
-//			System.out.println("News added: " + n);
-//		} else {
-//			System.out.println("Invalid news item.");
-//		}
-//	}
+	/**
+	 * Adds a news item to the university's news system.
+	 * @param n The news item to be added.
+	 */
+	public void addNews(News n) {
+		if (n != null) {
+			PriorityQueue<News> news = Database.getInstance().getNews();
+			if (news == null) {
+				news = new PriorityQueue<>();
+				news.add(n);
+			} else {
+				Database.getInstance().getNews().add(n);
+			}
+			System.out.println("News added: " + n);
+		} else {
+			System.out.println("Invalid news item.");
+		}
+	}
 
+	/**
+	 * Registers a student in the university system.
+	 * @param s The student to be registered.
+	 */
 	public void setRegistration(Student s) {
 		if (s != null) {
 			System.out.println("Student " + s + " has been registered.");
@@ -130,6 +155,12 @@ public class Manager extends Employee {
 			System.out.println("Invalid student.");
 		}
 	}
+
+	/**
+	 * Redirects a request to the rector for further action.
+	 * @param rec The rector to whom the request is being redirected.
+	 * @param req The request to be redirected.
+	 */
 	public void redirectRequest(Rector rec, Request req) {
 		if (rec != null && req != null) {
 			rec.addRequest(req);
@@ -139,17 +170,13 @@ public class Manager extends Employee {
 		}
 	}
 
+	/**
+	 * Opens or closes the registration process for students.
+	 * @param b True to open registration, false to close it.
+	 */
 	public void openRegistration(Boolean b) {
 		Database.getInstance().setRegistrationOpened(b);
 	}
-
-//	public void approveStudentRegistration() {
-//	}
-
-//	public void assignCourseTeachers(Course c, Vector<Teacher> teachers) {
-//		System.out.println("Teachers have been assigned to courses.");
-//	}
-
 
 	@Override
 	public boolean equals(Object o) {

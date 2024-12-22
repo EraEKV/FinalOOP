@@ -69,6 +69,9 @@ public class AttestationMark {
 		this.fullAtt = fullAtt;
 	}
 
+	/**
+	 * calculate full attestaion mark
+	 */
 	private void calculateFullAtt() {
 		if (firstAtt < 30 || secondAtt < 30 || finalExam < 10) {
 			fullAtt = "F";

@@ -116,11 +116,33 @@ public class Employee extends User {
 		return messages;
 	}
 
+	/**
+	 * Sends a message to an employee and notifies them of the new message.
+	 *
+	 * @param employee the recipient employee who will receive the message.
+	 *                 Must not be null.
+	 * @param message  the message being sent. Must not be null.
+	 * @throws IllegalArgumentException if the employee or message is null.
+	 */
 	public void sendMessage(Employee employee, Message message) {
+		if (employee == null || message == null) {
+			throw new IllegalArgumentException("Employee and message must not be null");
+		}
+
 		employee.getMessages().add(message);
-		Notification notification = new Notification(this, "You received a new message from " + this.getEmail());
+
+		String senderEmail = this.getEmail() != null ? this.getEmail() : "Unknown Sender";
+		Notification notification = new Notification(this, "You received a new message from " + senderEmail);
 		employee.getNotifications().add(notification);
 	}
+
+	/**
+	 *
+	 * Checks whether the employee can request a vacation based on their current
+	 * vacation status and the cooldown period since their last vacation
+	 * @param requestDate
+	 * @return boolean
+	 */
 
 	public boolean requestVacation(LocalDate requestDate) {
 		if (!onVacation) {

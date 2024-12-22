@@ -3,6 +3,11 @@ package Academic;
 import java.util.*;
 import Users.Student;
 
+/**
+ * The Transcript class represents an academic transcript of a student.
+ * It contains details of the courses the student has taken, their corresponding grades, and the GPA information.
+ * The class provides methods to calculate and display the student's overall performance.
+ */
 public class Attestation {
 	private Student student;
 	SemesterPeriod semesterPeriod;

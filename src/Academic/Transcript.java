@@ -6,6 +6,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 
+/**
+ * Represents the transcript of a student, containing their grades, GPA, and course information.
+ * This class handles the storage of course grades, GPA calculations, and provides methods
+ * to display the student's transcript.
+ * It also provides methods to calculate the letter grade, GPA, and traditional grade based on the student's scores.
+ */
 public class Transcript implements Serializable {
 	private Student owner;
 	private HashMap<Course, Double> transcriptData;
@@ -34,6 +40,11 @@ public class Transcript implements Serializable {
 		return transcriptData.get(course);
 	}
 
+	/**
+	 * Calculates the average grade of the student based on their courses.
+	 *
+	 * @return The average grade, rounded down to the nearest integer.
+	 */
 	public int getAvgGrades() {
 		if (transcriptData == null || transcriptData.isEmpty()) {
 			return 0;
@@ -48,7 +59,10 @@ public class Transcript implements Serializable {
 
 
 
-
+	/**
+	 * Displays the transcript in a formatted table, including letter grades, GPA, and course information.
+	 * The display includes a cumulative GPA and total credits.
+	 */
 	public void displayTranscript() {
 		double totalGPA = 0.0;
 		int totalCredits = 0;
@@ -76,22 +90,46 @@ public class Transcript implements Serializable {
 		System.out.printf("Credits: " + totalCredits + "  GPA: " + cumulativeGPA);
 	}
 
+	/**
+	 * Converts a numeric grade to a letter grade.
+	 *
+	 * @param grade The numeric grade (between 0 and 100).
+	 * @return The corresponding letter grade.
+	 */
+
 	private String getLetterGrade(double grade) {
 		int index = Math.min((int) Math.floor((grade / 10) - 5), GRADE_SCALE.length - 1);
 		return index >= 0 ? GRADE_SCALE[index] : "F";
 	}
 
+	/**
+	 * Converts a numeric grade to a GPA value.
+	 *
+	 * @param grade The numeric grade (between 0 and 100).
+	 * @return The corresponding GPA.
+	 */
 	private double getGPA(double grade) {
 		int index = Math.min((int) Math.floor((grade / 10) - 5), GPA_SCALE.length - 1);
 		return index >= 0 ? GPA_SCALE[index] : 0.0;
 	}
 
+	/**
+	 * Converts a numeric grade to a traditional grade description.
+	 *
+	 * @param grade The numeric grade (between 0 and 100).
+	 * @return The corresponding traditional grade description.
+	 */
 	private String getTraditionalGrade(double grade) {
 		if (grade >= 90) return "Excellent";
 		else if (grade >= 75) return "Good";
 			else if (grade >= 50) return "Satisfactory";
 		else return "Unsatisfactory";
 	}
+	/**
+	 * Calculates the total GPA based on the transcript data, considering course credits.
+	 *
+	 * @return The total GPA based on the courses and grades.
+	 */
 
 	private double getTotalGPA() {
 		int totalCredits = 0;

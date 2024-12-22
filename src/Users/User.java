@@ -46,16 +46,6 @@ public abstract class User implements Subscriber, Serializable {
 			throw new InsufficientAccessRightsException("You have insufficient access rights for deletion sensitive information");
 		}
 	}
-	
-//	public void addComments(News news, String text) {
-//		// TODO implement me
-//		return;
-//	}
-	
-//	public void newNotifications( parameter) {
-//		// TODO implement me
-//		return null;
-//	}
 
 
 //	accessors
@@ -89,6 +79,10 @@ public abstract class User implements Subscriber, Serializable {
 	}
 
 	//Observer pattern
+	/**
+	 * Updates the notification system by adding a new notification about a new post
+	 * in the research journal and printing the notification message to the console.
+	 */
 	public void update(){
 		notifications.add(new Notification("New post in research journal!!!"));
 		System.out.println("New post in research journal!!!");
