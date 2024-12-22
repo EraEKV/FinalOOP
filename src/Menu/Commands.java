@@ -78,7 +78,12 @@ public class Commands {
                     case "Rector":
                         Rector rector = (Rector) user;
                         new ShowRector().execute();
-                        System.out.println("\n\n\n");
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            System.err.println("Thread interrupted: " + e.getMessage());
+                            Thread.currentThread().interrupt();
+                        }
                         System.out.println(rector);
                         RectorMenu rectorMenu = new RectorMenu(rector, reader);
                         rectorMenu.displayMenu();
@@ -1582,11 +1587,12 @@ public class Commands {
                             case 5:  // Manager
                                 newUser = factory.createUser(firstname, lastname);
                                 break;
-//                            case 6:  // Researcher
-//                                newResarcher = factory.createUser(firstname + lastname);
-//                                System.out.println("Please enter the email for add Researcher to existing User. You can enter without domain (@kbtu.kz): ");
-//                                email = reader.readLine();
-//                                break;
+                            case 6:  // Researcher
+                                Faculty selectedFaculty = selectFaculty();
+                                newResarcher = factory.createUser(firstname + lastname, selectedFaculty);
+                                System.out.println("Please enter the email for add Researcher to existing User. You can enter without domain (@kbtu.kz): ");
+                                email = reader.readLine();
+                                break;
                             default:
                                 System.out.println("Invalid choice. User creation cancelled.");
                                 return;
