@@ -51,25 +51,6 @@ public class Attestation {
 		return semesterPeriod;
 	}
 
-	public void calculateAverageMark() {
-		double totalMarks = 0;
-		int count = info.size();
-
-		for(AttestationMark m : info.values()) {
-			totalMarks += m.getTotal();
-		}
-
-		if (count == 0) {
-			System.out.println("No marks available to calculate average.");
-			return;
-		}
-
-		double average = totalMarks / count;
-		System.out.println("Average Mark for " + student.getId() + " is  : " + average);
-	}
-
-
-
 
 	@Override
 	public String toString() {
