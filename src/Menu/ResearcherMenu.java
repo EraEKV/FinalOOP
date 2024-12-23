@@ -25,6 +25,7 @@ public class ResearcherMenu {
         commands.put(5, new Commands.PrintPapersCommand(researcher));
         commands.put(6, new PublishPaperCommand(researcher, reader));
         commands.put(7, new Commands.TopCitedResearcherCommand(Database.getInstance().getResearchers()));
+        commands.put(8, new Commands.WorkOnResearchProject(researcher, reader));
     }
 
     public void displayMenu() {

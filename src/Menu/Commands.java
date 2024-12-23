@@ -2918,6 +2918,56 @@ public class Commands {
             System.out.println(researcher.getAcademicContributor() + "'s H-Index: " + hIndex);
         }
     }
+    public static class WorkOnResearchProject implements Command {
+        private Vector<ResearchProject> researchProjects = Database.getInstance().getResearchProjects();
+        private BufferedReader reader;
+        private Researcher researcher;
+
+        public WorkOnResearchProject(Researcher researcher, BufferedReader reader) {
+            this.researcher = researcher;
+            this.reader = reader;
+        }
+
+
+        @Override
+        public void execute() {
+            try {
+                System.out.print("Type the name of your project: ");
+                String projectName = reader.readLine();
+                ResearchProject tempProject = new ResearchProject(projectName);
+
+//                for (ResearchProject rp : researchProjects) {
+//                    if (rp.equals(tempProject)) {
+//                        researchProject = rp;
+//                        break;
+//                    }
+//                }
+
+                if (tempProject == null) {
+                    throw new IllegalArgumentException("Project is not found");
+                }
+
+                System.out.println("Enter the email of user: ");
+                String email = reader.readLine().trim();
+                if(!email.contains("@")) email += "@kbtu.kz";
+
+                Database db = Database.getInstance();
+                User user = db.findUserByEmail(email);
+                if(user != null) {
+                    if(user instanceof Student) {
+                        Student student = (Student) user;
+                        Researcher r = student.getIsResearcher();
+                        if(r != null) {
+                            tempProject.getAuthors().add(r);
+                            System.out.println("User " + r.getAcademicContributor().getUser().getFirstname() + "added to project");
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public static class CalculateCitationsCommand implements Command {
         private final Researcher researcher;

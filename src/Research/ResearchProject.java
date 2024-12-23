@@ -72,6 +72,12 @@ public class ResearchProject implements Serializable {
 	public void setSuperVisor(Researcher superVisor) {
 		this.superVisor = superVisor;
 	}
+	public void workOn() {
+		System.out.println("Проект '" + title + "' продвигается. Участвуют: ");
+		for (Researcher researcher : authors) {
+			System.out.println(" - " + researcher);
+		}
+	}
 
 	@Override
 	public boolean equals(Object o) {

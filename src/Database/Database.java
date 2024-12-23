@@ -3,6 +3,7 @@ package Database ;
 import Comparators.DateComparator;
 import CustomExceptions.UserTypeException;
 import Research.ResearchJournal;
+import Research.ResearchProject;
 import Research.Researcher;
 import Users.*;
 import System.Organization;
@@ -23,6 +24,12 @@ public class Database implements Serializable {
 	private static Database DATABASE;
 	
 	private boolean isRegistrationOpened;
+
+    private Vector<ResearchProject> researchProjects;
+
+    public Vector<ResearchProject> getResearchProjects() {
+        return researchProjects;
+    }
 
 
 	private HashMap<Credentials, User> users = new HashMap<Credentials, User>();
@@ -255,6 +262,7 @@ public class Database implements Serializable {
                 .orElse(null);
 //                .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
     }
+
 
     public User findUserByCredentials(Credentials credentials) {
         return users.getOrDefault(credentials, null);
