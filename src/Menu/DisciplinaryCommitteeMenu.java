@@ -15,7 +15,7 @@ public class DisciplinaryCommitteeMenu {
         this.reader = reader;
         commands.put(1, new Commands.ManageComplaintsCommand(committee, reader));
         commands.put(2, new Commands.KickStudent(committee, reader));
-//        commands.put(3, new Commands.DeleteOrganization(committee, reader));
+        commands.put(3, new Commands.DeleteOrganization(committee, reader));
         commands.put(4, new Commands.SendMessageCommand(committee, reader));
         commands.put(9, new Commands.ChangePasswordCommand(committee, reader));
         commands.put(10, new Commands.ViewNotificationsCommand(committee, reader));

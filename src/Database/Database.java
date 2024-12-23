@@ -1,8 +1,5 @@
 package Database ;
 
-
-import Academic.Journal;
-import Academic.Transcript;
 import Comparators.DateComparator;
 import CustomExceptions.UserTypeException;
 import Research.ResearchJournal;

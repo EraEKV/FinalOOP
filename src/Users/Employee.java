@@ -18,7 +18,6 @@ public class Employee extends User {
 	private LocalDate vacationEndDate;
 	private LocalDate lastVacationDate;
 	private int vacationCoolDown;
-	private List<Message> messages;
 
 	public Employee() {
 		initializeDefaults();
@@ -51,7 +50,6 @@ public class Employee extends User {
 		this.vacationEndDate = null;
 		this.vacationCoolDown = 0;
 		this.lastVacationDate = null;
-		this.messages = new ArrayList<>();
 		this.salary = 0;
 		this.dateHired = LocalDate.now();
 	}
@@ -112,9 +110,6 @@ public class Employee extends User {
 		this.vacationCoolDown = vacationCoolDown;
 	}
 
-	public List<Message> getMessages() {
-		return messages;
-	}
 
 	/**
 	 * Sends a message to an employee and notifies them of the new message.
@@ -124,17 +119,6 @@ public class Employee extends User {
 	 * @param message  the message being sent. Must not be null.
 	 * @throws IllegalArgumentException if the employee or message is null.
 	 */
-	public void sendMessage(Employee employee, Message message) {
-		if (employee == null || message == null) {
-			throw new IllegalArgumentException("Employee and message must not be null");
-		}
-
-		employee.getMessages().add(message);
-
-		String senderEmail = this.getEmail() != null ? this.getEmail() : "Unknown Sender";
-		Notification notification = new Notification(this, "You received a new message from " + senderEmail);
-		employee.getNotifications().add(notification);
-	}
 
 	/**
 	 *
@@ -158,7 +142,7 @@ public class Employee extends User {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(salary, dateHired, onVacation, vacationStartDate, vacationEndDate, lastVacationDate, vacationCoolDown, messages);
+		return Objects.hash(salary, dateHired, onVacation, vacationStartDate, vacationEndDate, lastVacationDate, vacationCoolDown);
 	}
 
 	@Override
@@ -172,7 +156,6 @@ public class Employee extends User {
 				Objects.equals(dateHired, employee.dateHired) &&
 				Objects.equals(vacationStartDate, employee.vacationStartDate) &&
 				Objects.equals(vacationEndDate, employee.vacationEndDate) &&
-				Objects.equals(lastVacationDate, employee.lastVacationDate) &&
-				Objects.equals(messages, employee.messages);
+				Objects.equals(lastVacationDate, employee.lastVacationDate);
 	}
 }

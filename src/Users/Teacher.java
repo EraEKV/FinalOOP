@@ -53,12 +53,7 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 //	public void putMarks(LessonType lessonType, Attendance attendance, double mark, Student student, Course course, JournalLesson journalLesson) {
 //		journalLesson
 //	}
-	
-	public void sendComplaint(Complaint complaint) {
-		Vector<Complaint> curr =  DisciplinaryCommittee.getInstance().getComplaints();
-		curr.add(complaint);
-		DisciplinaryCommittee.getInstance().setComplaints(curr);
-	}
+
 	
 //	public void markAttendance(JournalCourse parameter, Vector<Student> parameter2, Attendance parameter3) {
 //		// TODO implement me

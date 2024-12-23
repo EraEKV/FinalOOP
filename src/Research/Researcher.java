@@ -18,7 +18,7 @@ public class Researcher implements CanResearch, Serializable {
 
     public Researcher(CanBeResearcher academicContributor) {
         this.academicContributor = academicContributor;
-        Database.getInstance().getResearchers().add(this);  // Registers the researcher in the database.
+        Database.getInstance().getResearchers().add(this);
     }
 
     public int getCitationsCount() {
