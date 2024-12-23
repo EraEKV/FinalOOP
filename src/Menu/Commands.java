@@ -1493,7 +1493,7 @@ public class Commands {
                 System.out.print("Enter course number (or 0 to cancel): ");
                 int choice = Integer.parseInt(reader.readLine()) - 1;
                 if (choice >= 0 && choice < courses.size()) {
-                    return courses.get(choice - 1);
+                    return courses.get(choice);
                 }
             }
         } catch (Exception e) {

@@ -41,11 +41,13 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 		this.id = id;
 		this.teacherType = teacherType;
 		this.faculty = faculty;
+
+		this.currentCourses = new Vector<>();
 	}
 
 	public Vector<Integer> getRatings() {
 		if (ratings == null) {
-			ratings = new Vector<>(); // Инициализация, если поле не было установлено
+			ratings = new Vector<>();
 		}
 		return ratings;
 	}
@@ -146,8 +148,7 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 		Teacher t = (Teacher) o;
 		return id.equals(t.id)
 				&& teacherType.equals(t.teacherType)
-				&& faculty.equals(t.faculty)
-				&& isResearcher.equals(t.isResearcher);
+				&& faculty.equals(t.faculty);
 	}
 
 	@Override
@@ -156,7 +157,6 @@ public class Teacher extends Employee implements CanViewStudents, CanBeResearche
 
 		res = res * 31 + (id != null ? id.hashCode() : 0);
 		res = res * 31 + (teacherType != null ? teacherType.hashCode() : 0);
-		res = res * 31 + (isResearcher != null ? isResearcher.hashCode() : 0);
 		res = res * 31 + (faculty != null ? faculty.hashCode() : 0);
 		res = res * 31 + (ratings != null ? ratings.hashCode() : 0);
 

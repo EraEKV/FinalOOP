@@ -69,6 +69,17 @@ public class TestData {
         Course cr5 = new Course("PHYS1020", "Physics for Engineers", Faculty.SEOG, 5, Semester.SPRING);
         Course cr6 = new Course("ENG101", "English Composition", Faculty.SITE, 5, Semester.FALL);
 
+        Course cr10 = new Course("42", "OOP", Faculty.SITE, 5, Semester.FALL);
+        cr10.assignTeacher(t);
+        t.getCurrentCourses().add(cr10);
+        s.getAttestation().getInfo().put(cr10, new AttestationMark());
+        s.getAttestation().getInfo().get(cr10).setFinalExam(7.0);
+        System.out.println(s.getAttestation().getInfo().get(cr10).getFullAtt());
+
+
+        s.getRegisteredCourses().put(cr10, t);
+        cr10.addStudentToTeacher(t, s);
+
         db.getCourses().add(cr1);
         db.getCourses().add(cr2);
         db.getCourses().add(cr3);
@@ -76,6 +87,7 @@ public class TestData {
         db.getCourses().add(cr5);
         db.getCourses().add(cr6);
 
+        db.getCourses().add(cr10);
 
         s.beResearcher(); // student now is Researcher
 
@@ -156,6 +168,8 @@ public class TestData {
         }
 
 
+        db.getNews().add(new News("Manager", "test2", "Welcome to our new University system VSP 2.0 with prikol :D", NewsTopic.ANNOUNCMENTS));
+
 
         try {
             Thread.sleep(1000);
@@ -164,7 +178,7 @@ public class TestData {
             Thread.currentThread().interrupt();
         }
 
-        db.getNews().add(new News("Manager", "test1", "Welcome to our new University system WSP 2.0 with rickroll :D", NewsTopic.ANNOUNCMENTS));
+        db.getNews().add(new News("Manager", "test1", "Welcome to our new University system VSP 2.0 with rickroll :D", NewsTopic.ANNOUNCMENTS));
 
         db.getUsers().put(new Credentials("gabdullin@kbtu.kz", "1234"), Rector.getInstance());
 
