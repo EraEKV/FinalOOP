@@ -1,5 +1,6 @@
 package Research;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Vector;
@@ -10,7 +11,7 @@ import Enums.CitationFormat;
 /**
  * Represents a research paper with various metadata and citation handling functionality.
  */
-public class ResearchPaper {
+public class ResearchPaper implements Serializable {
     private String name;
     private int pages;
     private Researcher mainAuthor;

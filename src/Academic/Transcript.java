@@ -27,6 +27,7 @@ public class Transcript implements Serializable {
 
 	public Transcript(Student owner) {
 		this.owner = owner;
+		transcriptData = new HashMap<>();
 	}
 
 

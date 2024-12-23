@@ -2,7 +2,9 @@ package Academic;
 
 import Enums.Mark;
 
-public class AttestationMark {
+import java.io.Serializable;
+
+public class AttestationMark implements Serializable {
 	private double firstAtt;
 	private double secondAtt;
 	private double finalExam;

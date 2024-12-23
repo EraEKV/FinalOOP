@@ -2,10 +2,11 @@ package Comparators;
 
 import System.Complaint;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Date;
 
-public class ComplaintComparator implements Comparator<Complaint> {
+public class ComplaintComparator implements Comparator<Complaint>, Serializable {
 
     @Override
     public int compare(Complaint c1, Complaint c2) {

@@ -4,9 +4,10 @@ package Academic ;
 import Enums.Mark;
 import Enums.MarkType;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class TranscriptMark
+public class TranscriptMark implements Serializable
 {
 	private MarkType markType;
 	private double markDouble;

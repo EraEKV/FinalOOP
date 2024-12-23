@@ -1,5 +1,5 @@
 package Research;
 
 public enum ResearchJournalsName {
-    TIMES,FORBES,KBTU;
+    TIMES, LANCET, KBTU;
 }

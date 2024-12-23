@@ -1,5 +1,6 @@
 package Academic;
 
+import java.io.Serializable;
 import java.util.*;
 import Users.Student;
 
@@ -8,7 +9,7 @@ import Users.Student;
  * It contains details of the courses the student has taken, their corresponding grades, and the GPA information.
  * The class provides methods to calculate and display the student's overall performance.
  */
-public class Attestation {
+public class Attestation implements Serializable {
 	private Student student;
 	SemesterPeriod semesterPeriod;
 	private Map<Course, AttestationMark> info;

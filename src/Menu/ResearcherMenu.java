@@ -106,7 +106,7 @@ public class ResearcherMenu {
                         selectedJournalName = ResearchJournalsName.TIMES;
                         break;
                     case 2:
-                        selectedJournalName = ResearchJournalsName.FORBES;
+                        selectedJournalName = ResearchJournalsName.LANCET;
                         break;
                     case 3:
                         selectedJournalName = ResearchJournalsName.KBTU;

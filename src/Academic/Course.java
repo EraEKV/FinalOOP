@@ -28,6 +28,16 @@ public class Course implements Serializable {
         this.members = new HashMap<>();
     }
 
+    public Course(String code, String name, Faculty faculty, int credits, Semester semester) {
+        this.code = code;
+        this.name = name;
+        this.faculty = faculty;
+        this.instructors = new Vector<>();
+        this.members = new HashMap<>();
+        this.credits = credits;
+        this.semester = semester;
+    }
+
     public Course(String code, String name, Faculty faculty, Speciality speciality, int credits, Semester semester) {
         this.code = code;
         this.name = name;

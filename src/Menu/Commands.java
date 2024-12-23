@@ -63,6 +63,18 @@ public class Commands {
                         teacherMenu.displayMenu();
                         break;
 
+                    case "MasterStudent":
+                        MasterStudent masterStudent = (MasterStudent) user;
+                        System.out.println(masterStudent);
+                        GradStudentMenu gradStudentMenu = new GradStudentMenu(masterStudent, reader);
+                        gradStudentMenu.displayMenu();
+
+                    case "PhDStudent":
+                        PhDStudent phDStudent = (PhDStudent) user;
+                        System.out.println(phDStudent);
+                        GradStudentMenu gradStudentMenu1 = new GradStudentMenu(phDStudent, reader);
+                        gradStudentMenu1.displayMenu();
+
                     case "Manager":
                         Manager manager = (Manager) user;
                         System.out.println(manager);
@@ -794,7 +806,7 @@ public class Commands {
                             continue;
                         }
 
-                        Discipline courseType = checkCourse(student, course.getSpeciality());
+                        Discipline courseType = checkCourse(student, course.getFaculty());
                         System.out.println("[" + (i + 1) + "] " + course.getName() + " (Credits: " + course.getCredits() + ") - [" + courseType + "]");
 
                         if (course.getTeachers().isEmpty()) {
@@ -821,6 +833,7 @@ public class Commands {
                     }
 
                     Course selectedCourse = availableCourses.get(courseIndex);
+                    availableCourses.remove(selectedCourse);
 
                     if (selectedCourse.getCredits() > remainingCredits) {
                         System.out.println("This course exceeds the remaining credit limit.");
@@ -871,11 +884,6 @@ public class Commands {
                         break;
                     }
 
-                    System.out.print("Would you like to register for another course? (y/n): ");
-                    String response = reader.readLine();
-                    if ("n".equalsIgnoreCase(response)) {
-                        break;
-                    }
                 }
 
                 student.getRegisteredCourses().putAll(registeredCoursesMap);
@@ -904,8 +912,8 @@ public class Commands {
         }
 
 
-        private Discipline checkCourse(Student student, Speciality speciality) {
-            if (student.getSpeciality().equals(speciality)) {
+        private Discipline checkCourse(Student student, Faculty faculty) {
+            if (student.getFaculty().equals(faculty)) {
                 return Discipline.MAJOR;
             } else {
                 return Discipline.MINOR;
@@ -1016,7 +1024,7 @@ public class Commands {
                 }
 
                 Faculty faculty = selectFaculty(reader);
-                Speciality speciality = selectSpeciality(reader);
+//                Speciality speciality = selectSpeciality(reader);
 
 
                 System.out.println("Enter number of credits (1-10):");
@@ -1034,7 +1042,7 @@ public class Commands {
 
                 Semester semester = selectSemester(reader);
 
-                Course course = new Course(code, name, faculty, speciality, credits, semester);
+                Course course = new Course(code, name, faculty, credits, semester);
                 manager.addCourse(course);
 
                 System.out.println("Course added successfully:\n" + course);

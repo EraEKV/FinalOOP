@@ -1,8 +1,9 @@
 package Research;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class ResearchProject {
+public class ResearchProject implements Serializable {
 	private String title;
 	private Date dateOfWritting;
 	private Date publishDate;
@@ -12,6 +13,8 @@ public class ResearchProject {
 
 	public ResearchProject() {
 	}
+
+	public ResearchProject(String title) {}
 
 	public ResearchProject(String title, Date dateOfWritting, Date publishDate, Vector<Researcher> authors, Vector<ResearchPaper> papers, Researcher superVisor) {
 		this.title = title;
